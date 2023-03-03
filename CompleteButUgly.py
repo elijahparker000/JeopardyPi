@@ -10,12 +10,22 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import * 
+from PyQt5.QtGui import * 
+from PyQt5.QtCore import Qt
+from openpyxl import load_workbook
 
 score1 = 0
 score2 = 0
 score3 = 0
 score4 = 0
 score5 = 0
+
+wb = load_workbook("C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/30TestQuestions.xlsx", data_only=True)
+sh = wb["Sheet1"]
+
+
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -1084,6 +1094,8 @@ class Ui_MainWindow(object):
         self.c6a4.clicked.connect(lambda: self.show_prompt(category = 6, clue = 4))
         self.c6a5.clicked.connect(lambda: self.show_prompt(category = 6, clue = 5))
 
+        MainWindow.setWindowFlag(Qt.FramelessWindowHint)
+
 
         
 
@@ -1133,12 +1145,15 @@ class Ui_MainWindow(object):
         self.c6a5.setText(_translate("MainWindow", "$1000"))
 
     def show_prompt(self, category, clue):
+        excelRow = (category-1)*5 + clue
         #msg = QMessageBox()
         #msg.setWindowTitle("Jeopardy!")
         #msg.setText(str(category) + str(clue))
         Prompt_Widget.show()
-        ui2.clue.setText(str(category) + str(clue))
+        #ui2.clue.setText(str(category) + str(clue))
         #ui.Score1.setText("$" + str(score1))
+        ui2.clue.setText(sh['F' + str(excelRow)].value)
+        ui2.clue.setWordWrap(True)
         ui2.PushButton.clicked.connect(lambda: self.incorrectUpdate(clue))
 
         #x = msg.exec()
