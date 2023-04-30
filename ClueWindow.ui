@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ClueWindow</class>
+ <widget class="QMainWindow" name="ClueWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1824</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(0, 0, 0);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="ReadyIndicatorR">
+    <property name="geometry">
+     <rect>
+      <x>1004</x>
+      <y>0</y>
+      <width>20</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ReadyIndicatorL">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>20</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_DecoLabel">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>540</y>
+      <width>984</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P1Name">
+    <property name="geometry">
+     <rect>
+      <x>59</x>
+      <y>545</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player1</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P1Money">
+    <property name="geometry">
+     <rect>
+      <x>59</x>
+      <y>570</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P2Name">
+    <property name="geometry">
+     <rect>
+      <x>248</x>
+      <y>545</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player2</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P3Name">
+    <property name="geometry">
+     <rect>
+      <x>437</x>
+      <y>545</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player3</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P4Name">
+    <property name="geometry">
+     <rect>
+      <x>626</x>
+      <y>545</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player4</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P5Name">
+    <property name="geometry">
+     <rect>
+      <x>815</x>
+      <y>545</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player5</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P2Money">
+    <property name="geometry">
+     <rect>
+      <x>248</x>
+      <y>570</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P3Money">
+    <property name="geometry">
+     <rect>
+      <x>437</x>
+      <y>570</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P4Money">
+    <property name="geometry">
+     <rect>
+      <x>626</x>
+      <y>570</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_P5Money">
+    <property name="geometry">
+     <rect>
+      <x>815</x>
+      <y>570</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="CloseButton">
+    <property name="geometry">
+     <rect>
+      <x>1764</x>
+      <y>10</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>28</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>X</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P5Name">
+    <property name="geometry">
+     <rect>
+      <x>1029</x>
+      <y>425</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player5</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_DecoLabel">
+    <property name="geometry">
+     <rect>
+      <x>1024</x>
+      <y>420</y>
+      <width>800</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P4Name">
+    <property name="geometry">
+     <rect>
+      <x>1189</x>
+      <y>425</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player4</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P3Name">
+    <property name="geometry">
+     <rect>
+      <x>1349</x>
+      <y>425</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player3</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P2Name">
+    <property name="geometry">
+     <rect>
+      <x>1509</x>
+      <y>425</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player2</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P1Name">
+    <property name="geometry">
+     <rect>
+      <x>1669</x>
+      <y>425</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Player1</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P5Money">
+    <property name="geometry">
+     <rect>
+      <x>1029</x>
+      <y>450</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P4Money">
+    <property name="geometry">
+     <rect>
+      <x>1189</x>
+      <y>450</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P3Money">
+    <property name="geometry">
+     <rect>
+      <x>1349</x>
+      <y>450</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P2Money">
+    <property name="geometry">
+     <rect>
+      <x>1509</x>
+      <y>450</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>MV Boli</family>
+      <pointsize>10</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_P1Money">
+    <property name="geometry">
+     <rect>
+      <x>1669</x>
+      <y>450</y>
+      <width>150</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>$0</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_DecoLabel2">
+    <property name="geometry">
+     <rect>
+      <x>1024</x>
+      <y>70</y>
+      <width>801</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_DecoLabel2">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>0</y>
+      <width>984</width>
+      <height>524</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="SettingsButton">
+    <property name="geometry">
+     <rect>
+      <x>1034</x>
+      <y>10</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>28</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton { background-color: transparent; border: 0px }</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="SettingsLabel">
+    <property name="geometry">
+     <rect>
+      <x>1034</x>
+      <y>10</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>settingsGear.jpg</pixmap>
+    </property>
+   </widget>
+   <widget class="QLabel" name="CategoryLabel">
+    <property name="geometry">
+     <rect>
+      <x>324</x>
+      <y>0</y>
+      <width>157</width>
+      <height>78</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Perpetua Titling MT</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);
+</string>
+    </property>
+    <property name="text">
+     <string>Category</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AmountLabel">
+    <property name="geometry">
+     <rect>
+      <x>481</x>
+      <y>0</y>
+      <width>219</width>
+      <height>78</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Perpetua Titling MT</family>
+      <pointsize>36</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: #d69f4c;</string>
+    </property>
+    <property name="text">
+     <string>$10000</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="PS_ClueLabel">
+    <property name="geometry">
+     <rect>
+      <x>112</x>
+      <y>80</y>
+      <width>800</width>
+      <height>431</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roman</family>
+      <pointsize>30</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Clue goes here</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AS_ClueLabel">
+    <property name="geometry">
+     <rect>
+      <x>1024</x>
+      <y>70</y>
+      <width>800</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roman</family>
+      <pointsize>30</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Clue goes here</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="correctButton">
+    <property name="geometry">
+     <rect>
+      <x>1024</x>
+      <y>371</y>
+      <width>400</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(0, 255, 0);</string>
+    </property>
+    <property name="text">
+     <string>Correct</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="incorrectButton">
+    <property name="geometry">
+     <rect>
+      <x>1424</x>
+      <y>371</y>
+      <width>400</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 0, 0);</string>
+    </property>
+    <property name="text">
+     <string>Incorrect</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ReponseLabel">
+    <property name="geometry">
+     <rect>
+      <x>1024</x>
+      <y>301</y>
+      <width>800</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roman</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>Response goes here</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <zorder>SettingsLabel</zorder>
+   <zorder>PS_DecoLabel2</zorder>
+   <zorder>AS_DecoLabel</zorder>
+   <zorder>ReadyIndicatorR</zorder>
+   <zorder>ReadyIndicatorL</zorder>
+   <zorder>PS_DecoLabel</zorder>
+   <zorder>PS_P1Name</zorder>
+   <zorder>PS_P1Money</zorder>
+   <zorder>PS_P2Name</zorder>
+   <zorder>PS_P3Name</zorder>
+   <zorder>PS_P4Name</zorder>
+   <zorder>PS_P5Name</zorder>
+   <zorder>PS_P2Money</zorder>
+   <zorder>PS_P3Money</zorder>
+   <zorder>PS_P4Money</zorder>
+   <zorder>PS_P5Money</zorder>
+   <zorder>CloseButton</zorder>
+   <zorder>AS_P5Name</zorder>
+   <zorder>AS_P4Name</zorder>
+   <zorder>AS_P3Name</zorder>
+   <zorder>AS_P2Name</zorder>
+   <zorder>AS_P1Name</zorder>
+   <zorder>AS_P5Money</zorder>
+   <zorder>AS_P4Money</zorder>
+   <zorder>AS_P3Money</zorder>
+   <zorder>AS_P2Money</zorder>
+   <zorder>AS_P1Money</zorder>
+   <zorder>AS_DecoLabel2</zorder>
+   <zorder>SettingsButton</zorder>
+   <zorder>CategoryLabel</zorder>
+   <zorder>AmountLabel</zorder>
+   <zorder>PS_ClueLabel</zorder>
+   <zorder>AS_ClueLabel</zorder>
+   <zorder>correctButton</zorder>
+   <zorder>incorrectButton</zorder>
+   <zorder>ReponseLabel</zorder>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
