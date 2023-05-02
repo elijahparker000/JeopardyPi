@@ -19,8 +19,10 @@ import pandas as pd
 import random
 from ClueWindow1 import Ui_ClueWindow
 from DDWindow2 import Ui_DDWindow
+from PyQt5.QtCore import QProcess
 
-
+#TODO: this may not be used at all so if not, delete it
+file_extension = "C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/"
 
 #indicates regular jeopardy or double jeopardy
 gameRound = 1
@@ -389,9 +391,9 @@ class Ui_MainWindow(object):
         self.PS_P1Name = QtWidgets.QLabel(self.centralwidget)
         self.PS_P1Name.setGeometry(QtCore.QRect(59, 545, 150, 25))
 
-        QFontDatabase.addApplicationFont("C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/Swiss 911 Compressed Regular.otf")
-        QFontDatabase.addApplicationFont("C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/Korinna-Regular.otf")
-        QFontDatabase.addApplicationFont("C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/Univers 75 Black Regular.otf")
+        QFontDatabase.addApplicationFont("Fonts/Swiss 911 Compressed Regular.otf")
+        QFontDatabase.addApplicationFont("Fonts/JeopardyPi/Korinna-Regular.otf")
+        QFontDatabase.addApplicationFont("Fonts/Univers 75 Black Regular.otf")
 
         font = QtGui.QFont()
         font.setPointSize(10)
