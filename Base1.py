@@ -107,8 +107,42 @@ answered = [[0,0,0,0,0],
 DDamount = ""
 totalCluesFinished = 0
 
+buzzedIn = [0, 0, 0, 0, 0]
+mostRecentBuzz = 0 #nobody buzzed in
+
 
 class Ui_MainWindow(object):
+    
+    def playerBuzzerPressed(self, channel):
+           global buzzedIn
+           global mostRecentBuzz
+           player = 0
+
+           for i in range(0, 5):
+                  if buzzedIn[i] == 1:
+                         return #someone has gotten it correct; do nothing
+                  
+           if channel == 23:
+                  player = 1
+           if channel == 24:
+                  player = 2
+           if channel == 25:
+                  player = 3
+           if channel == 8:
+                  player = 4
+           if channel == 7:
+                  player = 5
+           if channel == 5:
+                  player = 6
+                
+           if buzzedIn[player-1] == -1: #if they already got it wrong, do nothing
+                  return
+           
+           mostRecentBuzz = player
+           
+                
+
+    
     def initDoubleJeopRound(self):
            global gameRound
            global answered
@@ -249,6 +283,7 @@ class Ui_MainWindow(object):
           
     def showClueWindow(self, category, clue, amount, dailyDouble, DDplayer=""):
          global answered
+
          if(answered[category-1][clue-1] == 1):
                return
          
@@ -305,7 +340,14 @@ class Ui_MainWindow(object):
     def Correct(self, category, clue, amount):
           global player1Score
           global totalCluesFinished
-          player1Score += amount
+          global mostRecentBuzz
+          global buzzedIn
+
+          if mostRecentBuzz == 0:
+                 pass #nobody buzzed in
+          exec{f'player{mostRecentBuzz}score += amount'}
+          
+          #player1Score += amount
           if player1Score < 0:
                 self.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
                 self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
@@ -316,8 +358,52 @@ class Ui_MainWindow(object):
                 self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
                 self.PS_P1Money.setText("$" + str(player1Score))
                 self.AS_P1Money.setText("$" + str(player1Score))
+          if player2Score < 0:
+                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P2Money.setText("-$" + str(player2Score)[1:])
+                self.AS_P2Money.setText("-$" + str(player2Score)[1:])
+          else:
+                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P2Money.setText("$" + str(player2Score))
+                self.AS_P2Money.setText("$" + str(player2Score))
+          if player3Score < 0:
+                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P3Money.setText("-$" + str(player3Score)[1:])
+                self.AS_P3Money.setText("-$" + str(player3Score)[1:])
+          else:
+                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P3Money.setText("$" + str(player3Score))
+                self.AS_P3Money.setText("$" + str(player3Score))
+          if player4Score < 0:
+                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P4Money.setText("-$" + str(player4Score)[1:])
+                self.AS_P4Money.setText("-$" + str(player4Score)[1:])
+          else:
+                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P4Money.setText("$" + str(player4Score))
+                self.AS_P4Money.setText("$" + str(player4Score))
+          if player5Score < 0:
+                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P5Money.setText("-$" + str(player5Score)[1:])
+                self.AS_P5Money.setText("-$" + str(player5Score)[1:])
+          else:
+                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P5Money.setText("$" + str(player5Score))
+                self.AS_P5Money.setText("$" + str(player5Score))
           exec(f'self.Cat{category}Clue{clue}B.setText("")')
           self.ClueWindow.close()
+
+          buzzedIn = [0, 0, 0, 0, 0]
+          mostRecentBuzz = 0
+
           totalCluesFinished += 1
           self.checkEndRound1()
           
@@ -1180,6 +1266,14 @@ class Ui_MainWindow(object):
         
 
     def retranslateUi(self, MainWindow):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP) #player1 buzzer
+        GPIO.setup(24, GPIO.IN, pull_up_down=GPIO.PUD_UP) #player2 buzzer
+        GPIO.setup(25, GPIO.IN, pull_up_down=GPIO.PUD_UP) #player3 buzzer
+        GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_UP) #player4 buzzer
+        GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP) #player5 buzzer
+        GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP) #alex buzzer
+
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.PS_P1Name.setText(_translate("MainWindow", "Player1"))
@@ -1256,6 +1350,15 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
+
+    GPIO.add_event_detect(23, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
+    GPIO.add_event_detect(24, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
+    GPIO.add_event_detect(25, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
+    GPIO.add_event_detect(8, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
+    GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
+    #TODO: this may need to call a different function bc it's alex's button
+    GPIO.add_event_detect(12, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
+
     MainWindow.setWindowFlag(Qt.FramelessWindowHint)
     MainWindow.show()
     ui.setCategories()
