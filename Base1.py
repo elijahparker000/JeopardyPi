@@ -20,6 +20,7 @@ import random
 from ClueWindow1 import Ui_ClueWindow
 from DDWindow2 import Ui_DDWindow
 from PyQt5.QtCore import QProcess
+import RPi.GPIO as GPIO
 
 #TODO: this may not be used at all so if not, delete it
 file_extension = "C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/"
@@ -107,21 +108,86 @@ answered = [[0,0,0,0,0],
 DDamount = ""
 totalCluesFinished = 0
 
-buzzedIn = [0, 0, 0, 0, 0]
-mostRecentBuzz = 0 #nobody buzzed in
+buzzable = False #whether or not input from player buzzers should do anything
+canBuzzIn = [True, True, True, True, True]
+lastBuzzTime = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+mostRecentBuzz = 0 #who buzzed in
+mostRecentCorrect = 0
 
 
 class Ui_MainWindow(object):
     
+    #TODO: I'm probably not supposed to use exec() this much but i really love it and idk how else to do this. 
+    #I am bad at programming, but it's working so far
+    #this is to update player scores on a given screen so you don't have these huge blocks everytime you want to show a new screen
+    def setScores(self, ui):
+          if player1Score < 0:
+                exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P1Money.setText("-$" + str(player1Score)[1:])')
+                exec(f'{ui}.AS_P1Money.setText("-$" + str(player1Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P1Money.setText("$" + str(player1Score))')
+                exec(f'{ui}.AS_P1Money.setText("$" + str(player1Score))')
+          if player2Score < 0:
+                exec(f'{ui}.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P2Money.setText("-$" + str(player2Score)[1:])')
+                exec(f'{ui}.AS_P2Money.setText("-$" + str(player2Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P2Money.setText("$" + str(player2Score))')
+                exec(f'{ui}.AS_P2Money.setText("$" + str(player2Score))')
+          if player3Score < 0:
+                exec(f'{ui}.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P3Money.setText("-$" + str(player3Score)[1:])')
+                exec(f'{ui}.AS_P3Money.setText("-$" + str(player3Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P3Money.setText("$" + str(player3Score))')
+                exec(f'{ui}.AS_P3Money.setText("$" + str(player3Score))')
+          if player4Score < 0:
+                exec(f'{ui}.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P4Money.setText("-$" + str(player4Score)[1:])')
+                exec(f'{ui}.AS_P4Money.setText("-$" + str(player4Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P4Money.setText("$" + str(player4Score))')
+                exec(f'{ui}.AS_P4Money.setText("$" + str(player4Score))')
+          if player5Score < 0:
+                exec(f'{ui}.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P5Money.setText("-$" + str(player5Score)[1:])')
+                exec(f'{ui}.AS_P5Money.setText("-$" + str(player5Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P5Money.setText("$" + str(player5Score))')
+                exec(f'{ui}.AS_P5Money.setText("$" + str(player5Score))')
+    
+    def alexBuzzerReleased(self, channel):
+           pass
+    
+    def alexBuzzerPressed(self, channel):
+           pass
+    
     def playerBuzzerPressed(self, channel):
-           global buzzedIn
+           global canBuzzIn
            global mostRecentBuzz
-           player = 0
+           global buzzable
+           global lastBuzzTime
 
-           for i in range(0, 5):
-                  if buzzedIn[i] == 1:
-                         return #someone has gotten it correct; do nothing
-                  
+           player = 0
+           
+           #figure out who buzzed in TODO: better implementation
            if channel == 23:
                   player = 1
            if channel == 24:
@@ -132,13 +198,17 @@ class Ui_MainWindow(object):
                   player = 4
            if channel == 7:
                   player = 5
-           if channel == 5:
-                  player = 6
-                
-           if buzzedIn[player-1] == -1: #if they already got it wrong, do nothing
+        
+           if not buzzable: #if you buzzed too early or at a random time
+                  lastBuzzTime[player-1] = time.time()
                   return
-           
-           mostRecentBuzz = player
+           curtime = time.time()
+           if curtime - lastBuzzTime[player-1] <= 0.25:
+                  return #don't update lastBuzzTime since it was buzzable (this is just the penalty delay)
+           if  not canBuzzIn[player-1]: #if they already got it wrong, do nothing
+                  return
+           buzzable = False #nobody else should be able to buzz in until next question
+           mostRecentBuzz = player #so we know who to give the money to
            
                 
 
@@ -283,10 +353,13 @@ class Ui_MainWindow(object):
           
     def showClueWindow(self, category, clue, amount, dailyDouble, DDplayer=""):
          global answered
+         global buzzable
 
+         #if clue has already been given, do nothing
          if(answered[category-1][clue-1] == 1):
                return
          
+         #if this question is a Daily Double
          if(dailyDouble == "yes"):
                print("Daily Double clicked")
                self.showDDWindow(category = category, clue=clue, amount=amount, dailyDouble=dailyDouble, DDplayer="")
@@ -334,20 +407,32 @@ class Ui_MainWindow(object):
                 self.ClueWindowui.CategoryLabel.setText(str(df.iloc[clueIndex, 3]))
                 self.ClueWindowui.AmountLabel.setText("$" + str(amount))
 
-                answered[category-1][clue-1] = 1
+                buzzable = True #allow players to buzz in
+                answered[category-1][clue-1] = 1 #used to clear the button later
 
 #TODO: Correct and Incorrect functions can be consolidated into one function that only differs in whether the new value is added or subtracted (i think)
     def Correct(self, category, clue, amount):
-          global player1Score
+          #global player1Score
           global totalCluesFinished
           global mostRecentBuzz
-          global buzzedIn
+          global canBuzzIn
+          global mostRecentCorrect
 
-          if mostRecentBuzz == 0:
-                 pass #nobody buzzed in
-          exec{f'player{mostRecentBuzz}score += amount'}
+          if mostRecentBuzz == 0: #if nobody answered
+                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
+                 self.ClueWindow.close()
+
+                 canBuzzIn = [True, True, True, True, True]
+                 mostRecentBuzz = 0
+
+                 totalCluesFinished += 1
+                 self.checkEndRound1()
+                 return #nobody buzzed in
           
-          #player1Score += amount
+          exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score += amount')
+
+          #self.setScores("self")
+          
           if player1Score < 0:
                 self.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
                 self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
@@ -401,7 +486,8 @@ class Ui_MainWindow(object):
           exec(f'self.Cat{category}Clue{clue}B.setText("")')
           self.ClueWindow.close()
 
-          buzzedIn = [0, 0, 0, 0, 0]
+          canBuzzIn = [True, True, True, True, True]
+          mostRecentCorrect = mostRecentBuzz
           mostRecentBuzz = 0
 
           totalCluesFinished += 1
@@ -409,9 +495,26 @@ class Ui_MainWindow(object):
           
 #TODO: when Incorrect() is called it shouldn't automatically close the window bc others have a chance to guess
     def Incorrect(self, category, clue, amount):
-          global player1Score
+          #global player1Score
+          global mostRecentBuzz
+          global canBuzzIn
           global totalCluesFinished
-          player1Score -= amount
+          
+          if mostRecentBuzz == 0: #if nobody answered
+                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
+                 self.ClueWindow.close()
+
+                 canBuzzIn = [True, True, True, True, True]
+                 mostRecentBuzz = 0
+
+                 totalCluesFinished += 1
+                 self.checkEndRound1()
+                 return #nobody buzzed in so don't continue
+          
+          exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score -= amount')
+
+          #self.setScores("self")
+          
           if player1Score < 0:
                 self.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
                 self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
@@ -422,8 +525,50 @@ class Ui_MainWindow(object):
                 self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
                 self.PS_P1Money.setText("$" + str(player1Score))
                 self.AS_P1Money.setText("$" + str(player1Score))
-          exec(f'self.Cat{category}Clue{clue}B.setText("")')
-          self.ClueWindow.close()
+          if player2Score < 0:
+                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P2Money.setText("-$" + str(player2Score)[1:])
+                self.AS_P2Money.setText("-$" + str(player2Score)[1:])
+          else:
+                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P2Money.setText("$" + str(player2Score))
+                self.AS_P2Money.setText("$" + str(player2Score))
+          if player3Score < 0:
+                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P3Money.setText("-$" + str(player3Score)[1:])
+                self.AS_P3Money.setText("-$" + str(player3Score)[1:])
+          else:
+                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P3Money.setText("$" + str(player3Score))
+                self.AS_P3Money.setText("$" + str(player3Score))
+          if player4Score < 0:
+                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P4Money.setText("-$" + str(player4Score)[1:])
+                self.AS_P4Money.setText("-$" + str(player4Score)[1:])
+          else:
+                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P4Money.setText("$" + str(player4Score))
+                self.AS_P4Money.setText("$" + str(player4Score))
+          if player5Score < 0:
+                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
+                self.PS_P5Money.setText("-$" + str(player5Score)[1:])
+                self.AS_P5Money.setText("-$" + str(player5Score)[1:])
+          else:
+                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
+                self.PS_P5Money.setText("$" + str(player5Score))
+                self.AS_P5Money.setText("$" + str(player5Score))
+          
+          #exec(f'self.Cat{category}Clue{clue}B.setText("")') should be able to delete this
+          canBuzzIn[mostRecentBuzz-1] = False #can't buzz in once incorrect
+          mostRecentBuzz = 0 #so if incorrect is clicked again, the window closes
           totalCluesFinished += 1
           self.checkEndRound1()
 
@@ -1350,14 +1495,15 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-
-    GPIO.add_event_detect(23, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
-    GPIO.add_event_detect(24, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
-    GPIO.add_event_detect(25, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
-    GPIO.add_event_detect(8, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
-    GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
-    #TODO: this may need to call a different function bc it's alex's button
-    GPIO.add_event_detect(12, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=250)
+    
+    #TODO: I set bouncetime=0, but I'm not 100% sure that's okay
+    GPIO.add_event_detect(23, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
+    GPIO.add_event_detect(24, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
+    GPIO.add_event_detect(25, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
+    GPIO.add_event_detect(8, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
+    GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
+    GPIO.add_event_detect(12, GPIO.FALLING, callback=ui.alexBuzzerPressed, bouncetime=250)
+    GPIO.add_event_detect(12, GPIO.RISING, callback=ui.alexBuzzerReleased bouncetime=250)
 
     MainWindow.setWindowFlag(Qt.FramelessWindowHint)
     MainWindow.show()
