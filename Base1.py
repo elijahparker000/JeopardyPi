@@ -39,7 +39,7 @@ cat4Index = 0
 cat5Index = 0
 cat6Index = 0
 
-df = pd.read_excel('JeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
+df = pd.read_excel('Questions/JeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
 
 #############################################################################################################
 #The purpose of this next section is to guarantee the correct amount of daily doubles as well as unique categories
@@ -56,9 +56,9 @@ def initCluesAndCats(round):
 
 
        if round == 1:
-         df = pd.read_excel('JeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
+         df = pd.read_excel('Questions/JeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
        if round == 2:
-         df = pd.read_excel('DoubleJeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
+         df = pd.read_excel('Questions/DoubleJeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
        num_rows = df.shape[0]
 
        while True:
