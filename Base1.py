@@ -122,10 +122,56 @@ alexBuzzerPressedFirst = True
 
 class Ui_MainWindow(object):
     
+    def hideAllButBuzzed(self, player):
+        for i in range(1,6):
+            if i != player:
+                #TODO: this is kidna weird bc I did it two different ways but it should work. Dunno why it's not
+                exec(f'self.ClueWindowui.PS_P{i}Money.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                exec(f'self.ClueWindowui.PS_P{i}Name.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                exec(f'self.ClueWindowui.AS_P{i}Money.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                exec(f'self.ClueWindowui.AS_P{i}Name.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                exec(f'self.ClueWindowui.PS_P{i}Money.setText(".")')
+                exec(f'self.ClueWindowui.PS_P{i}Name.setText(".")')
+                exec(f'self.ClueWindowui.AS_P{i}Money.setText(".")')
+                exec(f'self.ClueWindowui.AS_P{i}Name.setText(".")')
+                exec(f'self.ClueWindowui.PS_P{i}Money.setText("")')
+                exec(f'self.ClueWindowui.PS_P{i}Name.setText("")')
+                exec(f'self.ClueWindowui.AS_P{i}Money.setText("")')
+                exec(f'self.ClueWindowui.AS_P{i}Name.setText("")')
+                
+                exec(f'self.ClueWindowui.PS_P{i}Name.update()')
+                exec(f'self.ClueWindowui.PS_P{i}Money.update()')
+                exec(f'self.ClueWindowui.AS_P{i}Name.update()')
+                exec(f'self.ClueWindowui.AS_P{i}Money.update()')
+                QApplication.processEvents()
+                
+                
+    
     #TODO: I'm probably not supposed to use exec() this much but i really love it and idk how else to do this. 
     #I am bad at programming, but it's working so far
     #this is to update player scores on a given screen so you don't have these huge blocks everytime you want to show a new screen
     def setScores(self, ui):
+        #TODO: could be done with for loop (at leat the first part)
+          exec(f'{ui}.AS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P1Name.setText("Player1")')
+          exec(f'{ui}.AS_P2Name.setText("Player2")')
+          exec(f'{ui}.AS_P3Name.setText("Player3")')
+          exec(f'{ui}.AS_P4Name.setText("Player4")')
+          exec(f'{ui}.AS_P5Name.setText("Player5")')
+          exec(f'{ui}.PS_P1Name.setText("Player1")')
+          exec(f'{ui}.PS_P2Name.setText("Player2")')
+          exec(f'{ui}.PS_P3Name.setText("Player3")')
+          exec(f'{ui}.PS_P4Name.setText("Player4")')
+          exec(f'{ui}.PS_P5Name.setText("Player5")')
           if player1Score < 0:
                 exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
                 exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
@@ -207,22 +253,6 @@ class Ui_MainWindow(object):
                  # Button pressed (falling edge)
                  alexBuzzerPressedFirst = True
                  self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
-           #if GPIO.input(channel):
-                # Button pressed (falling edge)
-                 #self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5])) #show clue
-           #else:
-                # Button released (rising edge)
-                 #print("Button released")
-                 #change colors of side bars to let them know they can buzz
-                 #self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
-                 #self.ClueWindowui.ReadyIndicatorR.setStyleSheet(("background-color: rgb(255, 255, 255)"))
-                 #self.ClueWindowui.ReadyIndicatorL.setText(".")
-                 #self.ClueWindowui.ReadyIndicatorR.setText(".")
-                 #self.ClueWindowui.ReadyIndicatorL.setText("")
-                 #self.ClueWindowui.ReadyIndicatorR.setText("")
-                 #update the time in lastBuzzTime
-                 #lastBuzzTime[5] = time.time()
-                 #alexSeesClue = False #not sure if this should be here 
                  
 
     
@@ -256,6 +286,7 @@ class Ui_MainWindow(object):
                   return
            buzzable = False #nobody else should be able to buzz in until next question or miss
            mostRecentBuzz = player #so we know who to give the money to
+           self.hideAllButBuzzed(player)
            
                 
 
