@@ -112,7 +112,7 @@ buzzable = False #whether or not input from player buzzers should do anything
 canBuzzIn = [True, True, True, True, True] #used to stop player from buzzing in after getting it wrong
 lastBuzzTime = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] #used for the 0.25 second delay for buzzing early
 mostRecentBuzz = 0 #who buzzed in most recently (who should gain or lose money)
-mostRecentCorrect = 0 #who was correct most recently (who gets the Daily Double)
+mostRecentCorrect = 1 #who was correct most recently (who gets the Daily Double) #this starts at 1 in case the dailydouble is the first clue clicked
 
 alexSeesClue = False #used to determine if alex's buzzer should do anything (if he can't see the clue, nothing's been clicked)
 clueIndex = 0 #TODO: this could break some stuff; this is so alexBuzzerPressedOrReleased() knows which clue to show to players
@@ -295,8 +295,10 @@ class Ui_MainWindow(object):
 
     
     def initDoubleJeopRound(self):
+           #TODO: should tell Alex who gets to select the clue, should do it at beginning of game too
            global gameRound
            global answered
+           global mostRecentCorrect
            gameRound = 2
            answered = [[0,0,0,0,0], 
                        [0,0,0,0,0], 
@@ -304,6 +306,21 @@ class Ui_MainWindow(object):
                        [0,0,0,0,0], 
                        [0,0,0,0,0], 
                        [0,0,0,0,0]]
+           
+           #the person with the lowest score should select the clue; that's also the person who gets the DD if it's first selected
+           #if two people are tied for lowest, it's the one with the lower player number
+           lowestScore = min(player1Score, player2Score, player3Score, player4Score, player5Score)
+           if player1Score == lowestScore:
+                  mostRecentCorrect = 1
+           elif player2Score == lowestScore:
+                  mostRecentCorrect = 2
+           elif player3Score == lowestScore:
+                  mostRecentCorrect = 3
+           elif player4Score == lowestScore:
+                  mostRecentCorrect = 4
+           else:
+                  mostRecentCorrect = 5
+
            initCluesAndCats(gameRound)
            self.setCategories()
            self.Cat1Clue1B.setText("$400")
