@@ -114,6 +114,9 @@ lastBuzzTime = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 mostRecentBuzz = 0 #who buzzed in
 mostRecentCorrect = 0
 
+alexSeesClue = False
+clueIndex = 0 #TODO: this could break some stuff; this is so alexBuzzerPressedOrReleased knows which clue to show to players
+
 
 class Ui_MainWindow(object):
     
@@ -173,11 +176,30 @@ class Ui_MainWindow(object):
                 exec(f'{ui}.PS_P5Money.setText("$" + str(player5Score))')
                 exec(f'{ui}.AS_P5Money.setText("$" + str(player5Score))')
     
-    def alexBuzzerReleased(self, channel):
-           pass
-    
-    def alexBuzzerPressed(self, channel):
-           pass
+    def alexBuzzerPressedOrReleased(self, channel):
+           global lastBuzzTime
+           global alexSeesClue
+
+           if not alexSeesClue:
+                        return #do nothing
+           
+           if GPIO.input(channel):
+                 # Button released (rising edge)
+                 print("Button released")
+                 #change colors of side bars to let them know they can buzz
+                 self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
+                 self.ClueWindowui.ReadyIndicatorR.setStyleSheet(("background-color: rgb(255, 255, 255)"))
+                 self.ClueWindowui.ReadyIndicatorL.setText(".")
+                 self.ClueWindowui.ReadyIndicatorR.setText(".")
+                 self.ClueWindowui.ReadyIndicatorL.setText("")
+                 self.ClueWindowui.ReadyIndicatorR.setText("")
+                 #update the time in lastBuzzTime
+                 lastBuzzTime[5] = time.time()
+                 alexSeesClue = False #not sure if this should be here 
+           else:
+                 # Button pressed (falling edge)
+                 self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5])) #show clue
+
     
     def playerBuzzerPressed(self, channel):
            global canBuzzIn
@@ -346,6 +368,8 @@ class Ui_MainWindow(object):
     def showClueWindow(self, category, clue, amount, dailyDouble, DDplayer=""):
          global answered
          global buzzable
+         global alexSeesClue
+         global clueIndex
 
          #if clue has already been given, do nothing
          if(answered[category-1][clue-1] == 1):
@@ -385,11 +409,12 @@ class Ui_MainWindow(object):
                         clueIndex = cat6Index
 
                 self.ClueWindowui.AS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
-                self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
+                #self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
                 self.ClueWindowui.ReponseLabel.setText(str(df.iloc[clueIndex+clue-1, 6]))
                 self.ClueWindowui.CategoryLabel.setText(str(df.iloc[clueIndex, 3]))
                 self.ClueWindowui.AmountLabel.setText("$" + str(amount))
 
+                alexSeesClue = True
                 buzzable = True #allow players to buzz in
                 answered[category-1][clue-1] = 1 #used to clear the button later
 
@@ -1382,14 +1407,14 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     
-    #TODO: I set bouncetime=0, but I'm not 100% sure that's okay
+    #TODO: I set bouncetime=1, but I'm not 100% sure that's okay
     GPIO.add_event_detect(23, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
     GPIO.add_event_detect(24, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
     GPIO.add_event_detect(25, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
     GPIO.add_event_detect(8, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
     GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
-    GPIO.add_event_detect(12, GPIO.FALLING, callback=ui.alexBuzzerPressed, bouncetime=250)
-    #GPIO.add_event_detect(12, GPIO.RISING, callback=ui.alexBuzzerReleased, bouncetime=250)
+        #alex's button has bouncetime bc it's both rising and falling edge that matters
+    GPIO.add_event_detect(12, GPIO.BOTH, callback=ui.alexBuzzerPressedOrReleased, bouncetime=300)
 
     MainWindow.setWindowFlag(Qt.FramelessWindowHint)
     MainWindow.show()
