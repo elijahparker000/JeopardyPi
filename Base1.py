@@ -126,19 +126,20 @@ class Ui_MainWindow(object):
         for i in range(1,6):
             if i != player:
                 #TODO: this is kidna weird bc I did it two different ways but it should work. Dunno why it's not
-                exec(f'self.ClueWindowui.PS_P{i}Money.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
-                exec(f'self.ClueWindowui.PS_P{i}Name.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
-                exec(f'self.ClueWindowui.AS_P{i}Money.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
-                exec(f'self.ClueWindowui.AS_P{i}Name.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
-                exec(f'self.ClueWindowui.PS_P{i}Money.setText(".")')
-                exec(f'self.ClueWindowui.PS_P{i}Name.setText(".")')
-                exec(f'self.ClueWindowui.AS_P{i}Money.setText(".")')
-                exec(f'self.ClueWindowui.AS_P{i}Name.setText(".")')
+                #exec(f'self.ClueWindowui.PS_P{i}Money.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                #exec(f'self.ClueWindowui.PS_P{i}Name.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                #exec(f'self.ClueWindowui.AS_P{i}Money.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                #exec(f'self.ClueWindowui.AS_P{i}Name.setStyleSheet("background-color: #060CE9; color: #060CE9;")')
+                #exec(f'self.ClueWindowui.PS_P{i}Money.setText(".")')
+                #exec(f'self.ClueWindowui.PS_P{i}Name.setText(".")')
+                #exec(f'self.ClueWindowui.AS_P{i}Money.setText(".")')
+                #exec(f'self.ClueWindowui.AS_P{i}Name.setText(".")')
                 exec(f'self.ClueWindowui.PS_P{i}Money.setText("")')
                 exec(f'self.ClueWindowui.PS_P{i}Name.setText("")')
                 exec(f'self.ClueWindowui.AS_P{i}Money.setText("")')
                 exec(f'self.ClueWindowui.AS_P{i}Name.setText("")')
                 
+                #I think the rest of this is unnecessary.
                 exec(f'self.ClueWindowui.PS_P{i}Name.update()')
                 exec(f'self.ClueWindowui.PS_P{i}Money.update()')
                 exec(f'self.ClueWindowui.AS_P{i}Name.update()')
