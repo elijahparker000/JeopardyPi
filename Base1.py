@@ -116,6 +116,8 @@ mostRecentCorrect = 0
 
 alexSeesClue = False
 clueIndex = 0 #TODO: this could break some stuff; this is so alexBuzzerPressedOrReleased knows which clue to show to players
+clueGlobal = 0
+alexBuzzerPressedFirst = True
 
 
 class Ui_MainWindow(object):
@@ -179,13 +181,16 @@ class Ui_MainWindow(object):
     def alexBuzzerPressedOrReleased(self, channel):
            global lastBuzzTime
            global alexSeesClue
+           global buzzable
+           global alexBuzzerPressedFirst
 
            if not alexSeesClue:
                         return #do nothing
            
            if GPIO.input(channel):
-                 # Button released (rising edge)
-                 print("Button released")
+                 #Button released (rising edge)
+                 if not alexBuzzerPressedFirst:
+                     return #the button must be pressed before it can be released
                  #change colors of side bars to let them know they can buzz
                  self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
                  self.ClueWindowui.ReadyIndicatorR.setStyleSheet(("background-color: rgb(255, 255, 255)"))
@@ -194,11 +199,31 @@ class Ui_MainWindow(object):
                  self.ClueWindowui.ReadyIndicatorL.setText("")
                  self.ClueWindowui.ReadyIndicatorR.setText("")
                  #update the time in lastBuzzTime
+                 buzzable = True
                  lastBuzzTime[5] = time.time()
-                 alexSeesClue = False #not sure if this should be here 
+                 alexSeesClue = False #not sure if this should be here
+                 alexBuzzerPressedFirst = False
            else:
                  # Button pressed (falling edge)
-                 self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5])) #show clue
+                 alexBuzzerPressedFirst = True
+                 self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
+           #if GPIO.input(channel):
+                # Button pressed (falling edge)
+                 #self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5])) #show clue
+           #else:
+                # Button released (rising edge)
+                 #print("Button released")
+                 #change colors of side bars to let them know they can buzz
+                 #self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
+                 #self.ClueWindowui.ReadyIndicatorR.setStyleSheet(("background-color: rgb(255, 255, 255)"))
+                 #self.ClueWindowui.ReadyIndicatorL.setText(".")
+                 #self.ClueWindowui.ReadyIndicatorR.setText(".")
+                 #self.ClueWindowui.ReadyIndicatorL.setText("")
+                 #self.ClueWindowui.ReadyIndicatorR.setText("")
+                 #update the time in lastBuzzTime
+                 #lastBuzzTime[5] = time.time()
+                 #alexSeesClue = False #not sure if this should be here 
+                 
 
     
     def playerBuzzerPressed(self, channel):
@@ -225,7 +250,7 @@ class Ui_MainWindow(object):
                   lastBuzzTime[player-1] = time.time()
                   return
            curtime = time.time()
-           if curtime - lastBuzzTime[player-1] <= 0.25:
+           if curtime - lastBuzzTime[player-1] <= 0.25: #I tested this with a 10 second delay and it worked appropriately
                   return #don't update lastBuzzTime since it was buzzable (this is just the penalty delay)
            if  not canBuzzIn[player-1]: #if they already got it wrong, do nothing
                   return
@@ -370,6 +395,8 @@ class Ui_MainWindow(object):
          global buzzable
          global alexSeesClue
          global clueIndex
+         global clueGlobal
+         global alexBuzzerPressedFirst
 
          #if clue has already been given, do nothing
          if(answered[category-1][clue-1] == 1):
@@ -407,15 +434,17 @@ class Ui_MainWindow(object):
                         clueIndex = cat5Index
                 if category == 6:
                         clueIndex = cat6Index
+                clueGlobal = clue #to get the value into the global var?
 
                 self.ClueWindowui.AS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
                 #self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
                 self.ClueWindowui.ReponseLabel.setText(str(df.iloc[clueIndex+clue-1, 6]))
                 self.ClueWindowui.CategoryLabel.setText(str(df.iloc[clueIndex, 3]))
                 self.ClueWindowui.AmountLabel.setText("$" + str(amount))
-
+                
+                alexBuzzerPressedFirst = False
                 alexSeesClue = True
-                buzzable = True #allow players to buzz in
+                #buzzable = True #taken care of by alexBuzzerPressedOrReleased()
                 answered[category-1][clue-1] = 1 #used to clear the button later
 
 #TODO: Correct and Incorrect functions can be consolidated into one function that only differs in whether the new value is added or subtracted (i think)
@@ -426,15 +455,16 @@ class Ui_MainWindow(object):
           global canBuzzIn
           global mostRecentCorrect
           global buzzable
+          global alexSeesClue
 
           if mostRecentBuzz == 0: #if nobody answered
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
                  self.ClueWindow.close()
-
+                 alexSeesClue = False
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
                  buzzable = False #nobody else should be able to buzz in until next question
-
+                 self.setScores("self")
                  totalCluesFinished += 1
                  self.checkEndRound1()
                  return #nobody buzzed in
@@ -445,7 +475,7 @@ class Ui_MainWindow(object):
           
           exec(f'self.Cat{category}Clue{clue}B.setText("")')
           self.ClueWindow.close()
-
+          alexSeesClue = False
           canBuzzIn = [True, True, True, True, True]
           mostRecentCorrect = mostRecentBuzz
           mostRecentBuzz = 0
@@ -461,12 +491,14 @@ class Ui_MainWindow(object):
           global canBuzzIn
           global totalCluesFinished
           global buzzable
+          global alexSeesClue
           
           if mostRecentBuzz == 0: #if nobody answered
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
                  buzzable = False #nobody else should be able to buzz in until next question
-                
+                 self.setScores("self")
+                 alexSeesClue = False
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
                  self.ClueWindow.close()
                  totalCluesFinished += 1
@@ -474,7 +506,7 @@ class Ui_MainWindow(object):
                  return #nobody buzzed in so don't continue
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score -= amount')
-          self.setScores("self")
+          self.setScores("self.ClueWindowui")
           
           #exec(f'self.Cat{category}Clue{clue}B.setText("")') should be able to delete this
           canBuzzIn[mostRecentBuzz-1] = False #can't buzz in once incorrect

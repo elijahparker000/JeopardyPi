@@ -452,7 +452,7 @@ class Ui_ClueWindow(object):
         self.AS_P1Money.setText(_translate("ClueWindow", "$0"))
         self.CategoryLabel.setText(_translate("ClueWindow", "Category"))
         self.AmountLabel.setText(_translate("ClueWindow", "$10000"))
-        self.PS_ClueLabel.setText(_translate("ClueWindow", "Clue goes here"))
+        self.PS_ClueLabel.setText(_translate("ClueWindow", ""))
         self.AS_ClueLabel.setText(_translate("ClueWindow", "Clue goes here"))
         self.correctButton.setText(_translate("ClueWindow", "Correct"))
         self.incorrectButton.setText(_translate("ClueWindow", "Incorrect"))
