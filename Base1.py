@@ -109,15 +109,17 @@ DDamount = ""
 totalCluesFinished = 0
 
 buzzable = False #whether or not input from player buzzers should do anything
-canBuzzIn = [True, True, True, True, True]
-lastBuzzTime = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-mostRecentBuzz = 0 #who buzzed in
-mostRecentCorrect = 0
+canBuzzIn = [True, True, True, True, True] #used to stop player from buzzing in after getting it wrong
+lastBuzzTime = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0] #used for the 0.25 second delay for buzzing early
+mostRecentBuzz = 0 #who buzzed in most recently (who should gain or lose money)
+mostRecentCorrect = 0 #who was correct most recently (who gets the Daily Double)
 
-alexSeesClue = False
-clueIndex = 0 #TODO: this could break some stuff; this is so alexBuzzerPressedOrReleased knows which clue to show to players
-clueGlobal = 0
-alexBuzzerPressedFirst = True
+alexSeesClue = False #used to determine if alex's buzzer should do anything (if he can't see the clue, nothing's been clicked)
+clueIndex = 0 #TODO: this could break some stuff; this is so alexBuzzerPressedOrReleased() knows which clue to show to players
+clueGlobal = 0 #so alexBuzzerPressedOrReleased() knows which clue to show players
+alexBuzzerPressedFirst = True #used to prevent alex from showing indicators before the clue appears
+
+playerScoreDD = 0
 
 
 class Ui_MainWindow(object):
@@ -346,9 +348,12 @@ class Ui_MainWindow(object):
                  print("END OF JEOPARDY ROUND")
                  self.initDoubleJeopRound()
 
+#this function handles all the button presses within the DailyDouble window. It's probably poorly written but it works
     def DDbutton(self, button, category=None, clue=None, amount=None, dailyDouble=None, DDplayer=""):
           global DDamount
-          maxWager = max(player1Score, 1000*gameRound)
+          global playerScoreDD
+
+          maxWager = max(playerScoreDD, 1000*gameRound)
 
           if button == "DEL" and DDamount != "":
                  DDamount = DDamount[:-1]
@@ -356,7 +361,7 @@ class Ui_MainWindow(object):
                  pass
           elif button == "ENTER" and DDamount != "":
                  if int(DDamount) <= maxWager and int(DDamount) >= 5:
-                        self.showClueWindow(category=category, clue=clue, amount=int(DDamount), dailyDouble="no", DDplayer="")
+                        self.showClueWindow(category=category, clue=clue, amount=int(DDamount), dailyDouble="no", DDplayer=mostRecentCorrect)
                         self.DDWindow.close()
                         DDamount = ""
                  else:
@@ -408,21 +413,24 @@ class Ui_MainWindow(object):
          if category == 5:
                   clueIndex = cat5Index
          if category == 6:
-                 clueIndex = cat6Index        
-         maxWager = max(player1Score, 1000*gameRound)
+                 clueIndex = cat6Index 
+
+         exec(f'global playerScoreDD; playerScoreDD = player{mostRecentCorrect}Score')       
+         maxWager = max(playerScoreDD, 1000*gameRound)
 
          #update window with correct info
          self.setScores("self.DDWindowui")
 
          self.DDWindowui.CategoryLabel.setText(str(df.iloc[clueIndex, 3]))
-         self.DDWindowui.PS_Instructions.setText("Enter your wager with the keypad. Your wager must be at least $5 and no more than $" + str(maxWager) + ".")
+         self.DDWindowui.PS_Instructions.setText(f"Player{mostRecentCorrect}, enter your wager with the keypad. Your wager must be at least $5 and no more than $" + str(maxWager) + ".")
+         self.DDWindowui.AS_Instructions.setText(f"Player{mostRecentCorrect}, found the Daily Double!")
          ##TODO: change this next line on future versions bc i updated the .ui file
-         self.DDWindowui.AS_DecoLabel3.setText("The wager must be at least $5 and no more than $" + str(maxWager) + ".")
+         self.DDWindowui.AS_DecoLabel3.setText("Their wager must be at least $5 and no more than $" + str(maxWager) + ".")
 
 
 
           
-    def showClueWindow(self, category, clue, amount, dailyDouble, DDplayer=""):
+    def showClueWindow(self, category, clue, amount, dailyDouble, DDplayer=0):
          global answered
          global buzzable
          global alexSeesClue
@@ -438,6 +446,43 @@ class Ui_MainWindow(object):
          if(dailyDouble == "yes"):
                print("Daily Double clicked")
                self.showDDWindow(category = category, clue=clue, amount=amount, dailyDouble=dailyDouble, DDplayer="")
+         elif DDplayer != 0: #this means that it's a DailyDouble and has already been wagered. No fancy buzzer stuff this time
+                #All the following stuff is redundant but I'm not caring right now as long as it works
+                #show the window
+                self.ClueWindow = QtWidgets.QMainWindow()
+                self.ClueWindowui = Ui_ClueWindow()
+                self.ClueWindowui.setupUi(self.ClueWindow)
+                self.ClueWindow.setWindowFlags(Qt.FramelessWindowHint)
+                self.ClueWindow.show()
+
+                #update window with correct info
+                self.setScores("self.ClueWindowui")
+
+                #link buttons
+                self.ClueWindowui.CloseButton.clicked.connect(self.CloseWindow)
+                self.ClueWindowui.correctButton.clicked.connect(lambda: self.Correct(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
+                self.ClueWindowui.incorrectButton.clicked.connect(lambda: self.Incorrect(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
+
+                if category == 1:
+                        clueIndex = cat1Index
+                if category == 2:
+                        clueIndex = cat2Index
+                if category == 3:
+                        clueIndex = cat3Index
+                if category == 4:
+                        clueIndex = cat4Index
+                if category == 5:
+                        clueIndex = cat5Index
+                if category == 6:
+                        clueIndex = cat6Index
+
+                self.ClueWindowui.AS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
+                self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
+                self.ClueWindowui.ReponseLabel.setText(str(df.iloc[clueIndex+clue-1, 6]))
+                self.ClueWindowui.CategoryLabel.setText(str(df.iloc[clueIndex, 3]))
+                self.ClueWindowui.AmountLabel.setText("$" + str(amount))
+
+                answered[category-1][clue-1] = 1 #used to clear the button later
          else:
                 #show the window
                 self.ClueWindow = QtWidgets.QMainWindow()
@@ -480,7 +525,7 @@ class Ui_MainWindow(object):
                 answered[category-1][clue-1] = 1 #used to clear the button later
 
 #TODO: Correct and Incorrect functions can be consolidated into one function that only differs in whether the new value is added or subtracted (i think)
-    def Correct(self, category, clue, amount):
+    def Correct(self, category, clue, amount, DDplayer=0): 
           #global player1Score
           global totalCluesFinished
           global mostRecentBuzz
@@ -488,6 +533,24 @@ class Ui_MainWindow(object):
           global mostRecentCorrect
           global buzzable
           global alexSeesClue
+
+          if DDplayer != 0:
+                 #i reckon i could use mostRecentCorrect in the following exec() but either way should work
+                 exec(f'global player{DDplayer}Score; player{DDplayer}Score += amount')
+
+                 #these shouldn't have to be stated
+                 alexSeesClue = False
+                 canBuzzIn = [True, True, True, True, True]
+                 mostRecentBuzz = 0
+                 buzzable = False 
+
+                 self.setScores("self")
+                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
+                 self.ClueWindow.close()
+                 totalCluesFinished += 1
+                 self.checkEndRound1()
+                 return
+
 
           if mostRecentBuzz == 0: #if nobody answered
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
@@ -499,7 +562,7 @@ class Ui_MainWindow(object):
                  self.setScores("self")
                  totalCluesFinished += 1
                  self.checkEndRound1()
-                 return #nobody buzzed in
+                 return
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score += amount')
 
@@ -517,13 +580,30 @@ class Ui_MainWindow(object):
           self.checkEndRound1()
           
 #TODO: when Incorrect() is called it shouldn't automatically close the window bc others have a chance to guess
-    def Incorrect(self, category, clue, amount):
+    def Incorrect(self, category, clue, amount, DDplayer=0):
           #global player1Score
           global mostRecentBuzz
           global canBuzzIn
           global totalCluesFinished
           global buzzable
           global alexSeesClue
+
+          if DDplayer != 0:
+                 #i reckon i could use mostRecentCorrect in the following exec() but either way should work
+                 exec(f'global player{DDplayer}Score; player{DDplayer}Score -= amount')
+
+                 #these shouldn't have to be stated
+                 alexSeesClue = False
+                 canBuzzIn = [True, True, True, True, True]
+                 mostRecentBuzz = 0
+                 buzzable = False 
+
+                 self.setScores("self")
+                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
+                 self.ClueWindow.close()
+                 totalCluesFinished += 1
+                 self.checkEndRound1()
+                 return
           
           if mostRecentBuzz == 0: #if nobody answered
                  canBuzzIn = [True, True, True, True, True]
