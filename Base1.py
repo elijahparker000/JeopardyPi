@@ -207,7 +207,7 @@ class Ui_MainWindow(object):
                   return #don't update lastBuzzTime since it was buzzable (this is just the penalty delay)
            if  not canBuzzIn[player-1]: #if they already got it wrong, do nothing
                   return
-           buzzable = False #nobody else should be able to buzz in until next question
+           buzzable = False #nobody else should be able to buzz in until next question or miss
            mostRecentBuzz = player #so we know who to give the money to
            
                 
@@ -333,16 +333,8 @@ class Ui_MainWindow(object):
          maxWager = max(player1Score, 1000*gameRound)
 
          #update window with correct info
-         if player1Score < 0:
-                self.DDWindowui.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.DDWindowui.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.DDWindowui.PS_P1Money.setText("-$" + str(player1Score)[1:])
-                self.DDWindowui.AS_P1Money.setText("-$" + str(player1Score)[1:])
-         else:
-                self.DDWindowui.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.DDWindowui.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.DDWindowui.PS_P1Money.setText("$" + str(player1Score))
-                self.DDWindowui.AS_P1Money.setText("$" + str(player1Score))
+         self.setScores("self.DDWindowui")
+
          self.DDWindowui.CategoryLabel.setText(str(df.iloc[clueIndex, 3]))
          self.DDWindowui.PS_Instructions.setText("Enter your wager with the keypad. Your wager must be at least $5 and no more than $" + str(maxWager) + ".")
          ##TODO: change this next line on future versions bc i updated the .ui file
@@ -372,16 +364,7 @@ class Ui_MainWindow(object):
                 self.ClueWindow.show()
 
                 #update window with correct info
-                if player1Score < 0:
-                        self.ClueWindowui.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                        self.ClueWindowui.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                        self.ClueWindowui.PS_P1Money.setText("-$" + str(player1Score)[1:])
-                        self.ClueWindowui.AS_P1Money.setText("-$" + str(player1Score)[1:])
-                else:
-                        self.ClueWindowui.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                        self.ClueWindowui.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                        self.ClueWindowui.PS_P1Money.setText("$" + str(player1Score))
-                        self.ClueWindowui.AS_P1Money.setText("$" + str(player1Score))
+                self.setScores("self.ClueWindowui")
 
                 #link buttons
                 self.ClueWindowui.CloseButton.clicked.connect(self.CloseWindow)
@@ -417,6 +400,7 @@ class Ui_MainWindow(object):
           global mostRecentBuzz
           global canBuzzIn
           global mostRecentCorrect
+          global buzzable
 
           if mostRecentBuzz == 0: #if nobody answered
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
@@ -424,6 +408,7 @@ class Ui_MainWindow(object):
 
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
+                 buzzable = False #nobody else should be able to buzz in until next question
 
                  totalCluesFinished += 1
                  self.checkEndRound1()
@@ -431,64 +416,15 @@ class Ui_MainWindow(object):
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score += amount')
 
-          #self.setScores("self")
+          self.setScores("self")
           
-          if player1Score < 0:
-                self.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P1Money.setText("-$" + str(player1Score)[1:])
-                self.AS_P1Money.setText("-$" + str(player1Score)[1:])
-          else:
-                self.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P1Money.setText("$" + str(player1Score))
-                self.AS_P1Money.setText("$" + str(player1Score))
-          if player2Score < 0:
-                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P2Money.setText("-$" + str(player2Score)[1:])
-                self.AS_P2Money.setText("-$" + str(player2Score)[1:])
-          else:
-                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P2Money.setText("$" + str(player2Score))
-                self.AS_P2Money.setText("$" + str(player2Score))
-          if player3Score < 0:
-                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P3Money.setText("-$" + str(player3Score)[1:])
-                self.AS_P3Money.setText("-$" + str(player3Score)[1:])
-          else:
-                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P3Money.setText("$" + str(player3Score))
-                self.AS_P3Money.setText("$" + str(player3Score))
-          if player4Score < 0:
-                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P4Money.setText("-$" + str(player4Score)[1:])
-                self.AS_P4Money.setText("-$" + str(player4Score)[1:])
-          else:
-                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P4Money.setText("$" + str(player4Score))
-                self.AS_P4Money.setText("$" + str(player4Score))
-          if player5Score < 0:
-                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P5Money.setText("-$" + str(player5Score)[1:])
-                self.AS_P5Money.setText("-$" + str(player5Score)[1:])
-          else:
-                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P5Money.setText("$" + str(player5Score))
-                self.AS_P5Money.setText("$" + str(player5Score))
           exec(f'self.Cat{category}Clue{clue}B.setText("")')
           self.ClueWindow.close()
 
           canBuzzIn = [True, True, True, True, True]
           mostRecentCorrect = mostRecentBuzz
           mostRecentBuzz = 0
+          buzzable = False
 
           totalCluesFinished += 1
           self.checkEndRound1()
@@ -499,78 +435,28 @@ class Ui_MainWindow(object):
           global mostRecentBuzz
           global canBuzzIn
           global totalCluesFinished
+          global buzzable
           
           if mostRecentBuzz == 0: #if nobody answered
-                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
-                 self.ClueWindow.close()
-
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
-
+                 buzzable = False #nobody else should be able to buzz in until next question
+                
+                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
+                 self.ClueWindow.close()
                  totalCluesFinished += 1
                  self.checkEndRound1()
                  return #nobody buzzed in so don't continue
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score -= amount')
-
-          #self.setScores("self")
-          
-          if player1Score < 0:
-                self.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P1Money.setText("-$" + str(player1Score)[1:])
-                self.AS_P1Money.setText("-$" + str(player1Score)[1:])
-          else:
-                self.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P1Money.setText("$" + str(player1Score))
-                self.AS_P1Money.setText("$" + str(player1Score))
-          if player2Score < 0:
-                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P2Money.setText("-$" + str(player2Score)[1:])
-                self.AS_P2Money.setText("-$" + str(player2Score)[1:])
-          else:
-                self.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P2Money.setText("$" + str(player2Score))
-                self.AS_P2Money.setText("$" + str(player2Score))
-          if player3Score < 0:
-                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P3Money.setText("-$" + str(player3Score)[1:])
-                self.AS_P3Money.setText("-$" + str(player3Score)[1:])
-          else:
-                self.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P3Money.setText("$" + str(player3Score))
-                self.AS_P3Money.setText("$" + str(player3Score))
-          if player4Score < 0:
-                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P4Money.setText("-$" + str(player4Score)[1:])
-                self.AS_P4Money.setText("-$" + str(player4Score)[1:])
-          else:
-                self.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P4Money.setText("$" + str(player4Score))
-                self.AS_P4Money.setText("$" + str(player4Score))
-          if player5Score < 0:
-                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")
-                self.PS_P5Money.setText("-$" + str(player5Score)[1:])
-                self.AS_P5Money.setText("-$" + str(player5Score)[1:])
-          else:
-                self.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")
-                self.PS_P5Money.setText("$" + str(player5Score))
-                self.AS_P5Money.setText("$" + str(player5Score))
+          self.setScores("self")
           
           #exec(f'self.Cat{category}Clue{clue}B.setText("")') should be able to delete this
           canBuzzIn[mostRecentBuzz-1] = False #can't buzz in once incorrect
+          buzzable = True #others can buzz in after this person missed it
           mostRecentBuzz = 0 #so if incorrect is clicked again, the window closes
-          totalCluesFinished += 1
-          self.checkEndRound1()
+          #totalCluesFinished += 1
+          #self.checkEndRound1()
 
 
     def CloseWindow(self):
@@ -1380,7 +1266,7 @@ class Ui_MainWindow(object):
         self.Cat1Clue1B.clicked.connect(lambda: self.showClueWindow(category = 1, clue = 1, amount = 200*gameRound, dailyDouble=df.iloc[cat1Index+0, 2]))
         self.Cat1Clue2B.clicked.connect(lambda: self.showClueWindow(category = 1, clue = 2, amount = 400*gameRound, dailyDouble=df.iloc[cat1Index+1, 2]))
         self.Cat1Clue3B.clicked.connect(lambda: self.showClueWindow(category = 1, clue = 3, amount = 600*gameRound, dailyDouble=df.iloc[cat1Index+2, 2]))
-        self.Cat1Clue4B.clicked.connect(lambda: self.showClueWindow(category = 1, clue = 4, amount = 700*gameRound, dailyDouble=df.iloc[cat1Index+3, 2]))
+        self.Cat1Clue4B.clicked.connect(lambda: self.showClueWindow(category = 1, clue = 4, amount = 800*gameRound, dailyDouble=df.iloc[cat1Index+3, 2]))
         self.Cat1Clue5B.clicked.connect(lambda: self.showClueWindow(category = 1, clue = 5, amount = 1000*gameRound, dailyDouble=df.iloc[cat1Index+4, 2]))
         self.Cat2Clue1B.clicked.connect(lambda: self.showClueWindow(category = 2, clue = 1, amount = 200*gameRound, dailyDouble=df.iloc[cat2Index+0, 2]))
         self.Cat2Clue2B.clicked.connect(lambda: self.showClueWindow(category = 2, clue = 2, amount = 400*gameRound, dailyDouble=df.iloc[cat2Index+1, 2]))
@@ -1497,13 +1383,13 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     
     #TODO: I set bouncetime=0, but I'm not 100% sure that's okay
-    GPIO.add_event_detect(23, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
-    GPIO.add_event_detect(24, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
-    GPIO.add_event_detect(25, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
-    GPIO.add_event_detect(8, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
-    GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=0)
+    GPIO.add_event_detect(23, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
+    GPIO.add_event_detect(24, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
+    GPIO.add_event_detect(25, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
+    GPIO.add_event_detect(8, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
+    GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
     GPIO.add_event_detect(12, GPIO.FALLING, callback=ui.alexBuzzerPressed, bouncetime=250)
-    GPIO.add_event_detect(12, GPIO.RISING, callback=ui.alexBuzzerReleased bouncetime=250)
+    #GPIO.add_event_detect(12, GPIO.RISING, callback=ui.alexBuzzerReleased, bouncetime=250)
 
     MainWindow.setWindowFlag(Qt.FramelessWindowHint)
     MainWindow.show()
