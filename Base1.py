@@ -655,7 +655,8 @@ class Ui_MainWindow(object):
     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1824, 600)
+        #MainWindow.resize(1824, 600)
+        MainWindow.setGeometry(0,0,1824,600)#you can use this to scoot the window over to see where DD is
         MainWindow.setStyleSheet("background-color: rgb(0, 0, 0);")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
