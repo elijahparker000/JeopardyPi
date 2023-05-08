@@ -1,2 +1,2 @@
 # JeopardyPi
-Fully functional jeopardy game for Raspberry Pi 
+Fully functional Jeopardy game for Raspberry Pi 
