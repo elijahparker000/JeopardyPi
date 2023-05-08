@@ -10,8 +10,26 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+color = "black"
 
 class Ui_Form(object):
+    def buttonClicked(self):
+        global color
+
+        if color == "black":
+            color = "white"
+            self.widget_1.setStyleSheet("background-color: rgb(255, 255, 255);")
+            self.widget_2.setStyleSheet("background-color: rgb(255, 255, 255);")
+            #self.label.setHidden(True)
+            self.label.setVisible(False)
+            #self.pushButton.setVisible(False)
+        else:
+            color = "black"
+            self.widget_1.setStyleSheet("background-color: rgb(0, 0, 0);")
+            self.widget_2.setStyleSheet("background-color: rgb(0, 0, 0);")
+            #self.label.setHidden(False)
+            self.label.setVisible(True)
+
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(879, 619)
@@ -40,6 +58,8 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "Form"))
         self.pushButton.setText(_translate("Form", "PushButton"))
         self.label.setText(_translate("Form", "TextLabel"))
+
+        self.pushButton.clicked.connect(self.buttonClicked)
 
 
 if __name__ == "__main__":

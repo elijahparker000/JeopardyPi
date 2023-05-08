@@ -1,9 +1,14 @@
 import pandas as pd
+import random as rand
 
 # Load the Excel file into a pandas DataFrame
-df = pd.read_excel('JeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
+df = pd.read_excel('Questions/testAfterDrop.xlsx', sheet_name='Sheet1', header=None)
 num_rows = df.shape[0]
-print(num_rows)
+#print(num_rows)
+
+index = rand.randrange(0, num_rows)
+print(index)
+print(df.iloc[index, 1])
 
 
 #subset_df = df.iloc[0:10, 3:7]

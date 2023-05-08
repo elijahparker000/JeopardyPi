@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ClueWindow</class>
- <widget class="QMainWindow" name="ClueWindow">
+ <class>FinalJWindow</class>
+ <widget class="QMainWindow" name="FinalJWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,38 +17,6 @@
    <string notr="true">background-color: rgb(0, 0, 0);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="ReadyIndicatorR">
-    <property name="geometry">
-     <rect>
-      <x>1004</x>
-      <y>0</y>
-      <width>20</width>
-      <height>600</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="ReadyIndicatorL">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>20</width>
-      <height>600</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="PS_DecoLabel">
     <property name="geometry">
      <rect>
@@ -731,7 +699,7 @@ color: rgb(255, 255, 255);
    <widget class="QLabel" name="CategoryLabel">
     <property name="geometry">
      <rect>
-      <x>324</x>
+      <x>434</x>
       <y>0</y>
       <width>157</width>
       <height>78</height>
@@ -749,38 +717,13 @@ color: rgb(255, 255, 255);
 </string>
     </property>
     <property name="text">
-     <string>Category</string>
+     <string>Cat second</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
-   </widget>
-   <widget class="QLabel" name="AmountLabel">
-    <property name="geometry">
-     <rect>
-      <x>481</x>
-      <y>0</y>
-      <width>219</width>
-      <height>78</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Perpetua Titling MT</family>
-      <pointsize>36</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: #060CE9;
-color: #d69f4c;</string>
-    </property>
-    <property name="text">
-     <string>$10000</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="PS_ClueLabel">
@@ -794,7 +737,7 @@ color: #d69f4c;</string>
     </property>
     <property name="font">
      <font>
-      <family>Roman</family>
+      <family>Perpetua Titling MT</family>
       <pointsize>30</pointsize>
      </font>
     </property>
@@ -803,10 +746,13 @@ color: #d69f4c;</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Clue goes here</string>
+     <string>Cat first, then clue, also change font</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="AS_ClueLabel">
@@ -829,16 +775,19 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Clue goes here</string>
+     <string>The category is: </string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
-   <widget class="QPushButton" name="correctButton">
+   <widget class="QPushButton" name="showClueButton">
     <property name="geometry">
      <rect>
-      <x>1024</x>
+      <x>1224</x>
       <y>371</y>
       <width>400</width>
       <height>40</height>
@@ -855,30 +804,7 @@ color: rgb(255, 255, 255);</string>
      <string notr="true">background-color: rgb(0, 255, 0);</string>
     </property>
     <property name="text">
-     <string>Correct</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="incorrectButton">
-    <property name="geometry">
-     <rect>
-      <x>1424</x>
-      <y>371</y>
-      <width>400</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>15</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>Incorrect</string>
+     <string>Show Clue</string>
     </property>
    </widget>
    <widget class="QLabel" name="ReponseLabel">
@@ -901,7 +827,7 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Response goes here</string>
+     <string>Wait for players to make wagers.</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -910,11 +836,33 @@ color: rgb(255, 255, 255);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="startTimerButton">
+    <property name="geometry">
+     <rect>
+      <x>1224</x>
+      <y>371</y>
+      <width>400</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(0, 255, 0);</string>
+    </property>
+    <property name="text">
+     <string>Start Timer</string>
+    </property>
+   </widget>
+   <zorder>startTimerButton</zorder>
    <zorder>SettingsLabel</zorder>
    <zorder>PS_DecoLabel2</zorder>
    <zorder>AS_DecoLabel</zorder>
-   <zorder>ReadyIndicatorR</zorder>
-   <zorder>ReadyIndicatorL</zorder>
    <zorder>PS_DecoLabel</zorder>
    <zorder>PS_P1Name</zorder>
    <zorder>PS_P1Money</zorder>
@@ -940,11 +888,9 @@ color: rgb(255, 255, 255);</string>
    <zorder>AS_DecoLabel2</zorder>
    <zorder>SettingsButton</zorder>
    <zorder>CategoryLabel</zorder>
-   <zorder>AmountLabel</zorder>
    <zorder>PS_ClueLabel</zorder>
    <zorder>AS_ClueLabel</zorder>
-   <zorder>correctButton</zorder>
-   <zorder>incorrectButton</zorder>
+   <zorder>showClueButton</zorder>
    <zorder>ReponseLabel</zorder>
   </widget>
  </widget>

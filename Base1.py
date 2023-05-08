@@ -21,6 +21,7 @@ from ClueWindow1 import Ui_ClueWindow
 from DDWindow2 import Ui_DDWindow
 from PyQt5.QtCore import QProcess
 import RPi.GPIO as GPIO
+from FinalJWindow1 import Ui_FinalJWindow
 
 #TODO: this may not be used at all so if not, delete it
 file_extension = "C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/"
@@ -121,9 +122,53 @@ alexBuzzerPressedFirst = True #used to prevent alex from showing indicators befo
 
 playerScoreDD = 0
 
+finalIndex = 0
+
 
 class Ui_MainWindow(object):
     
+    def showFinalClue(self):
+           self.FinalJWindowui.CategoryLabel.setText(str(df.iloc[finalIndex, 3]))
+           font = QtGui.QFont()
+           font.setBold(True)
+           font.setFamily("Roman")
+           self.FinalJWindowui.PS_ClueLabel.setFont(font)
+           self.FinalJWindowui.PS_ClueLabel.setText(str(df.iloc[finalIndex, 5]))
+           self.FinalJWindowui.AS_ClueLabel.setText(str(df.iloc[finalIndex, 5]))
+           self.FinalJWindowui.ReponseLabel.setText(str(df.iloc[finalIndex, 6]))
+           #the button will be hidden to show the "Start Time" button
+           self.FinalJWindowui.showClueButton.setVisible(False)
+    
+    def initFinalJeopRound(self):
+         global df
+         global finalIndex
+
+        #show the window
+         self.FinalJWindow = QtWidgets.QMainWindow()
+         self.FinalJWindowui = Ui_FinalJWindow()
+         self.FinalJWindowui.setupUi(self.FinalJWindow)
+         self.FinalJWindow.setWindowFlags(Qt.FramelessWindowHint)
+         self.FinalJWindow.show()
+
+         self.FinalJWindowui.CloseButton.clicked.connect(self.CloseWindow)
+         self.FinalJWindowui.showClueButton.clicked.connect(self.showFinalClue)
+
+         df = pd.read_excel('Questions/FinalJeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
+         num_rows = df.shape[0]
+         finalIndex = random.randrange(0, num_rows)
+         
+         self.FinalJWindowui.CategoryLabel.setText("")
+         self.FinalJWindowui.PS_ClueLabel.setText(str(df.iloc[finalIndex, 3]))
+         self.FinalJWindowui.AS_ClueLabel.setText("The category is: " + str(df.iloc[finalIndex, 3]))
+
+         self.setScores("self.FinalJWindowui")
+    
+    def checkEndRound2(self):
+           if totalCluesFinished == 60:
+                 print("END OF DOUBLE JEOPARDY ROUND")
+                 self.initFinalJeopRound()
+    
+    #TODO: change all of this so that is uses setVisible() which I think will work better
     def hideAllButBuzzed(self, player):
         for i in range(1,6):
             if i != player:
@@ -241,12 +286,16 @@ class Ui_MainWindow(object):
                  if not alexBuzzerPressedFirst:
                      return #the button must be pressed before it can be released
                  #change colors of side bars to let them know they can buzz
-                 self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
-                 self.ClueWindowui.ReadyIndicatorR.setStyleSheet(("background-color: rgb(255, 255, 255)"))
-                 self.ClueWindowui.ReadyIndicatorL.setText(".")
-                 self.ClueWindowui.ReadyIndicatorR.setText(".")
-                 self.ClueWindowui.ReadyIndicatorL.setText("")
-                 self.ClueWindowui.ReadyIndicatorR.setText("")
+                 #self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
+                 #self.ClueWindowui.ReadyIndicatorR.setStyleSheet(("background-color: rgb(255, 255, 255)"))
+                 #self.ClueWindowui.ReadyIndicatorL.setText(".")
+                 #self.ClueWindowui.ReadyIndicatorR.setText(".")
+                 #self.ClueWindowui.ReadyIndicatorL.setText("")
+                 #self.ClueWindowui.ReadyIndicatorR.setText("")
+                 #show the indicator bars
+                 self.ClueWindowui.ReadyIndicatorL.setVisible(True)
+                 self.ClueWindowui.ReadyIndicatorR.setVisible(True)
+
                  #update the time in lastBuzzTime
                  buzzable = True
                  lastBuzzTime[5] = time.time()
@@ -354,11 +403,6 @@ class Ui_MainWindow(object):
            self.Cat5Clue5B.setText("$2000")
            self.Cat6Clue5B.setText("$2000")
         
-        
-
-
-
-           
     
     def checkEndRound1(self):
            if totalCluesFinished == 30:
@@ -530,11 +574,16 @@ class Ui_MainWindow(object):
                         clueIndex = cat6Index
                 clueGlobal = clue #to get the value into the global var?
 
+                #initially the indicators are hidden
+                self.ClueWindowui.ReadyIndicatorL.setVisible(False)
+                self.ClueWindowui.ReadyIndicatorR.setVisible(False)
+
                 self.ClueWindowui.AS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
                 #self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clue-1, 5]))
                 self.ClueWindowui.ReponseLabel.setText(str(df.iloc[clueIndex+clue-1, 6]))
                 self.ClueWindowui.CategoryLabel.setText(str(df.iloc[clueIndex, 3]))
                 self.ClueWindowui.AmountLabel.setText("$" + str(amount))
+                
                 
                 alexBuzzerPressedFirst = False
                 alexSeesClue = True
@@ -649,6 +698,7 @@ class Ui_MainWindow(object):
             MainWindow.close()
             self.ClueWindow.close()
             self.DDWindow.close()
+            self.FinalJWindow.close()
 
     def setCategories(self):
          self.CatLabel1.setText(str(df.iloc[cat1Index, 3])) 
