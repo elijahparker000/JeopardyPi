@@ -317,7 +317,7 @@ class Ui_FinalJWindow(object):
         self.PS_ClueLabel.setGeometry(QtCore.QRect(112, 80, 800, 431))
         font = QtGui.QFont()
         font.setFamily("Swiss 911 Compressed")
-        font.setPointSize(30)
+        font.setPointSize(45)
         self.PS_ClueLabel.setFont(font)
         self.PS_ClueLabel.setStyleSheet("background-color: #060CE9;\n"
 "color: rgb(255, 255, 255);")
@@ -329,6 +329,7 @@ class Ui_FinalJWindow(object):
         font = QtGui.QFont()
         font.setFamily("ITC Korinna Bold")
         font.setPointSize(30)
+        font.setBold(True)
         self.AS_ClueLabel.setFont(font)
         self.AS_ClueLabel.setStyleSheet("background-color: #060CE9;\n"
 "color: rgb(255, 255, 255);")
@@ -349,6 +350,7 @@ class Ui_FinalJWindow(object):
         font = QtGui.QFont()
         font.setFamily("ITC Korinna Bold")
         font.setPointSize(20)
+        font.setBold(True)
         self.ReponseLabel.setFont(font)
         self.ReponseLabel.setStyleSheet("background-color: #060CE9;\n"
 "color: rgb(255, 255, 255);")
