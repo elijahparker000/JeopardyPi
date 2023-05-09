@@ -9,18 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QFont, QFontDatabase
-from PyQt5.QtWidgets import * 
-from PyQt5.QtGui import * 
-from PyQt5.QtCore import Qt
-import sys
-import time
-import pandas as pd
-import random
-from ClueWindow1 import Ui_ClueWindow
-from DDWindow2 import Ui_DDWindow
-from PyQt5.QtCore import QProcess
 
 
 class Ui_FinalJWindow(object):
@@ -37,6 +26,11 @@ class Ui_FinalJWindow(object):
         self.PS_DecoLabel.setObjectName("PS_DecoLabel")
         self.PS_P1Name = QtWidgets.QLabel(self.centralwidget)
         self.PS_P1Name.setGeometry(QtCore.QRect(59, 545, 150, 25))
+
+        QFontDatabase.addApplicationFont("Fonts/Swiss 911 Compressed Regular.otf")
+        QFontDatabase.addApplicationFont("Fonts/JeopardyPi/Korinna-Regular.otf")
+        QFontDatabase.addApplicationFont("Fonts/Univers 75 Black Regular.otf")
+
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(True)
@@ -49,7 +43,7 @@ class Ui_FinalJWindow(object):
         self.PS_P1Money = QtWidgets.QLabel(self.centralwidget)
         self.PS_P1Money.setGeometry(QtCore.QRect(59, 570, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(14)
         font.setBold(False)
         font.setWeight(50)
@@ -105,7 +99,7 @@ class Ui_FinalJWindow(object):
         self.PS_P2Money = QtWidgets.QLabel(self.centralwidget)
         self.PS_P2Money.setGeometry(QtCore.QRect(248, 570, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(14)
         font.setBold(False)
         font.setWeight(50)
@@ -117,7 +111,7 @@ class Ui_FinalJWindow(object):
         self.PS_P3Money = QtWidgets.QLabel(self.centralwidget)
         self.PS_P3Money.setGeometry(QtCore.QRect(437, 570, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(14)
         font.setBold(False)
         font.setWeight(50)
@@ -129,7 +123,7 @@ class Ui_FinalJWindow(object):
         self.PS_P4Money = QtWidgets.QLabel(self.centralwidget)
         self.PS_P4Money.setGeometry(QtCore.QRect(626, 570, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(14)
         font.setBold(False)
         font.setWeight(50)
@@ -141,7 +135,7 @@ class Ui_FinalJWindow(object):
         self.PS_P5Money = QtWidgets.QLabel(self.centralwidget)
         self.PS_P5Money.setGeometry(QtCore.QRect(815, 570, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(14)
         font.setBold(False)
         font.setWeight(50)
@@ -222,7 +216,7 @@ class Ui_FinalJWindow(object):
         self.AS_P5Money = QtWidgets.QLabel(self.centralwidget)
         self.AS_P5Money.setGeometry(QtCore.QRect(1029, 450, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
@@ -234,7 +228,7 @@ class Ui_FinalJWindow(object):
         self.AS_P4Money = QtWidgets.QLabel(self.centralwidget)
         self.AS_P4Money.setGeometry(QtCore.QRect(1189, 450, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
@@ -246,7 +240,7 @@ class Ui_FinalJWindow(object):
         self.AS_P3Money = QtWidgets.QLabel(self.centralwidget)
         self.AS_P3Money.setGeometry(QtCore.QRect(1349, 450, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
@@ -258,7 +252,7 @@ class Ui_FinalJWindow(object):
         self.AS_P2Money = QtWidgets.QLabel(self.centralwidget)
         self.AS_P2Money.setGeometry(QtCore.QRect(1509, 450, 150, 25))
         font = QtGui.QFont()
-        font.setFamily("MV Boli")
+        font.setFamily("Univers 75 Black")
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
@@ -310,7 +304,7 @@ class Ui_FinalJWindow(object):
         self.CategoryLabel = QtWidgets.QLabel(self.centralwidget)
         self.CategoryLabel.setGeometry(QtCore.QRect(434, 0, 157, 78))
         font = QtGui.QFont()
-        font.setFamily("Perpetua Titling MT")
+        font.setFamily("Swiss 911 Compressed")
         font.setPointSize(14)
         self.CategoryLabel.setFont(font)
         self.CategoryLabel.setStyleSheet("background-color: #060CE9;\n"
@@ -322,7 +316,7 @@ class Ui_FinalJWindow(object):
         self.PS_ClueLabel = QtWidgets.QLabel(self.centralwidget)
         self.PS_ClueLabel.setGeometry(QtCore.QRect(112, 80, 800, 431))
         font = QtGui.QFont()
-        font.setFamily("Perpetua Titling MT")
+        font.setFamily("Swiss 911 Compressed")
         font.setPointSize(30)
         self.PS_ClueLabel.setFont(font)
         self.PS_ClueLabel.setStyleSheet("background-color: #060CE9;\n"
@@ -333,7 +327,7 @@ class Ui_FinalJWindow(object):
         self.AS_ClueLabel = QtWidgets.QLabel(self.centralwidget)
         self.AS_ClueLabel.setGeometry(QtCore.QRect(1024, 70, 800, 231))
         font = QtGui.QFont()
-        font.setFamily("Roman")
+        font.setFamily("ITC Korinna Bold")
         font.setPointSize(30)
         self.AS_ClueLabel.setFont(font)
         self.AS_ClueLabel.setStyleSheet("background-color: #060CE9;\n"
@@ -353,7 +347,7 @@ class Ui_FinalJWindow(object):
         self.ReponseLabel = QtWidgets.QLabel(self.centralwidget)
         self.ReponseLabel.setGeometry(QtCore.QRect(1024, 301, 800, 50))
         font = QtGui.QFont()
-        font.setFamily("Roman")
+        font.setFamily("ITC Korinna Bold")
         font.setPointSize(20)
         self.ReponseLabel.setFont(font)
         self.ReponseLabel.setStyleSheet("background-color: #060CE9;\n"
@@ -361,6 +355,16 @@ class Ui_FinalJWindow(object):
         self.ReponseLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.ReponseLabel.setWordWrap(True)
         self.ReponseLabel.setObjectName("ReponseLabel")
+        self.startTimerButton = QtWidgets.QPushButton(self.centralwidget)
+        self.startTimerButton.setGeometry(QtCore.QRect(1224, 371, 400, 40))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        font.setBold(True)
+        font.setWeight(75)
+        self.startTimerButton.setFont(font)
+        self.startTimerButton.setStyleSheet("background-color: rgb(0, 255, 0);")
+        self.startTimerButton.setObjectName("startTimerButton")
+        self.startTimerButton.raise_()
         self.SettingsLabel.raise_()
         self.PS_DecoLabel2.raise_()
         self.AS_DecoLabel.raise_()
@@ -424,9 +428,10 @@ class Ui_FinalJWindow(object):
         self.AS_P1Money.setText(_translate("FinalJWindow", "$0"))
         self.CategoryLabel.setText(_translate("FinalJWindow", "Cat second"))
         self.PS_ClueLabel.setText(_translate("FinalJWindow", "Cat first, then clue, also change font"))
-        self.AS_ClueLabel.setText(_translate("FinalJWindow", "The categorty is: "))
+        self.AS_ClueLabel.setText(_translate("FinalJWindow", "The category is: "))
         self.showClueButton.setText(_translate("FinalJWindow", "Show Clue"))
         self.ReponseLabel.setText(_translate("FinalJWindow", "Wait for players to make wagers."))
+        self.startTimerButton.setText(_translate("FinalJWindow", "Start Timer"))
 
 
 if __name__ == "__main__":
@@ -435,6 +440,5 @@ if __name__ == "__main__":
     FinalJWindow = QtWidgets.QMainWindow()
     ui = Ui_FinalJWindow()
     ui.setupUi(FinalJWindow)
-    FinalJWindow.setWindowFlags(Qt.FramelessWindowHint)
     FinalJWindow.show()
     sys.exit(app.exec_())
