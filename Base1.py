@@ -300,11 +300,9 @@ class Ui_MainWindow(object):
                  
                  #TODO: this is probably a stupid solution that won't work
                  while not self.ClueWindowui.ReadyIndicatorL.isVisible():
-                        print("trying to make visible")
-                 self.ClueWindowui.ReadyIndicatorL.setVisible(True)
+                        self.ClueWindowui.ReadyIndicatorL.setVisible(True)
                  while not self.ClueWindowui.ReadyIndicatorR.isVisible():
                         self.ClueWindowui.ReadyIndicatorR.setVisible(True)
-                 print("Should be visible")
 
                  #update the time in lastBuzzTime
                  buzzable = True
