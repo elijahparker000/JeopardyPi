@@ -739,10 +739,10 @@ color: rgb(255, 255, 255);
     </property>
     <property name="font">
      <font>
-      <family>Perpetua Titling MT</family>
-      <pointsize>45</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
+      <family>Roman</family>
+      <pointsize>30</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">

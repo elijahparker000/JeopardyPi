@@ -21,7 +21,7 @@ from ClueWindow1 import Ui_ClueWindow
 from DDWindow2 import Ui_DDWindow
 from PyQt5.QtCore import QProcess
 import RPi.GPIO as GPIO
-from FinalJWindow1 import Ui_FinalJWindow
+from FinalJWindow2 import Ui_FinalJWindow
 
 #TODO: this may not be used at all so if not, delete it
 file_extension = "C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/"
@@ -293,8 +293,12 @@ class Ui_MainWindow(object):
                  #self.ClueWindowui.ReadyIndicatorL.setText("")
                  #self.ClueWindowui.ReadyIndicatorR.setText("")
                  #show the indicator bars
-                 self.ClueWindowui.ReadyIndicatorL.setVisible(True)
-                 self.ClueWindowui.ReadyIndicatorR.setVisible(True)
+                 
+                 #TODO: this is probably a stupid solution that won't work
+                 while not self.ClueWindowui.ReadyIndicatorL.isVisible():
+                        self.ClueWindowui.ReadyIndicatorL.setVisible(True)
+                 while not self.ClueWindowui.ReadyIndicatorR.isVisible():
+                        self.ClueWindowui.ReadyIndicatorR.setVisible(True)
 
                  #update the time in lastBuzzTime
                  buzzable = True
