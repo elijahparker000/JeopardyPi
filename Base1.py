@@ -132,12 +132,14 @@ class Ui_MainWindow(object):
            font = QtGui.QFont()
            font.setBold(True)
            font.setFamily("Roman")
+           font.setPointSize(30)
            self.FinalJWindowui.PS_ClueLabel.setFont(font)
            self.FinalJWindowui.PS_ClueLabel.setText(str(df.iloc[finalIndex, 5]))
            self.FinalJWindowui.AS_ClueLabel.setText(str(df.iloc[finalIndex, 5]))
            self.FinalJWindowui.ReponseLabel.setText(str(df.iloc[finalIndex, 6]))
            #the button will be hidden to show the "Start Time" button
            self.FinalJWindowui.showClueButton.setVisible(False)
+           self.FinalJWindowui.startTimerButton.setVisible(True)
     
     def initFinalJeopRound(self):
          global df
@@ -155,7 +157,9 @@ class Ui_MainWindow(object):
 
          df = pd.read_excel('Questions/FinalJeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
          num_rows = df.shape[0]
-         finalIndex = random.randrange(0, num_rows)
+         #TODO: swap comments on following 2 lines. This is here so I don't view all the final jeopardies in dev
+         #finalIndex = random.randrange(0, num_rows)
+         finalIndex = 0
          
          self.FinalJWindowui.CategoryLabel.setText("")
          self.FinalJWindowui.PS_ClueLabel.setText(str(df.iloc[finalIndex, 3]))
@@ -296,9 +300,11 @@ class Ui_MainWindow(object):
                  
                  #TODO: this is probably a stupid solution that won't work
                  while not self.ClueWindowui.ReadyIndicatorL.isVisible():
-                        self.ClueWindowui.ReadyIndicatorL.setVisible(True)
+                        print("trying to make visible")
+                 self.ClueWindowui.ReadyIndicatorL.setVisible(True)
                  while not self.ClueWindowui.ReadyIndicatorR.isVisible():
                         self.ClueWindowui.ReadyIndicatorR.setVisible(True)
+                 print("Should be visible")
 
                  #update the time in lastBuzzTime
                  buzzable = True
@@ -506,6 +512,8 @@ class Ui_MainWindow(object):
          #if clue has already been given, do nothing
          if(answered[category-1][clue-1] == 1):
                return
+        
+         print("\n")
          
          #if this question is a Daily Double
          if(dailyDouble == "yes"):
@@ -619,6 +627,7 @@ class Ui_MainWindow(object):
                  self.ClueWindow.close()
                  totalCluesFinished += 1
                  self.checkEndRound1()
+                 self.checkEndRound2()
                  return
 
 
@@ -632,6 +641,7 @@ class Ui_MainWindow(object):
                  self.setScores("self")
                  totalCluesFinished += 1
                  self.checkEndRound1()
+                 self.checkEndRound2()
                  return
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score += amount')
@@ -648,6 +658,7 @@ class Ui_MainWindow(object):
 
           totalCluesFinished += 1
           self.checkEndRound1()
+          self.checkEndRound2()
           
 #TODO: when Incorrect() is called it shouldn't automatically close the window bc others have a chance to guess
     def Incorrect(self, category, clue, amount, DDplayer=0):
@@ -673,6 +684,7 @@ class Ui_MainWindow(object):
                  self.ClueWindow.close()
                  totalCluesFinished += 1
                  self.checkEndRound1()
+                 self.checkEndRound2()
                  return
           
           if mostRecentBuzz == 0: #if nobody answered
@@ -685,6 +697,7 @@ class Ui_MainWindow(object):
                  self.ClueWindow.close()
                  totalCluesFinished += 1
                  self.checkEndRound1()
+                 self.checkEndRound2()
                  return #nobody buzzed in so don't continue
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score -= amount')
@@ -1630,7 +1643,7 @@ if __name__ == "__main__":
     GPIO.add_event_detect(8, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
     GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
         #alex's button has bouncetime bc it's both rising and falling edge that matters
-    GPIO.add_event_detect(12, GPIO.BOTH, callback=ui.alexBuzzerPressedOrReleased, bouncetime=300)
+    GPIO.add_event_detect(12, GPIO.BOTH, callback=ui.alexBuzzerPressedOrReleased, bouncetime=50)
 
     MainWindow.setWindowFlag(Qt.FramelessWindowHint)
     MainWindow.show()
