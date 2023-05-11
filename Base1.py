@@ -281,13 +281,18 @@ class Ui_MainWindow(object):
            global alexSeesClue
            global buzzable
            global alexBuzzerPressedFirst
+           print("in buzzer function")
+           print(channel)
 
            if not alexSeesClue:
+                        print("about to return bc alex hasn't seen clue")
                         return #do nothing
            
            if GPIO.input(channel):
+                 print("in released function")
                  #Button released (rising edge)
                  if not alexBuzzerPressedFirst:
+                     print("about to return bc alex buzzer hasnt yet been pressed")
                      return #the button must be pressed before it can be released
                  #change colors of side bars to let them know they can buzz
                  #self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
@@ -303,16 +308,24 @@ class Ui_MainWindow(object):
                         self.ClueWindowui.ReadyIndicatorL.setVisible(True)
                  while not self.ClueWindowui.ReadyIndicatorR.isVisible():
                         self.ClueWindowui.ReadyIndicatorR.setVisible(True)
+                 self.ClueWindowui.ReadyIndicatorL.update()
+                 self.ClueWindowui.ReadyIndicatorR.update()
+                 QApplication.processEvents()
+                 print("indicated")
+                 
 
                  #update the time in lastBuzzTime
                  buzzable = True
                  lastBuzzTime[5] = time.time()
                  alexSeesClue = False #not sure if this should be here
                  alexBuzzerPressedFirst = False
+                 print("finished release function")
            else:
                  # Button pressed (falling edge)
+                 print("in pressed function")
                  alexBuzzerPressedFirst = True
                  self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
+                 print("finished pressed function")
                  
 
     
