@@ -22,6 +22,9 @@ from DDWindow2 import Ui_DDWindow
 from PyQt5.QtCore import QProcess
 import RPi.GPIO as GPIO
 from FinalJWindow2 import Ui_FinalJWindow
+import pygame
+
+pygame.init()
 
 #TODO: this may not be used at all so if not, delete it
 file_extension = "C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/"
@@ -461,6 +464,9 @@ class Ui_MainWindow(object):
           
 
     def showDDWindow(self, category, clue, amount, dailyDouble, DDplayer=""):
+         pygame.mixer.music.load("Sounds/DailyDoubleSound.mp3")
+         pygame.mixer.music.play()
+        
          #show the window
          self.DDWindow = QtWidgets.QMainWindow()
          self.DDWindowui = Ui_DDWindow()
