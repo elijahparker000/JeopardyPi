@@ -23,6 +23,10 @@ from PyQt5.QtCore import QProcess
 import RPi.GPIO as GPIO
 from FinalJWindow2 import Ui_FinalJWindow
 import pygame
+from CloseWindow1 import Ui_CloseWindow
+from FinalJWagersWindow1 import Ui_FinalJWagersWindow
+import subprocess
+from PyQt5.QtCore import QTimer
 
 pygame.init()
 
@@ -126,10 +130,115 @@ alexBuzzerPressedFirst = True #used to prevent alex from showing indicators befo
 playerScoreDD = 0
 
 finalIndex = 0
+wagerAmount = ""
+scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
+index = 0
 
 
 class Ui_MainWindow(object):
-    
+
+        #TODO: a lot of this final Jeopardy stuff is probably really poorly written, but it worked on my laptop
+    def correctOrIncorrect(self, correct):
+         global player1Score
+         global player2Score
+         global player3Score
+         global player4Score
+         global player5Score
+         global index
+         global wagerAmount
+         global scoresArray
+         
+         if correct:
+                if scoresArray[index][1] == "Player1":
+                        player1Score = player1Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player2":
+                        player2Score = player2Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player3":
+                        player3Score = player3Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player4":
+                        player4Score = player4Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player5":
+                        player5Score = player5Score + int(wagerAmount)
+         else:
+                if scoresArray[index][1] == "Player1":
+                        player1Score = player1Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player2":
+                        player2Score = player2Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player3":
+                        player3Score = player3Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player4":
+                        player4Score = player4Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player5":
+                        player5Score = player5Score - int(wagerAmount)
+                
+         self.setScores("self.FinalJWagersWindowui")
+
+         index = index + 1
+         wagerAmount = ""
+
+         if index == len(scoresArray):
+                self.FinalJWagersWindowui.correctButton.setVisible(False)
+                self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+                scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
+                scoresArray = sorted(scoresArray, key=lambda x: x[0])
+                self.FinalJWagersWindowui.ReponseLabel.setText(scoresArray[4][1] + " is the winner!")
+                self.FinalJWagersWindowui.PS_ClueLabel.setText(scoresArray[4][1] + " is the winner!")
+         else:
+                self.FinalJWagersWindowui.button0.setVisible(True)
+                self.FinalJWagersWindowui.button1.setVisible(True)
+                self.FinalJWagersWindowui.button2.setVisible(True)
+                self.FinalJWagersWindowui.button3.setVisible(True)
+                self.FinalJWagersWindowui.button4.setVisible(True)
+                self.FinalJWagersWindowui.button5.setVisible(True)
+                self.FinalJWagersWindowui.button6.setVisible(True)
+                self.FinalJWagersWindowui.button7.setVisible(True)
+                self.FinalJWagersWindowui.button8.setVisible(True)
+                self.FinalJWagersWindowui.button9.setVisible(True)
+                self.FinalJWagersWindowui.buttonDEL.setVisible(True)
+                self.FinalJWagersWindowui.buttonENTER.setVisible(True)
+                self.FinalJWagersWindowui.correctButton.setVisible(False)
+                self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+                self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
+
+
+    #this function handles all the button presses within the DailyDouble window. It's probably poorly written but it works
+    def wagersButton(self, button):
+          global wagerAmount
+          global index
+
+          maxWager = scoresArray[index][0]
+
+          if button == "DEL" and wagerAmount != "":
+                 wagerAmount = wagerAmount[:-1]
+          elif button == "DEL" and wagerAmount == "":
+                 pass
+          elif button == "ENTER" and wagerAmount != "":
+                 if int(wagerAmount) <= maxWager and int(wagerAmount) >= 5:
+                        self.FinalJWagersWindowui.button0.setVisible(False)
+                        self.FinalJWagersWindowui.button1.setVisible(False)
+                        self.FinalJWagersWindowui.button2.setVisible(False)
+                        self.FinalJWagersWindowui.button3.setVisible(False)
+                        self.FinalJWagersWindowui.button4.setVisible(False)
+                        self.FinalJWagersWindowui.button5.setVisible(False)
+                        self.FinalJWagersWindowui.button6.setVisible(False)
+                        self.FinalJWagersWindowui.button7.setVisible(False)
+                        self.FinalJWagersWindowui.button8.setVisible(False)
+                        self.FinalJWagersWindowui.button9.setVisible(False)
+                        self.FinalJWagersWindowui.buttonDEL.setVisible(False)
+                        self.FinalJWagersWindowui.buttonENTER.setVisible(False)
+                        self.FinalJWagersWindowui.correctButton.setVisible(True)
+                        self.FinalJWagersWindowui.incorrectButton.setVisible(True)
+                 else:
+                        pass
+          elif button == "0" and wagerAmount == "0":
+                 pass
+          elif button == "ENTER" and wagerAmount == "":
+                 pass
+          else: 
+                if int(wagerAmount + button) <= maxWager:
+                         wagerAmount = wagerAmount + button
+          self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
+
     def showFinalClue(self):
            self.FinalJWindowui.CategoryLabel.setText(str(df.iloc[finalIndex, 3]))
            font = QtGui.QFont()
@@ -142,8 +251,64 @@ class Ui_MainWindow(object):
            self.FinalJWindowui.ReponseLabel.setText(str(df.iloc[finalIndex, 6]))
            #the button will be hidden to show the "Start Time" button
            self.FinalJWindowui.showClueButton.setVisible(False)
-           self.FinalJWindowui.startTimerButton.setVisible(True)
-    
+           self.FinalJWindowui.startMusicButton.setVisible(True)
+
+    def startMusicClicked(self):
+        self.startMusicButton.setVisible(False)
+
+        pygame.mixer.music.load("Sounds/FinalJeopardy_Think.mp3")
+        pygame.mixer.music.play()
+        
+        self.timer = QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.timeFinished)
+        self.timer.start(30000) # 30,000 milliseconds = 30 seconds
+        
+
+    def timeFinished(self):
+        global player1Score
+        global player2Score
+        global player3Score
+        global player4Score
+        global player5Score
+        global scoresArray
+        global nextWager
+
+        self.FinalJWagersWindow = QtWidgets.QMainWindow()
+        self.FinalJWagersWindowui = Ui_FinalJWagersWindow()
+        self.FinalJWagersWindowui.setupUi(self.FinalJWagersWindow)
+        self.FinalJWagersWindow.setWindowFlags(Qt.FramelessWindowHint)
+        self.FinalJWagersWindow.show()
+
+        self.setScores("self.FinalJWagersWindowui")
+
+        self.FinalJWagersWindowui.CloseButton.clicked.connect(self.closedButtonClicked)
+        self.FinalJWagersWindowui.button0.clicked.connect(lambda: self.wagersButton(button="0"))
+        self.FinalJWagersWindowui.button1.clicked.connect(lambda: self.wagersButton(button="1"))
+        self.FinalJWagersWindowui.button2.clicked.connect(lambda: self.wagersButton(button="2"))
+        self.FinalJWagersWindowui.button3.clicked.connect(lambda: self.wagersButton(button="3"))
+        self.FinalJWagersWindowui.button4.clicked.connect(lambda: self.wagersButton(button="4"))
+        self.FinalJWagersWindowui.button5.clicked.connect(lambda: self.wagersButton(button="5"))
+        self.FinalJWagersWindowui.button6.clicked.connect(lambda: self.wagersButton(button="6"))
+        self.FinalJWagersWindowui.button7.clicked.connect(lambda: self.wagersButton(button="7"))
+        self.FinalJWagersWindowui.button8.clicked.connect(lambda: self.wagersButton(button="8"))
+        self.FinalJWagersWindowui.button9.clicked.connect(lambda: self.wagersButton(button="9"))
+        self.FinalJWagersWindowui.buttonDEL.clicked.connect(lambda: self.wagersButton(button="DEL"))
+        self.FinalJWagersWindowui.buttonENTER.clicked.connect(lambda: self.wagersButton(button="ENTER"))
+        self.FinalJWagersWindowui.correctButton.clicked.connect(lambda: self.correctOrIncorrect(correct=True))
+        self.FinalJWagersWindowui.incorrectButton.clicked.connect(lambda: self.correctOrIncorrect(correct=False))
+        self.FinalJWagersWindowui.correctButton.setVisible(False)
+        self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+
+        scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
+        #sort elements
+        scoresArray = sorted(scoresArray, key=lambda x: x[0])
+        # Remove elements with integer <= 0
+        scoresArray = [item for item in scoresArray if item[0] > 0]
+        print(scoresArray)    
+
+        self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[0][1] + "'s wager: $" + wagerAmount)
+
     def initFinalJeopRound(self):
          global df
          global finalIndex
@@ -155,7 +320,7 @@ class Ui_MainWindow(object):
          self.FinalJWindow.setWindowFlags(Qt.FramelessWindowHint)
          self.FinalJWindow.show()
 
-         self.FinalJWindowui.CloseButton.clicked.connect(self.CloseWindow)
+         self.FinalJWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
          self.FinalJWindowui.showClueButton.clicked.connect(self.showFinalClue)
 
          df = pd.read_excel('Questions/FinalJeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
@@ -464,7 +629,7 @@ class Ui_MainWindow(object):
           
 
     def showDDWindow(self, category, clue, amount, dailyDouble, DDplayer=""):
-         pygame.mixer.music.load("Sounds/DailyDoubleSound.mp3")
+         pygame.mixer.music.load("Sounds/DailyDouble.mp3")
          pygame.mixer.music.play()
         
          #show the window
@@ -475,7 +640,7 @@ class Ui_MainWindow(object):
          self.DDWindow.show()
 
           #link buttons
-         self.DDWindowui.CloseButton.clicked.connect(self.CloseWindow)
+         self.DDWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
          self.DDWindowui.button0.clicked.connect(lambda: self.DDbutton(button="0"))
          self.DDWindowui.button1.clicked.connect(lambda: self.DDbutton(button="1"))
          self.DDWindowui.button2.clicked.connect(lambda: self.DDbutton(button="2"))
@@ -549,7 +714,7 @@ class Ui_MainWindow(object):
                 self.setScores("self.ClueWindowui")
 
                 #link buttons
-                self.ClueWindowui.CloseButton.clicked.connect(self.CloseWindow)
+                self.ClueWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
                 self.ClueWindowui.correctButton.clicked.connect(lambda: self.Correct(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
                 self.ClueWindowui.incorrectButton.clicked.connect(lambda: self.Incorrect(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
 
@@ -585,7 +750,7 @@ class Ui_MainWindow(object):
                 self.setScores("self.ClueWindowui")
 
                 #link buttons
-                self.ClueWindowui.CloseButton.clicked.connect(self.CloseWindow)
+                self.ClueWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
                 self.ClueWindowui.correctButton.clicked.connect(lambda: self.Correct(category = category, clue = clue, amount = amount))
                 self.ClueWindowui.incorrectButton.clicked.connect(lambda: self.Incorrect(category = category, clue = clue, amount = amount))
 
@@ -728,11 +893,31 @@ class Ui_MainWindow(object):
           #self.checkEndRound1()
 
 
-    def CloseWindow(self):
+    def closeButtonPressed(self):
+            #show the window
+            self.CloseWindow = QtWidgets.QMainWindow()
+            self.CloseWindowui = Ui_CloseWindow()
+            self.CloseWindowui.setupUi(self.CloseWindow)
+            self.CloseWindow.setWindowFlags(Qt.FramelessWindowHint)
+            self.CloseWindow.show()
+        
+            self.CloseWindowui.closeJButton.clicked.connect(self.closeScreens)
+            self.CloseWindowui.shutdownButton.clicked.connect(self.shutdownPi)
+            self.CloseWindowui.cancelButton.clicked.connect(self.cancelClose)
+
+    def closeScreens(self):
             MainWindow.close()
             self.ClueWindow.close()
             self.DDWindow.close()
             self.FinalJWindow.close()
+            self.FinalJWagersWindow.close()
+            self.CloseWindow.close()
+
+    def shutdownPi(self):
+           subprocess.call("sudo shutdown -h now", shell=True)
+
+    def cancelClose(self):
+           self.CloseWindow.close()
 
     def setCategories(self):
          self.CatLabel1.setText(str(df.iloc[cat1Index, 3])) 
@@ -1529,7 +1714,7 @@ class Ui_MainWindow(object):
 ###########################################################################################################
 ##################################### Button Connects #####################################
 ###########################################################################################################
-        self.CloseButton.clicked.connect(self.CloseWindow)
+        self.CloseButton.clicked.connect(self.closeButtonPressed)
 
         # lambda is used to send the category and clue as parameters so that they can all
         # call the same function, but we can differentiate between them to display the 

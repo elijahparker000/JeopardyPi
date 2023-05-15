@@ -105,9 +105,8 @@ class Ui_FinalJWindow(object):
                 exec(f'{ui}.PS_P5Money.setText("$" + str(player5Score))')
                 exec(f'{ui}.AS_P5Money.setText("$" + str(player5Score))')
 
-
-    #TODO: this is written really poorly
-    def finalIncorrect(self):
+        #TODO: this is written really poorly
+    def correctOrIncorrect(self, correct):
          global player1Score
          global player2Score
          global player3Score
@@ -115,82 +114,60 @@ class Ui_FinalJWindow(object):
          global player5Score
          global index
          global wagerAmount
-
-         if scoresArray[index][1] == "Player1":
-                player1Score = player1Score - int(wagerAmount)
-         if scoresArray[index][1] == "Player2":
-                player2Score = player2Score - int(wagerAmount)
-         if scoresArray[index][1] == "Player3":
-                player3Score = player3Score - int(wagerAmount)
-         if scoresArray[index][1] == "Player4":
-                player4Score = player4Score - int(wagerAmount)
-         if scoresArray[index][1] == "Player5":
-                player5Score = player5Score - int(wagerAmount)
+         global scoresArray
          
-         self.FinalJWagersWindowui.button0.setVisible(True)
-         self.FinalJWagersWindowui.button1.setVisible(True)
-         self.FinalJWagersWindowui.button2.setVisible(True)
-         self.FinalJWagersWindowui.button3.setVisible(True)
-         self.FinalJWagersWindowui.button4.setVisible(True)
-         self.FinalJWagersWindowui.button5.setVisible(True)
-         self.FinalJWagersWindowui.button6.setVisible(True)
-         self.FinalJWagersWindowui.button7.setVisible(True)
-         self.FinalJWagersWindowui.button8.setVisible(True)
-         self.FinalJWagersWindowui.button9.setVisible(True)
-         self.FinalJWagersWindowui.buttonDEL.setVisible(True)
-         self.FinalJWagersWindowui.buttonENTER.setVisible(True)
-         self.FinalJWagersWindowui.correctButton.setVisible(False)
-         self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+         if correct:
+                if scoresArray[index][1] == "Player1":
+                        player1Score = player1Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player2":
+                        player2Score = player2Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player3":
+                        player3Score = player3Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player4":
+                        player4Score = player4Score + int(wagerAmount)
+                if scoresArray[index][1] == "Player5":
+                        player5Score = player5Score + int(wagerAmount)
+         else:
+                if scoresArray[index][1] == "Player1":
+                        player1Score = player1Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player2":
+                        player2Score = player2Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player3":
+                        player3Score = player3Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player4":
+                        player4Score = player4Score - int(wagerAmount)
+                if scoresArray[index][1] == "Player5":
+                        player5Score = player5Score - int(wagerAmount)
+                
+         self.setScores("self.FinalJWagersWindowui")
 
          index = index + 1
          wagerAmount = ""
 
-         self.setScores("self.FinalJWagersWindowui")
-         self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
+         if index == len(scoresArray):
+                self.FinalJWagersWindowui.correctButton.setVisible(False)
+                self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+                scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
+                scoresArray = sorted(scoresArray, key=lambda x: x[0])
+                self.FinalJWagersWindowui.ReponseLabel.setText(scoresArray[4][1] + " is the winner!")
+                self.FinalJWagersWindowui.PS_ClueLabel.setText(scoresArray[4][1] + " is the winner!")
+         else:
+                self.FinalJWagersWindowui.button0.setVisible(True)
+                self.FinalJWagersWindowui.button1.setVisible(True)
+                self.FinalJWagersWindowui.button2.setVisible(True)
+                self.FinalJWagersWindowui.button3.setVisible(True)
+                self.FinalJWagersWindowui.button4.setVisible(True)
+                self.FinalJWagersWindowui.button5.setVisible(True)
+                self.FinalJWagersWindowui.button6.setVisible(True)
+                self.FinalJWagersWindowui.button7.setVisible(True)
+                self.FinalJWagersWindowui.button8.setVisible(True)
+                self.FinalJWagersWindowui.button9.setVisible(True)
+                self.FinalJWagersWindowui.buttonDEL.setVisible(True)
+                self.FinalJWagersWindowui.buttonENTER.setVisible(True)
+                self.FinalJWagersWindowui.correctButton.setVisible(False)
+                self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+                self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
 
-
-    def finalCorrect(self):
-         global player1Score
-         global player2Score
-         global player3Score
-         global player4Score
-         global player5Score
-         global index
-         global wagerAmount
-
-         print("Before score update: " + wagerAmount)
-         if scoresArray[index][1] == "Player1":
-                player1Score = player1Score + int(wagerAmount)
-         if scoresArray[index][1] == "Player2":
-                player2Score = player2Score + int(wagerAmount)
-         if scoresArray[index][1] == "Player3":
-                player3Score = player3Score + int(wagerAmount)
-         if scoresArray[index][1] == "Player4":
-                player4Score = player4Score + int(wagerAmount)
-         if scoresArray[index][1] == "Player5":
-                player5Score = player5Score + int(wagerAmount)
-
-         self.FinalJWagersWindowui.button0.setVisible(True)
-         self.FinalJWagersWindowui.button1.setVisible(True)
-         self.FinalJWagersWindowui.button2.setVisible(True)
-         self.FinalJWagersWindowui.button3.setVisible(True)
-         self.FinalJWagersWindowui.button4.setVisible(True)
-         self.FinalJWagersWindowui.button5.setVisible(True)
-         self.FinalJWagersWindowui.button6.setVisible(True)
-         self.FinalJWagersWindowui.button7.setVisible(True)
-         self.FinalJWagersWindowui.button8.setVisible(True)
-         self.FinalJWagersWindowui.button9.setVisible(True)
-         self.FinalJWagersWindowui.buttonDEL.setVisible(True)
-         self.FinalJWagersWindowui.buttonENTER.setVisible(True)
-         self.FinalJWagersWindowui.correctButton.setVisible(False)
-         self.FinalJWagersWindowui.incorrectButton.setVisible(False)
-
-         index = index + 1
-         wagerAmount = ""
-         print("wager amount set blank")
-
-         self.setScores("self.FinalJWagersWindowui")
-         self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
 
     #this function handles all the button presses within the DailyDouble window. It's probably poorly written but it works
     def wagersButton(self, button):
@@ -219,8 +196,6 @@ class Ui_FinalJWindow(object):
                         self.FinalJWagersWindowui.buttonENTER.setVisible(False)
                         self.FinalJWagersWindowui.correctButton.setVisible(True)
                         self.FinalJWagersWindowui.incorrectButton.setVisible(True)
-                        self.FinalJWagersWindowui.correctButton.clicked.connect(self.finalCorrect)
-                        self.FinalJWagersWindowui.incorrectButton.clicked.connect(self.finalIncorrect)
                  else:
                         pass
           elif button == "0" and wagerAmount == "0":
@@ -230,15 +205,14 @@ class Ui_FinalJWindow(object):
           else: 
                 if int(wagerAmount + button) <= maxWager:
                          wagerAmount = wagerAmount + button
-          print(wagerAmount)
           self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
 
 
     def showClueClicked(self):
         self.showClueButton.setVisible(False)
 
-    def startTimerClicked(self):
-        self.startTimerButton.setVisible(False)
+    def startMusicClicked(self):
+        self.startMusicButton.setVisible(False)
         self.timer = QTimer()
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self.timeFinished)
@@ -274,6 +248,8 @@ class Ui_FinalJWindow(object):
         self.FinalJWagersWindowui.button9.clicked.connect(lambda: self.wagersButton(button="9"))
         self.FinalJWagersWindowui.buttonDEL.clicked.connect(lambda: self.wagersButton(button="DEL"))
         self.FinalJWagersWindowui.buttonENTER.clicked.connect(lambda: self.wagersButton(button="ENTER"))
+        self.FinalJWagersWindowui.correctButton.clicked.connect(lambda: self.correctOrIncorrect(correct=True))
+        self.FinalJWagersWindowui.incorrectButton.clicked.connect(lambda: self.correctOrIncorrect(correct=False))
         self.FinalJWagersWindowui.correctButton.setVisible(False)
         self.FinalJWagersWindowui.incorrectButton.setVisible(False)
 
@@ -641,17 +617,17 @@ class Ui_FinalJWindow(object):
         self.ReponseLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.ReponseLabel.setWordWrap(True)
         self.ReponseLabel.setObjectName("ReponseLabel")
-        self.startTimerButton = QtWidgets.QPushButton(self.centralwidget)
-        self.startTimerButton.setGeometry(QtCore.QRect(1224, 371, 400, 40))
+        self.startMusicButton = QtWidgets.QPushButton(self.centralwidget)
+        self.startMusicButton.setGeometry(QtCore.QRect(1224, 371, 400, 40))
         font = QtGui.QFont()
         font.setPointSize(15)
         font.setBold(True)
         font.setWeight(75)
-        self.startTimerButton.setFont(font)
-        self.startTimerButton.setStyleSheet("background-color: rgb(0, 255, 0);")
-        self.startTimerButton.setObjectName("startTimerButton")
+        self.startMusicButton.setFont(font)
+        self.startMusicButton.setStyleSheet("background-color: rgb(0, 255, 0);")
+        self.startMusicButton.setObjectName("startMusicButton")
         self.AS_DecoLabel2.raise_()
-        self.startTimerButton.raise_()
+        self.startMusicButton.raise_()
         self.SettingsLabel.raise_()
         self.PS_DecoLabel2.raise_()
         self.AS_DecoLabel.raise_()
@@ -689,7 +665,7 @@ class Ui_FinalJWindow(object):
         QtCore.QMetaObject.connectSlotsByName(FinalJWindow)
         
         self.showClueButton.clicked.connect(self.showClueClicked)
-        self.startTimerButton.clicked.connect(self.startTimerClicked)
+        self.startMusicButton.clicked.connect(self.startMusicClicked)
         self.CloseButton.clicked.connect(self.closedButtonClicked)
 
     def retranslateUi(self, FinalJWindow):
@@ -721,7 +697,7 @@ class Ui_FinalJWindow(object):
         self.AS_ClueLabel.setText(_translate("FinalJWindow", "The category is: "))
         self.showClueButton.setText(_translate("FinalJWindow", "Show Clue"))
         self.ReponseLabel.setText(_translate("FinalJWindow", "Wait for players to make wagers."))
-        self.startTimerButton.setText(_translate("FinalJWindow", "Start Timer"))
+        self.startMusicButton.setText(_translate("FinalJWindow", "Start Music"))
 
 
 if __name__ == "__main__":

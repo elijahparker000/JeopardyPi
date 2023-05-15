@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FinalJWindow</class>
- <widget class="QMainWindow" name="FinalJWindow">
+ <class>CloseWindow</class>
+ <widget class="QMainWindow" name="CloseWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -308,29 +308,6 @@ color: rgb(255, 255, 255);</string>
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QPushButton" name="CloseButton">
-    <property name="geometry">
-     <rect>
-      <x>1764</x>
-      <y>10</y>
-      <width>50</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>28</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(255, 0, 0);</string>
-    </property>
-    <property name="text">
-     <string>X</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="AS_P5Name">
     <property name="geometry">
      <rect>
@@ -605,9 +582,10 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="font">
      <font>
+      <family>MV Boli</family>
       <pointsize>10</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
+      <weight>50</weight>
+      <bold>false</bold>
      </font>
     </property>
     <property name="styleSheet">
@@ -625,9 +603,9 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>1024</x>
-      <y>70</y>
+      <y>290</y>
       <width>801</width>
-      <height>341</height>
+      <height>121</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -657,77 +635,6 @@ color: rgb(255, 255, 255);
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="SettingsButton">
-    <property name="geometry">
-     <rect>
-      <x>1034</x>
-      <y>10</y>
-      <width>50</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>28</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton { background-color: transparent; border: 0px }</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="SettingsLabel">
-    <property name="geometry">
-     <rect>
-      <x>1034</x>
-      <y>10</y>
-      <width>50</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="pixmap">
-     <pixmap>settingsGear.jpg</pixmap>
-    </property>
-   </widget>
-   <widget class="QLabel" name="CategoryLabel">
-    <property name="geometry">
-     <rect>
-      <x>434</x>
-      <y>0</y>
-      <width>157</width>
-      <height>78</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Perpetua Titling MT</family>
-      <pointsize>14</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: #060CE9;
-color: rgb(255, 255, 255);
-</string>
-    </property>
-    <property name="text">
-     <string>Cat second</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLabel" name="PS_ClueLabel">
     <property name="geometry">
      <rect>
@@ -739,78 +646,24 @@ color: rgb(255, 255, 255);
     </property>
     <property name="font">
      <font>
-      <family>Perpetua Titling MT</family>
-      <pointsize>45</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: #060CE9;
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>Cat first, then clue, also change font</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="AS_ClueLabel">
-    <property name="geometry">
-     <rect>
-      <x>1024</x>
-      <y>70</y>
-      <width>800</width>
-      <height>231</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Perpetua Titling MT</family>
+      <family>Roman</family>
       <pointsize>30</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: #060CE9;
-color: rgb(255, 255, 255);</string>
-    </property>
-    <property name="text">
-     <string>The category is: </string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="showClueButton">
-    <property name="geometry">
-     <rect>
-      <x>1224</x>
-      <y>371</y>
-      <width>400</width>
-      <height>40</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>15</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(0, 255, 0);</string>
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Show Clue</string>
+     <string>Waiting on input from Alex</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="ReponseLabel">
@@ -819,13 +672,13 @@ color: rgb(255, 255, 255);</string>
       <x>1024</x>
       <y>301</y>
       <width>800</width>
-      <height>50</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Roman</family>
-      <pointsize>20</pointsize>
+      <pointsize>15</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
@@ -835,7 +688,7 @@ color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Wait for players to make wagers.</string>
+     <string>Would you like to close the game or shutdown? Note: a mouse is required to navigate after closing the game. Press cancel to return to the game. </string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -844,13 +697,13 @@ color: rgb(255, 255, 255);</string>
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="startMusicButton">
+   <widget class="QPushButton" name="closeJButton">
     <property name="geometry">
      <rect>
-      <x>1224</x>
-      <y>371</y>
-      <width>400</width>
-      <height>40</height>
+      <x>1034</x>
+      <y>10</y>
+      <width>380</width>
+      <height>131</height>
      </rect>
     </property>
     <property name="font">
@@ -861,16 +714,61 @@ color: rgb(255, 255, 255);</string>
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(0, 255, 0);</string>
+     <string notr="true">QPushButton { background-color: #060CE9; border: 0px; color: #FFFFFF;}</string>
     </property>
     <property name="text">
-     <string>Start Music</string>
+     <string>Close Jeopardy</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="shutdownButton">
+    <property name="geometry">
+     <rect>
+      <x>1434</x>
+      <y>10</y>
+      <width>380</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton { background-color: #060CE9; border: 0px; color: #FFFFFF;}</string>
+    </property>
+    <property name="text">
+     <string>Shutdown</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="cancelButton">
+    <property name="geometry">
+     <rect>
+      <x>1034</x>
+      <y>160</y>
+      <width>780</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton { background-color: #060CE9; border: 0px; color: #FFFFFF;}</string>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
+   </widget>
+   <zorder>shutdownButton</zorder>
    <zorder>AS_DecoLabel2</zorder>
-   <zorder>startMusicButton</zorder>
-   <zorder>showClueButton</zorder>
-   <zorder>SettingsLabel</zorder>
+   <zorder>closeJButton</zorder>
    <zorder>PS_DecoLabel2</zorder>
    <zorder>AS_DecoLabel</zorder>
    <zorder>PS_DecoLabel</zorder>
@@ -884,7 +782,6 @@ color: rgb(255, 255, 255);</string>
    <zorder>PS_P3Money</zorder>
    <zorder>PS_P4Money</zorder>
    <zorder>PS_P5Money</zorder>
-   <zorder>CloseButton</zorder>
    <zorder>AS_P5Name</zorder>
    <zorder>AS_P4Name</zorder>
    <zorder>AS_P3Name</zorder>
@@ -895,11 +792,9 @@ color: rgb(255, 255, 255);</string>
    <zorder>AS_P3Money</zorder>
    <zorder>AS_P2Money</zorder>
    <zorder>AS_P1Money</zorder>
-   <zorder>SettingsButton</zorder>
-   <zorder>CategoryLabel</zorder>
    <zorder>PS_ClueLabel</zorder>
-   <zorder>AS_ClueLabel</zorder>
    <zorder>ReponseLabel</zorder>
+   <zorder>cancelButton</zorder>
   </widget>
  </widget>
  <resources/>
