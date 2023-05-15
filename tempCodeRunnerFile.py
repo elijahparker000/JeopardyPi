@@ -1,1 +1,1 @@
-setSco
+correctButton

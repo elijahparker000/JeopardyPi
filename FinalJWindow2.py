@@ -10,9 +10,287 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QFont, QFontDatabase
+from FinalJWagersWindow1 import Ui_FinalJWagersWindow
+from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import * 
+from PyQt5.QtGui import * 
+from PyQt5.QtCore import Qt
+
+player1Score = 0
+player2Score = 13876
+player3Score = 3800
+player4Score = 20000
+player5Score = 542
+
+wagerAmount = ""
+scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
+index = 0
 
 
 class Ui_FinalJWindow(object):
+    #TODO: I'm probably not supposed to use exec() this much but i really love it and idk how else to do this. 
+    #I am bad at programming, but it's working so far
+    #this is to update player scores on a given screen so you don't have these huge blocks everytime you want to show a new screen
+    def setScores(self, ui):
+        #TODO: could be done with for loop (at leat the first part)
+          exec(f'{ui}.AS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.PS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          exec(f'{ui}.AS_P1Name.setText("Player1")')
+          exec(f'{ui}.AS_P2Name.setText("Player2")')
+          exec(f'{ui}.AS_P3Name.setText("Player3")')
+          exec(f'{ui}.AS_P4Name.setText("Player4")')
+          exec(f'{ui}.AS_P5Name.setText("Player5")')
+          exec(f'{ui}.PS_P1Name.setText("Player1")')
+          exec(f'{ui}.PS_P2Name.setText("Player2")')
+          exec(f'{ui}.PS_P3Name.setText("Player3")')
+          exec(f'{ui}.PS_P4Name.setText("Player4")')
+          exec(f'{ui}.PS_P5Name.setText("Player5")')
+          if player1Score < 0:
+                exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P1Money.setText("-$" + str(player1Score)[1:])')
+                exec(f'{ui}.AS_P1Money.setText("-$" + str(player1Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P1Money.setText("$" + str(player1Score))')
+                exec(f'{ui}.AS_P1Money.setText("$" + str(player1Score))')
+          if player2Score < 0:
+                exec(f'{ui}.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P2Money.setText("-$" + str(player2Score)[1:])')
+                exec(f'{ui}.AS_P2Money.setText("-$" + str(player2Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P2Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P2Money.setText("$" + str(player2Score))')
+                exec(f'{ui}.AS_P2Money.setText("$" + str(player2Score))')
+          if player3Score < 0:
+                exec(f'{ui}.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P3Money.setText("-$" + str(player3Score)[1:])')
+                exec(f'{ui}.AS_P3Money.setText("-$" + str(player3Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P3Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P3Money.setText("$" + str(player3Score))')
+                exec(f'{ui}.AS_P3Money.setText("$" + str(player3Score))')
+          if player4Score < 0:
+                exec(f'{ui}.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P4Money.setText("-$" + str(player4Score)[1:])')
+                exec(f'{ui}.AS_P4Money.setText("-$" + str(player4Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P4Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P4Money.setText("$" + str(player4Score))')
+                exec(f'{ui}.AS_P4Money.setText("$" + str(player4Score))')
+          if player5Score < 0:
+                exec(f'{ui}.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
+                exec(f'{ui}.PS_P5Money.setText("-$" + str(player5Score)[1:])')
+                exec(f'{ui}.AS_P5Money.setText("-$" + str(player5Score)[1:])')
+          else:
+                exec(f'{ui}.PS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.AS_P5Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+                exec(f'{ui}.PS_P5Money.setText("$" + str(player5Score))')
+                exec(f'{ui}.AS_P5Money.setText("$" + str(player5Score))')
+
+
+    #TODO: this is written really poorly
+    def finalIncorrect(self):
+         global player1Score
+         global player2Score
+         global player3Score
+         global player4Score
+         global player5Score
+         global index
+         global wagerAmount
+
+         if scoresArray[index][1] == "Player1":
+                player1Score = player1Score - int(wagerAmount)
+         if scoresArray[index][1] == "Player2":
+                player2Score = player2Score - int(wagerAmount)
+         if scoresArray[index][1] == "Player3":
+                player3Score = player3Score - int(wagerAmount)
+         if scoresArray[index][1] == "Player4":
+                player4Score = player4Score - int(wagerAmount)
+         if scoresArray[index][1] == "Player5":
+                player5Score = player5Score - int(wagerAmount)
+         
+         self.FinalJWagersWindowui.button0.setVisible(True)
+         self.FinalJWagersWindowui.button1.setVisible(True)
+         self.FinalJWagersWindowui.button2.setVisible(True)
+         self.FinalJWagersWindowui.button3.setVisible(True)
+         self.FinalJWagersWindowui.button4.setVisible(True)
+         self.FinalJWagersWindowui.button5.setVisible(True)
+         self.FinalJWagersWindowui.button6.setVisible(True)
+         self.FinalJWagersWindowui.button7.setVisible(True)
+         self.FinalJWagersWindowui.button8.setVisible(True)
+         self.FinalJWagersWindowui.button9.setVisible(True)
+         self.FinalJWagersWindowui.buttonDEL.setVisible(True)
+         self.FinalJWagersWindowui.buttonENTER.setVisible(True)
+         self.FinalJWagersWindowui.correctButton.setVisible(False)
+         self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+
+         index = index + 1
+         wagerAmount = ""
+
+         self.setScores("self.FinalJWagersWindowui")
+         self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
+
+
+    def finalCorrect(self):
+         global player1Score
+         global player2Score
+         global player3Score
+         global player4Score
+         global player5Score
+         global index
+         global wagerAmount
+
+         print("Before score update: " + wagerAmount)
+         if scoresArray[index][1] == "Player1":
+                player1Score = player1Score + int(wagerAmount)
+         if scoresArray[index][1] == "Player2":
+                player2Score = player2Score + int(wagerAmount)
+         if scoresArray[index][1] == "Player3":
+                player3Score = player3Score + int(wagerAmount)
+         if scoresArray[index][1] == "Player4":
+                player4Score = player4Score + int(wagerAmount)
+         if scoresArray[index][1] == "Player5":
+                player5Score = player5Score + int(wagerAmount)
+
+         self.FinalJWagersWindowui.button0.setVisible(True)
+         self.FinalJWagersWindowui.button1.setVisible(True)
+         self.FinalJWagersWindowui.button2.setVisible(True)
+         self.FinalJWagersWindowui.button3.setVisible(True)
+         self.FinalJWagersWindowui.button4.setVisible(True)
+         self.FinalJWagersWindowui.button5.setVisible(True)
+         self.FinalJWagersWindowui.button6.setVisible(True)
+         self.FinalJWagersWindowui.button7.setVisible(True)
+         self.FinalJWagersWindowui.button8.setVisible(True)
+         self.FinalJWagersWindowui.button9.setVisible(True)
+         self.FinalJWagersWindowui.buttonDEL.setVisible(True)
+         self.FinalJWagersWindowui.buttonENTER.setVisible(True)
+         self.FinalJWagersWindowui.correctButton.setVisible(False)
+         self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+
+         index = index + 1
+         wagerAmount = ""
+         print("wager amount set blank")
+
+         self.setScores("self.FinalJWagersWindowui")
+         self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
+
+    #this function handles all the button presses within the DailyDouble window. It's probably poorly written but it works
+    def wagersButton(self, button):
+          global wagerAmount
+          global index
+
+          maxWager = scoresArray[index][0]
+
+          if button == "DEL" and wagerAmount != "":
+                 wagerAmount = wagerAmount[:-1]
+          elif button == "DEL" and wagerAmount == "":
+                 pass
+          elif button == "ENTER" and wagerAmount != "":
+                 if int(wagerAmount) <= maxWager and int(wagerAmount) >= 5:
+                        self.FinalJWagersWindowui.button0.setVisible(False)
+                        self.FinalJWagersWindowui.button1.setVisible(False)
+                        self.FinalJWagersWindowui.button2.setVisible(False)
+                        self.FinalJWagersWindowui.button3.setVisible(False)
+                        self.FinalJWagersWindowui.button4.setVisible(False)
+                        self.FinalJWagersWindowui.button5.setVisible(False)
+                        self.FinalJWagersWindowui.button6.setVisible(False)
+                        self.FinalJWagersWindowui.button7.setVisible(False)
+                        self.FinalJWagersWindowui.button8.setVisible(False)
+                        self.FinalJWagersWindowui.button9.setVisible(False)
+                        self.FinalJWagersWindowui.buttonDEL.setVisible(False)
+                        self.FinalJWagersWindowui.buttonENTER.setVisible(False)
+                        self.FinalJWagersWindowui.correctButton.setVisible(True)
+                        self.FinalJWagersWindowui.incorrectButton.setVisible(True)
+                        self.FinalJWagersWindowui.correctButton.clicked.connect(self.finalCorrect)
+                        self.FinalJWagersWindowui.incorrectButton.clicked.connect(self.finalIncorrect)
+                 else:
+                        pass
+          elif button == "0" and wagerAmount == "0":
+                 pass
+          elif button == "ENTER" and wagerAmount == "":
+                 pass
+          else: 
+                if int(wagerAmount + button) <= maxWager:
+                         wagerAmount = wagerAmount + button
+          print(wagerAmount)
+          self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[index][1] + "'s wager: $" + wagerAmount)
+
+
+    def showClueClicked(self):
+        self.showClueButton.setVisible(False)
+
+    def startTimerClicked(self):
+        self.startTimerButton.setVisible(False)
+        self.timer = QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.timeFinished)
+        self.timer.start(3000) # 30,000 milliseconds = 30 seconds
+
+    def timeFinished(self):
+        global player1Score
+        global player2Score
+        global player3Score
+        global player4Score
+        global player5Score
+        global scoresArray
+        global nextWager
+
+        self.FinalJWagersWindow = QtWidgets.QMainWindow()
+        self.FinalJWagersWindowui = Ui_FinalJWagersWindow()
+        self.FinalJWagersWindowui.setupUi(self.FinalJWagersWindow)
+        self.FinalJWagersWindow.setWindowFlags(Qt.FramelessWindowHint)
+        self.FinalJWagersWindow.show()
+
+        self.setScores("self.FinalJWagersWindowui")
+
+        self.FinalJWagersWindowui.CloseButton.clicked.connect(self.closedButtonClicked)
+        self.FinalJWagersWindowui.button0.clicked.connect(lambda: self.wagersButton(button="0"))
+        self.FinalJWagersWindowui.button1.clicked.connect(lambda: self.wagersButton(button="1"))
+        self.FinalJWagersWindowui.button2.clicked.connect(lambda: self.wagersButton(button="2"))
+        self.FinalJWagersWindowui.button3.clicked.connect(lambda: self.wagersButton(button="3"))
+        self.FinalJWagersWindowui.button4.clicked.connect(lambda: self.wagersButton(button="4"))
+        self.FinalJWagersWindowui.button5.clicked.connect(lambda: self.wagersButton(button="5"))
+        self.FinalJWagersWindowui.button6.clicked.connect(lambda: self.wagersButton(button="6"))
+        self.FinalJWagersWindowui.button7.clicked.connect(lambda: self.wagersButton(button="7"))
+        self.FinalJWagersWindowui.button8.clicked.connect(lambda: self.wagersButton(button="8"))
+        self.FinalJWagersWindowui.button9.clicked.connect(lambda: self.wagersButton(button="9"))
+        self.FinalJWagersWindowui.buttonDEL.clicked.connect(lambda: self.wagersButton(button="DEL"))
+        self.FinalJWagersWindowui.buttonENTER.clicked.connect(lambda: self.wagersButton(button="ENTER"))
+        self.FinalJWagersWindowui.correctButton.setVisible(False)
+        self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+
+        scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
+        #sort elements
+        scoresArray = sorted(scoresArray, key=lambda x: x[0])
+        # Remove elements with integer <= 0
+        scoresArray = [item for item in scoresArray if item[0] > 0]
+        print(scoresArray)    
+
+
+        self.FinalJWagersWindowui.ReponseLabel.setText("Enter " + scoresArray[0][1] + "'s wager: $" + wagerAmount)
+
+    def closedButtonClicked(self):
+        FinalJWindow.close()
+        self.FinalJWagersWindow.close()
+
     def setupUi(self, FinalJWindow):
         FinalJWindow.setObjectName("FinalJWindow")
         FinalJWindow.resize(1824, 600)
@@ -409,6 +687,10 @@ class Ui_FinalJWindow(object):
 
         self.retranslateUi(FinalJWindow)
         QtCore.QMetaObject.connectSlotsByName(FinalJWindow)
+        
+        self.showClueButton.clicked.connect(self.showClueClicked)
+        self.startTimerButton.clicked.connect(self.startTimerClicked)
+        self.CloseButton.clicked.connect(self.closedButtonClicked)
 
     def retranslateUi(self, FinalJWindow):
         _translate = QtCore.QCoreApplication.translate
