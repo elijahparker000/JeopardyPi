@@ -30,9 +30,6 @@ from PyQt5.QtCore import QTimer
 
 pygame.init()
 
-#TODO: this may not be used at all so if not, delete it
-file_extension = "C:/Users/elija/OneDrive/Desktop/PythonScripts/JeopardyProjectRepo/JeopardyPi/"
-
 #indicates regular jeopardy or double jeopardy
 gameRound = 1
 
@@ -125,6 +122,7 @@ mostRecentCorrect = 1 #who was correct most recently (who gets the Daily Double)
 alexSeesClue = False #used to determine if alex's buzzer should do anything (if he can't see the clue, nothing's been clicked)
 clueIndex = 0 #TODO: this could break some stuff; this is so alexBuzzerPressedOrReleased() knows which clue to show to players
 clueGlobal = 0 #so alexBuzzerPressedOrReleased() knows which clue to show players
+categoryGlobal = 0 #so alexBuzzerPressedOrReleased() knows which $amount to erase on the buttons
 alexBuzzerPressedFirst = True #used to prevent alex from showing indicators before the clue appears
 
 playerScoreDD = 0
@@ -133,9 +131,72 @@ finalIndex = 0
 wagerAmount = ""
 scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
 index = 0
-
+winnerPlayer = 0 #nobody has won initially
 
 class Ui_MainWindow(object):
+    def initPlayAgain(self):
+           global gameRound
+           global player1Score
+           global player2Score
+           global player3Score
+           global player4Score
+           global player5Score
+           global answered
+           global totalCluesFinished
+           global mostRecentCorrect
+           global index
+
+           gameRound = 1
+           player1Score = 0
+           player2Score = 0
+           player3Score = 0
+           player4Score = 0
+           player5Score = 0
+           
+           totalCluesFinished = 0
+           mostRecentCorrect = winnerPlayer #whoever won the last game should get to pick the next clue (they get the Daily Double if it's the first clue)
+           index = 0
+
+           initCluesAndCats(gameRound)
+           self.setCategories()
+           self.Cat1Clue1B.setText("$200")
+           self.Cat2Clue1B.setText("$200")
+           self.Cat3Clue1B.setText("$200")
+           self.Cat4Clue1B.setText("$200")
+           self.Cat5Clue1B.setText("$200")
+           self.Cat6Clue1B.setText("$200")
+           self.Cat1Clue2B.setText("$400")
+           self.Cat2Clue2B.setText("$400")
+           self.Cat3Clue2B.setText("$400")
+           self.Cat4Clue2B.setText("$400")
+           self.Cat5Clue2B.setText("$400")
+           self.Cat6Clue2B.setText("$400")
+           self.Cat1Clue3B.setText("$600")
+           self.Cat2Clue3B.setText("$600")
+           self.Cat3Clue3B.setText("$600")
+           self.Cat4Clue3B.setText("$600")
+           self.Cat5Clue3B.setText("$600")
+           self.Cat6Clue3B.setText("$600")
+           self.Cat1Clue4B.setText("$800")
+           self.Cat2Clue4B.setText("$800")
+           self.Cat3Clue4B.setText("$800")
+           self.Cat4Clue4B.setText("$800")
+           self.Cat5Clue4B.setText("$800")
+           self.Cat6Clue4B.setText("$800")
+           self.Cat1Clue5B.setText("$1000")
+           self.Cat2Clue5B.setText("$1000")
+           self.Cat3Clue5B.setText("$1000")
+           self.Cat4Clue5B.setText("$1000")
+           self.Cat5Clue5B.setText("$1000")
+           self.Cat6Clue5B.setText("$1000")
+           answered = [[0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0]]
+           print("BEGIN NEW GAME")
+
 
         #TODO: a lot of this final Jeopardy stuff is probably really poorly written, but it worked on my laptop
     def correctOrIncorrect(self, correct):
@@ -184,6 +245,10 @@ class Ui_MainWindow(object):
                 self.FinalJWagersWindowui.ReponseLabel.setText(scoresArray[4][1] + " is the winner!")
                 self.FinalJWagersWindowui.PS_ClueLabel.setText(scoresArray[4][1] + " is the winner!")
                 self.FinalJWagersWindowui.CategoryLabel.setText("")
+                self.FinalJWagersWindowui.playAgainButton.setVisible(True)
+                global winnerPlayer
+                winnerPlayer = int(scoresArray[4][1][6])
+
          else:
                 self.FinalJWagersWindowui.button0.setVisible(True)
                 self.FinalJWagersWindowui.button1.setVisible(True)
@@ -273,7 +338,6 @@ class Ui_MainWindow(object):
         global player4Score
         global player5Score
         global scoresArray
-        global nextWager
 
         self.FinalJWagersWindow = QtWidgets.QMainWindow()
         self.FinalJWagersWindowui = Ui_FinalJWagersWindow()
@@ -305,8 +369,10 @@ class Ui_MainWindow(object):
         self.FinalJWagersWindowui.buttonENTER.clicked.connect(lambda: self.wagersButton(button="ENTER"))
         self.FinalJWagersWindowui.correctButton.clicked.connect(lambda: self.correctOrIncorrect(correct=True))
         self.FinalJWagersWindowui.incorrectButton.clicked.connect(lambda: self.correctOrIncorrect(correct=False))
+        self.FinalJWagersWindowui.playAgainButton.clicked.connect(self.initPlayAgain)
         self.FinalJWagersWindowui.correctButton.setVisible(False)
         self.FinalJWagersWindowui.incorrectButton.setVisible(False)
+        self.FinalJWagersWindowui.playAgainButton.setVisible(False)
 
         scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Score, "Player3"), (player4Score, "Player4"), (player5Score, "Player5")]
         #sort elements
@@ -407,7 +473,7 @@ class Ui_MainWindow(object):
           #exec(f'{ui}.PS_P3Name.setText("Player3")')
           #exec(f'{ui}.PS_P4Name.setText("Player4")')
           #exec(f'{ui}.PS_P5Name.setText("Player5")')
-          
+
           for i in range(1,6):
                 exec(f'self.ClueWindowui.PS_P{i}Money.setVisible(True)')
                 exec(f'self.ClueWindowui.PS_P{i}Name.setVisible(True)')
@@ -503,8 +569,12 @@ class Ui_MainWindow(object):
                  # Button pressed (falling edge)
                  #if it's been at least three seconds since the indicators have been shown
                  if buzzable and (time.time() - lastBuzzTime[5] >= 3):
+                        #play the time's up sound
+                        pygame.mixer.music.load("Sounds/times_up.mp3")
+                        pygame.mixer.music.play()
+
                         #close the clue window when alex buzzes
-                        exec(f'self.Cat{category}Clue{clue}B.setText("")')
+                        exec(f'self.Cat{categoryGlobal}Clue{clueGlobal}B.setText("")')
                         self.ClueWindow.close()
                         alexSeesClue = False
                         canBuzzIn = [True, True, True, True, True]
@@ -514,7 +584,6 @@ class Ui_MainWindow(object):
                         totalCluesFinished += 1
                         self.checkEndRound1()
                         self.checkEndRound2()
-                        alexSeesClue = False
                  else:
                         alexBuzzerPressedFirst = True
                         self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
@@ -565,12 +634,6 @@ class Ui_MainWindow(object):
            global answered
            global mostRecentCorrect
            gameRound = 2
-           answered = [[0,0,0,0,0], 
-                       [0,0,0,0,0], 
-                       [0,0,0,0,0], 
-                       [0,0,0,0,0], 
-                       [0,0,0,0,0], 
-                       [0,0,0,0,0]]
            
            #the person with the lowest score should select the clue; that's also the person who gets the DD if it's first selected
            #if two people are tied for lowest, it's the one with the lower player number
@@ -618,6 +681,12 @@ class Ui_MainWindow(object):
            self.Cat4Clue5B.setText("$2000")
            self.Cat5Clue5B.setText("$2000")
            self.Cat6Clue5B.setText("$2000")
+           answered = [[0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0], 
+                       [0,0,0,0,0]]
         
     
     def checkEndRound1(self):
@@ -717,6 +786,7 @@ class Ui_MainWindow(object):
          global clueIndex
          global clueGlobal
          global alexBuzzerPressedFirst
+         global categoryGlobal
 
          #if clue has already been given, do nothing
          if(answered[category-1][clue-1] == 1):
@@ -798,6 +868,7 @@ class Ui_MainWindow(object):
                 if category == 6:
                         clueIndex = cat6Index
                 clueGlobal = clue #to get the value into the global var?
+                categoryGlobal = category
 
                 #initially the indicators are hidden
                 self.ClueWindowui.ReadyIndicatorL.setVisible(False)
