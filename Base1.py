@@ -183,6 +183,7 @@ class Ui_MainWindow(object):
                 scoresArray = sorted(scoresArray, key=lambda x: x[0])
                 self.FinalJWagersWindowui.ReponseLabel.setText(scoresArray[4][1] + " is the winner!")
                 self.FinalJWagersWindowui.PS_ClueLabel.setText(scoresArray[4][1] + " is the winner!")
+                self.FinalJWagersWindowui.CategoryLabel.setText("")
          else:
                 self.FinalJWagersWindowui.button0.setVisible(True)
                 self.FinalJWagersWindowui.button1.setVisible(True)
@@ -213,7 +214,7 @@ class Ui_MainWindow(object):
           elif button == "DEL" and wagerAmount == "":
                  pass
           elif button == "ENTER" and wagerAmount != "":
-                 if int(wagerAmount) <= maxWager and int(wagerAmount) >= 5:
+                 if int(wagerAmount) <= maxWager:
                         self.FinalJWagersWindowui.button0.setVisible(False)
                         self.FinalJWagersWindowui.button1.setVisible(False)
                         self.FinalJWagersWindowui.button2.setVisible(False)
@@ -254,7 +255,7 @@ class Ui_MainWindow(object):
            self.FinalJWindowui.startMusicButton.setVisible(True)
 
     def startMusicClicked(self):
-        self.startMusicButton.setVisible(False)
+        self.FinalJWindowui.startMusicButton.setVisible(False)
 
         pygame.mixer.music.load("Sounds/FinalJeopardy_Think.mp3")
         pygame.mixer.music.play()
@@ -281,8 +282,15 @@ class Ui_MainWindow(object):
         self.FinalJWagersWindow.show()
 
         self.setScores("self.FinalJWagersWindowui")
+        self.FinalJWagersWindowui.CategoryLabel.setText(str(df.iloc[finalIndex, 3]))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setFamily("Roman")
+        font.setPointSize(30)
+        self.FinalJWagersWindowui.PS_ClueLabel.setFont(font)
+        self.FinalJWagersWindowui.PS_ClueLabel.setText(str(df.iloc[finalIndex, 5]))
 
-        self.FinalJWagersWindowui.CloseButton.clicked.connect(self.closedButtonClicked)
+        self.FinalJWagersWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
         self.FinalJWagersWindowui.button0.clicked.connect(lambda: self.wagersButton(button="0"))
         self.FinalJWagersWindowui.button1.clicked.connect(lambda: self.wagersButton(button="1"))
         self.FinalJWagersWindowui.button2.clicked.connect(lambda: self.wagersButton(button="2"))
@@ -322,6 +330,7 @@ class Ui_MainWindow(object):
 
          self.FinalJWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
          self.FinalJWindowui.showClueButton.clicked.connect(self.showFinalClue)
+         self.FinalJWindowui.startMusicButton.clicked.connect(self.startMusicClicked)
 
          df = pd.read_excel('Questions/FinalJeopardyTeenQs.xlsx', sheet_name='Sheet1', header=None)
          num_rows = df.shape[0]
