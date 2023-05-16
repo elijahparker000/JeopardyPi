@@ -1125,6 +1125,31 @@ color: rgb(255, 255, 255);</string>
      <string>Incorrect</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="playAgainButton">
+    <property name="geometry">
+     <rect>
+      <x>1224</x>
+      <y>83</y>
+      <width>400</width>
+      <height>124</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roman</family>
+      <pointsize>36</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton { background-color: #060CE9; border: 0px; color: #FFFFFF;}</string>
+    </property>
+    <property name="text">
+     <string>Play again</string>
+    </property>
+   </widget>
+   <zorder>playAgainButton</zorder>
    <zorder>incorrectButton</zorder>
    <zorder>AS_DecoLabel2</zorder>
    <zorder>correctButton</zorder>

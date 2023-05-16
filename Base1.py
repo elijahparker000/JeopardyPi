@@ -353,17 +353,23 @@ class Ui_MainWindow(object):
                 #exec(f'self.ClueWindowui.PS_P{i}Name.setText(".")')
                 #exec(f'self.ClueWindowui.AS_P{i}Money.setText(".")')
                 #exec(f'self.ClueWindowui.AS_P{i}Name.setText(".")')
-                exec(f'self.ClueWindowui.PS_P{i}Money.setText("")')
-                exec(f'self.ClueWindowui.PS_P{i}Name.setText("")')
-                exec(f'self.ClueWindowui.AS_P{i}Money.setText("")')
-                exec(f'self.ClueWindowui.AS_P{i}Name.setText("")')
+
+
+                #exec(f'self.ClueWindowui.PS_P{i}Money.setText("")')
+                #exec(f'self.ClueWindowui.PS_P{i}Name.setText("")')
+                #exec(f'self.ClueWindowui.AS_P{i}Money.setText("")')
+                #exec(f'self.ClueWindowui.AS_P{i}Name.setText("")')
                 
                 #I think the rest of this is unnecessary.
-                exec(f'self.ClueWindowui.PS_P{i}Name.update()')
-                exec(f'self.ClueWindowui.PS_P{i}Money.update()')
-                exec(f'self.ClueWindowui.AS_P{i}Name.update()')
-                exec(f'self.ClueWindowui.AS_P{i}Money.update()')
-                QApplication.processEvents()
+                #exec(f'self.ClueWindowui.PS_P{i}Name.update()')
+                #exec(f'self.ClueWindowui.PS_P{i}Money.update()')
+                #exec(f'self.ClueWindowui.AS_P{i}Name.update()')
+                #exec(f'self.ClueWindowui.AS_P{i}Money.update()')
+                #QApplication.processEvents()
+                exec(f'self.ClueWindowui.PS_P{i}Money.setVisible(False)')
+                exec(f'self.ClueWindowui.PS_P{i}Name.setVisible(False)')
+                exec(f'self.ClueWindowui.AS_P{i}Money.setVisible(False)')
+                exec(f'self.ClueWindowui.AS_P{i}Name.setVisible(False)')
                 
                 
     
@@ -372,26 +378,33 @@ class Ui_MainWindow(object):
     #this is to update player scores on a given screen so you don't have these huge blocks everytime you want to show a new screen
     def setScores(self, ui):
         #TODO: could be done with for loop (at leat the first part)
-          exec(f'{ui}.AS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.AS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.AS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.AS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.AS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.PS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.PS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.PS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.PS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.PS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
-          exec(f'{ui}.AS_P1Name.setText("Player1")')
-          exec(f'{ui}.AS_P2Name.setText("Player2")')
-          exec(f'{ui}.AS_P3Name.setText("Player3")')
-          exec(f'{ui}.AS_P4Name.setText("Player4")')
-          exec(f'{ui}.AS_P5Name.setText("Player5")')
-          exec(f'{ui}.PS_P1Name.setText("Player1")')
-          exec(f'{ui}.PS_P2Name.setText("Player2")')
-          exec(f'{ui}.PS_P3Name.setText("Player3")')
-          exec(f'{ui}.PS_P4Name.setText("Player4")')
-          exec(f'{ui}.PS_P5Name.setText("Player5")')
+          #exec(f'{ui}.AS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.AS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.AS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.AS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.AS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.PS_P1Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.PS_P2Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.PS_P3Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.PS_P4Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.PS_P5Name.setStyleSheet("background-color: #060CE9; color: rgb(255, 255, 255);")')
+          #exec(f'{ui}.AS_P1Name.setText("Player1")')
+          #exec(f'{ui}.AS_P2Name.setText("Player2")')
+          #exec(f'{ui}.AS_P3Name.setText("Player3")')
+          #exec(f'{ui}.AS_P4Name.setText("Player4")')
+          #exec(f'{ui}.AS_P5Name.setText("Player5")')
+          #exec(f'{ui}.PS_P1Name.setText("Player1")')
+          #exec(f'{ui}.PS_P2Name.setText("Player2")')
+          #exec(f'{ui}.PS_P3Name.setText("Player3")')
+          #exec(f'{ui}.PS_P4Name.setText("Player4")')
+          #exec(f'{ui}.PS_P5Name.setText("Player5")')
+          
+          for i in range(1,6):
+                exec(f'self.ClueWindowui.PS_P{i}Money.setVisible(True)')
+                exec(f'self.ClueWindowui.PS_P{i}Name.setVisible(True)')
+                exec(f'self.ClueWindowui.AS_P{i}Money.setVisible(True)')
+                exec(f'self.ClueWindowui.AS_P{i}Name.setVisible(True)')
+
           if player1Score < 0:
                 exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
                 exec(f'{ui}.PS_P1Money.setStyleSheet("background-color: #060CE9; color: rgb(255, 0, 0);")')
@@ -449,27 +462,19 @@ class Ui_MainWindow(object):
            global alexSeesClue
            global buzzable
            global alexBuzzerPressedFirst
-           print("in buzzer function")
+           global canBuzzIn
+           global mostRecentBuzz
+           global totalCluesFinished
+
            print(channel)
 
            if not alexSeesClue:
-                        print("about to return bc alex hasn't seen clue")
-                        return #do nothing
+                        return #do nothing; not a time alex can buzz
            
            if GPIO.input(channel):
-                 print("in released function")
                  #Button released (rising edge)
                  if not alexBuzzerPressedFirst:
-                     print("about to return bc alex buzzer hasnt yet been pressed")
                      return #the button must be pressed before it can be released
-                 #change colors of side bars to let them know they can buzz
-                 #self.ClueWindowui.ReadyIndicatorL.setStyleSheet(("background-color: rgb(255, 255, 255)"))
-                 #self.ClueWindowui.ReadyIndicatorR.setStyleSheet(("background-color: rgb(255, 255, 255)"))
-                 #self.ClueWindowui.ReadyIndicatorL.setText(".")
-                 #self.ClueWindowui.ReadyIndicatorR.setText(".")
-                 #self.ClueWindowui.ReadyIndicatorL.setText("")
-                 #self.ClueWindowui.ReadyIndicatorR.setText("")
-                 #show the indicator bars
                  
                  #TODO: this is probably a stupid solution that won't work
                  while not self.ClueWindowui.ReadyIndicatorL.isVisible():
@@ -479,21 +484,31 @@ class Ui_MainWindow(object):
                  self.ClueWindowui.ReadyIndicatorL.update()
                  self.ClueWindowui.ReadyIndicatorR.update()
                  QApplication.processEvents()
-                 print("indicated")
                  
-
                  #update the time in lastBuzzTime
                  buzzable = True
                  lastBuzzTime[5] = time.time()
-                 alexSeesClue = False #not sure if this should be here
+                 #alexSeesClue = False #not sure if this should be here
                  alexBuzzerPressedFirst = False
-                 print("finished release function")
            else:
                  # Button pressed (falling edge)
-                 print("in pressed function")
-                 alexBuzzerPressedFirst = True
-                 self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
-                 print("finished pressed function")
+                 #if it's been at least three seconds since the indicators have been shown
+                 if buzzable and (time.time() - lastBuzzTime[5] >= 3):
+                        #close the clue window when alex buzzes
+                        exec(f'self.Cat{category}Clue{clue}B.setText("")')
+                        self.ClueWindow.close()
+                        alexSeesClue = False
+                        canBuzzIn = [True, True, True, True, True]
+                        mostRecentBuzz = 0
+                        buzzable = False #nobody else should be able to buzz in until next question
+                        self.setScores("self")
+                        totalCluesFinished += 1
+                        self.checkEndRound1()
+                        self.checkEndRound2()
+                        alexSeesClue = False
+                 else:
+                        alexBuzzerPressedFirst = True
+                        self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
                  
 
     
@@ -528,6 +543,9 @@ class Ui_MainWindow(object):
            buzzable = False #nobody else should be able to buzz in until next question or miss
            mostRecentBuzz = player #so we know who to give the money to
            self.hideAllButBuzzed(player)
+           #now show the buttons
+           self.ClueWindowui.correctButton.setVisible(True)
+           self.ClueWindowui.incorrectButton.setVisible(True)
            
                 
 
@@ -694,8 +712,6 @@ class Ui_MainWindow(object):
          #if clue has already been given, do nothing
          if(answered[category-1][clue-1] == 1):
                return
-        
-         print("\n")
          
          #if this question is a Daily Double
          if(dailyDouble == "yes"):
@@ -717,6 +733,9 @@ class Ui_MainWindow(object):
                 self.ClueWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
                 self.ClueWindowui.correctButton.clicked.connect(lambda: self.Correct(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
                 self.ClueWindowui.incorrectButton.clicked.connect(lambda: self.Incorrect(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
+                #initially, the buttons should be hidden
+                self.ClueWindowui.correctButton.setVisible(False)
+                self.ClueWindowui.incorrectButton.setVisible(False)
 
                 if category == 1:
                         clueIndex = cat1Index
@@ -753,6 +772,9 @@ class Ui_MainWindow(object):
                 self.ClueWindowui.CloseButton.clicked.connect(self.closeButtonPressed)
                 self.ClueWindowui.correctButton.clicked.connect(lambda: self.Correct(category = category, clue = clue, amount = amount))
                 self.ClueWindowui.incorrectButton.clicked.connect(lambda: self.Incorrect(category = category, clue = clue, amount = amount))
+                #initially, the buttons should be hidden
+                self.ClueWindowui.correctButton.setVisible(False)
+                self.ClueWindowui.incorrectButton.setVisible(False)
 
                 if category == 1:
                         clueIndex = cat1Index
@@ -884,6 +906,9 @@ class Ui_MainWindow(object):
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score -= amount')
           self.setScores("self.ClueWindowui")
+          #hide buttons again
+          self.ClueWindowui.correctButton.setVisible(False)
+          self.ClueWindowui.incorrectButton.setVisible(False)
           
           #exec(f'self.Cat{category}Clue{clue}B.setText("")') should be able to delete this
           canBuzzIn[mostRecentBuzz-1] = False #can't buzz in once incorrect
