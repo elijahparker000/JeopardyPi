@@ -135,6 +135,7 @@ winnerPlayer = 0 #nobody has won initially
 
 alexBuzzCount = 0 #how many times alex has pressed the buzzer (i am so bad at this)
 indicatedTime = 0.0
+alexCanBuzz = True
 
 class Ui_MainWindow(object):
     def initPlayAgain(self):
@@ -538,6 +539,7 @@ class Ui_MainWindow(object):
                 exec(f'{ui}.PS_P5Money.setText("$" + str(player5Score))')
                 exec(f'{ui}.AS_P5Money.setText("$" + str(player5Score))')
     
+    #TODO: This is an immensely confusing function. Please do better
     def alexBuzzerPressedOrReleased(self, channel):
            global lastBuzzTime
            global alexSeesClue
@@ -548,11 +550,13 @@ class Ui_MainWindow(object):
            global totalCluesFinished
            global alexBuzzCount
            global indicatedTime
+           global alexCanBuzz
 
-           print(channel)
 
            if not alexSeesClue:
                         return #do nothing; not a time alex can buzz
+           if not alexCanBuzz: #like if a player has already buzzed in
+                        return
            
            if GPIO.input(channel):
                  #Button released (rising edge)
@@ -575,10 +579,12 @@ class Ui_MainWindow(object):
                  #if this is the first time alex has pressed it 
                  if alexBuzzCount == 0:
                          indicatedTime = time.time()
+                         alexBuzzCount = 1
                  #send us back to the base screen when released
-                 elif alexBuzzCount == 1:
+                 elif alexBuzzCount == 2:
                          alexBuzzCount = 0
                          #close the clue window when alex buzzes
+                         buzzable = False
                          exec(f'self.Cat{categoryGlobal}Clue{clueGlobal}B.setText("")')
                          self.ClueWindow.close()
                          alexSeesClue = False
@@ -597,7 +603,8 @@ class Ui_MainWindow(object):
                         pygame.mixer.music.load("Sounds/times_up.mp3")
                         pygame.mixer.music.play()
                         buzzable = False #nobody else should be able to buzz in until next question
-                        alexBuzzCount += 1 #so that we'll close the ClueWindow when buzzer released
+                        alexBuzzCount = 2 #so that we'll close the ClueWindow when buzzer released
+                        alexBuzzerPressedFirst = True
                  else:
                         alexBuzzerPressedFirst = True
                         self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
@@ -610,6 +617,7 @@ class Ui_MainWindow(object):
            global mostRecentBuzz
            global buzzable
            global lastBuzzTime
+           global alexCanBuzz
 
            player = 0
            
@@ -634,6 +642,7 @@ class Ui_MainWindow(object):
            if  not canBuzzIn[player-1]: #if they already got it wrong, do nothing
                   return
            buzzable = False #nobody else should be able to buzz in until next question or miss
+           alexCanBuzz = False #alex shouldnt be able to buzz until next question or miss
            mostRecentBuzz = player #so we know who to give the money to
            self.hideAllButBuzzed(player)
            #now show the buttons
@@ -911,6 +920,7 @@ class Ui_MainWindow(object):
           global buzzable
           global alexSeesClue
           global alexBuzzCount
+          global alexCanBuzz
 
           if DDplayer != 0:
                  #i reckon i could use mostRecentCorrect in the following exec() but either way should work
@@ -920,7 +930,8 @@ class Ui_MainWindow(object):
                  alexSeesClue = False
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
-                 buzzable = False 
+                 buzzable = False
+                 alexCanBuzz = True
                  
                  alexBuzzCount = 0
                  self.setScores("self")
@@ -940,6 +951,7 @@ class Ui_MainWindow(object):
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
                  buzzable = False #nobody else should be able to buzz in until next question
+                 alexCanBuzz = True
                  self.setScores("self")
                  totalCluesFinished += 1
                  self.checkEndRound1()
@@ -956,6 +968,7 @@ class Ui_MainWindow(object):
           mostRecentCorrect = mostRecentBuzz
           mostRecentBuzz = 0
           buzzable = False
+          alexCanBuzz = True
 
           totalCluesFinished += 1
           self.checkEndRound1()
@@ -970,6 +983,7 @@ class Ui_MainWindow(object):
           global buzzable
           global alexSeesClue
           global alexBuzzCount
+          global alexCanBuzz
 
           if DDplayer != 0:
                  #i reckon i could use mostRecentCorrect in the following exec() but either way should work
@@ -979,7 +993,8 @@ class Ui_MainWindow(object):
                  alexSeesClue = False
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
-                 buzzable = False 
+                 buzzable = False
+                 alexCanBuzz = True
 
                  alexBuzzCount = 0
                  self.setScores("self")
@@ -996,6 +1011,7 @@ class Ui_MainWindow(object):
                  buzzable = False #nobody else should be able to buzz in until next question
                  self.setScores("self")
                  alexSeesClue = False
+                 alexCanBuzz = True
                  alexBuzzCount = 0
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
                  self.ClueWindow.close()
@@ -1013,6 +1029,7 @@ class Ui_MainWindow(object):
           #exec(f'self.Cat{category}Clue{clue}B.setText("")') should be able to delete this
           canBuzzIn[mostRecentBuzz-1] = False #can't buzz in once incorrect
           buzzable = True #others can buzz in after this person missed it
+          alexCanBuzz = True
           mostRecentBuzz = 0 #so if incorrect is clicked again, the window closes
           #totalCluesFinished += 1
           #self.checkEndRound1()
