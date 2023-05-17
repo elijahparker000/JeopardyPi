@@ -198,6 +198,8 @@ class Ui_MainWindow(object):
                        [0,0,0,0,0], 
                        [0,0,0,0,0], 
                        [0,0,0,0,0]]
+           self.FinalJWagersWindow.close()
+           self.FinalJWindow.close()
            print("BEGIN NEW GAME")
 
 
@@ -573,7 +575,6 @@ class Ui_MainWindow(object):
                  #if this is the first time alex has pressed it 
                  if alexBuzzCount == 0:
                          indicatedTime = time.time()
-                         alexBuzzCount += 1
                  #send us back to the base screen when released
                  elif alexBuzzCount == 1:
                          alexBuzzCount = 0
@@ -596,6 +597,7 @@ class Ui_MainWindow(object):
                         pygame.mixer.music.load("Sounds/times_up.mp3")
                         pygame.mixer.music.play()
                         buzzable = False #nobody else should be able to buzz in until next question
+                        alexBuzzCount += 1 #so that we'll close the ClueWindow when buzzer released
                  else:
                         alexBuzzerPressedFirst = True
                         self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
