@@ -941,22 +941,6 @@ class Ui_MainWindow(object):
                  self.checkEndRound1()
                  self.checkEndRound2()
                  return
-
-
-          if mostRecentBuzz == 0: #if nobody answered
-                 alexBuzzCount = 0
-                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
-                 self.ClueWindow.close()
-                 alexSeesClue = False
-                 canBuzzIn = [True, True, True, True, True]
-                 mostRecentBuzz = 0
-                 buzzable = False #nobody else should be able to buzz in until next question
-                 alexCanBuzz = True
-                 self.setScores("self")
-                 totalCluesFinished += 1
-                 self.checkEndRound1()
-                 self.checkEndRound2()
-                 return
           
           alexBuzzCount = 0
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score += amount')
@@ -1005,20 +989,6 @@ class Ui_MainWindow(object):
                  self.checkEndRound2()
                  return
           
-          if mostRecentBuzz == 0: #if nobody answered
-                 canBuzzIn = [True, True, True, True, True]
-                 mostRecentBuzz = 0
-                 buzzable = False #nobody else should be able to buzz in until next question
-                 self.setScores("self")
-                 alexSeesClue = False
-                 alexCanBuzz = True
-                 alexBuzzCount = 0
-                 exec(f'self.Cat{category}Clue{clue}B.setText("")')
-                 self.ClueWindow.close()
-                 totalCluesFinished += 1
-                 self.checkEndRound1()
-                 self.checkEndRound2()
-                 return #nobody buzzed in so don't continue
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score -= amount')
           self.setScores("self.ClueWindowui")
