@@ -133,6 +133,9 @@ scoresArray = [(player1Score, "Player1"), (player2Score, "Player2"), (player3Sco
 index = 0
 winnerPlayer = 0 #nobody has won initially
 
+alexBuzzCount = 0 #how many times alex has pressed the buzzer (i am so bad at this)
+indicatedTime = 0.0
+
 class Ui_MainWindow(object):
     def initPlayAgain(self):
            global gameRound
@@ -246,6 +249,7 @@ class Ui_MainWindow(object):
                 self.FinalJWagersWindowui.PS_ClueLabel.setText(scoresArray[4][1] + " is the winner!")
                 self.FinalJWagersWindowui.CategoryLabel.setText("")
                 self.FinalJWagersWindowui.playAgainButton.setVisible(True)
+                #keep track of who won bc they should get the first pick of next game
                 global winnerPlayer
                 winnerPlayer = int(scoresArray[4][1][6])
 
@@ -540,6 +544,8 @@ class Ui_MainWindow(object):
            global canBuzzIn
            global mostRecentBuzz
            global totalCluesFinished
+           global alexBuzzCount
+           global indicatedTime
 
            print(channel)
 
@@ -560,33 +566,40 @@ class Ui_MainWindow(object):
                  self.ClueWindowui.ReadyIndicatorR.update()
                  QApplication.processEvents()
                  
-                 #update the time in lastBuzzTime
                  buzzable = True
+                 #update the time in lastBuzzTime
                  lastBuzzTime[5] = time.time()
-                 #alexSeesClue = False #not sure if this should be here
                  alexBuzzerPressedFirst = False
+                 #if this is the first time alex has pressed it 
+                 if alexBuzzCount == 0:
+                         indicatedTime = time.time()
+                         alexBuzzCount += 1
+                 #send us back to the base screen when released
+                 elif alexBuzzCount == 1:
+                         alexBuzzCount = 0
+                         #close the clue window when alex buzzes
+                         exec(f'self.Cat{categoryGlobal}Clue{clueGlobal}B.setText("")')
+                         self.ClueWindow.close()
+                         alexSeesClue = False
+                         canBuzzIn = [True, True, True, True, True]
+                         mostRecentBuzz = 0
+                         self.setScores("self")
+                         totalCluesFinished += 1
+                         self.checkEndRound1()
+                         self.checkEndRound2()
+
            else:
                  # Button pressed (falling edge)
                  #if it's been at least three seconds since the indicators have been shown
-                 if buzzable and (time.time() - lastBuzzTime[5] >= 3):
-                        #play the time's up sound
+                 if buzzable and (time.time() - indicatedTime >= 3):
+                        #play the time's up sound and prevent buzzes when pressed
                         pygame.mixer.music.load("Sounds/times_up.mp3")
                         pygame.mixer.music.play()
-
-                        #close the clue window when alex buzzes
-                        exec(f'self.Cat{categoryGlobal}Clue{clueGlobal}B.setText("")')
-                        self.ClueWindow.close()
-                        alexSeesClue = False
-                        canBuzzIn = [True, True, True, True, True]
-                        mostRecentBuzz = 0
                         buzzable = False #nobody else should be able to buzz in until next question
-                        self.setScores("self")
-                        totalCluesFinished += 1
-                        self.checkEndRound1()
-                        self.checkEndRound2()
                  else:
                         alexBuzzerPressedFirst = True
                         self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
+                               
                  
 
     
@@ -813,8 +826,8 @@ class Ui_MainWindow(object):
                 self.ClueWindowui.correctButton.clicked.connect(lambda: self.Correct(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
                 self.ClueWindowui.incorrectButton.clicked.connect(lambda: self.Incorrect(category = category, clue = clue, amount = amount, DDplayer=DDplayer))
                 #initially, the buttons should be hidden
-                self.ClueWindowui.correctButton.setVisible(False)
-                self.ClueWindowui.incorrectButton.setVisible(False)
+                self.ClueWindowui.correctButton.setVisible(True)
+                self.ClueWindowui.incorrectButton.setVisible(True)
 
                 if category == 1:
                         clueIndex = cat1Index
@@ -895,6 +908,7 @@ class Ui_MainWindow(object):
           global mostRecentCorrect
           global buzzable
           global alexSeesClue
+          global alexBuzzCount
 
           if DDplayer != 0:
                  #i reckon i could use mostRecentCorrect in the following exec() but either way should work
@@ -905,7 +919,8 @@ class Ui_MainWindow(object):
                  canBuzzIn = [True, True, True, True, True]
                  mostRecentBuzz = 0
                  buzzable = False 
-
+                 
+                 alexBuzzCount = 0
                  self.setScores("self")
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
                  self.ClueWindow.close()
@@ -916,6 +931,7 @@ class Ui_MainWindow(object):
 
 
           if mostRecentBuzz == 0: #if nobody answered
+                 alexBuzzCount = 0
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
                  self.ClueWindow.close()
                  alexSeesClue = False
@@ -928,10 +944,9 @@ class Ui_MainWindow(object):
                  self.checkEndRound2()
                  return
           
+          alexBuzzCount = 0
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score += amount')
-
           self.setScores("self")
-          
           exec(f'self.Cat{category}Clue{clue}B.setText("")')
           self.ClueWindow.close()
           alexSeesClue = False
@@ -952,6 +967,7 @@ class Ui_MainWindow(object):
           global totalCluesFinished
           global buzzable
           global alexSeesClue
+          global alexBuzzCount
 
           if DDplayer != 0:
                  #i reckon i could use mostRecentCorrect in the following exec() but either way should work
@@ -963,6 +979,7 @@ class Ui_MainWindow(object):
                  mostRecentBuzz = 0
                  buzzable = False 
 
+                 alexBuzzCount = 0
                  self.setScores("self")
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
                  self.ClueWindow.close()
@@ -977,6 +994,7 @@ class Ui_MainWindow(object):
                  buzzable = False #nobody else should be able to buzz in until next question
                  self.setScores("self")
                  alexSeesClue = False
+                 alexBuzzCount = 0
                  exec(f'self.Cat{category}Clue{clue}B.setText("")')
                  self.ClueWindow.close()
                  totalCluesFinished += 1
