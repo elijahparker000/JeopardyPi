@@ -1688,6 +1688,34 @@ color: rgb(255, 255, 255);
      <pixmap>settingsGear.jpg</pixmap>
     </property>
    </widget>
+   <widget class="QLabel" name="AS_InstructionsLabel">
+    <property name="geometry">
+     <rect>
+      <x>1094</x>
+      <y>10</y>
+      <width>660</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Roman</family>
+      <pointsize>14</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #060CE9;
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>PlayerX to select a clue</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
    <zorder>SettingsLabel</zorder>
    <zorder>SettingsButton</zorder>
    <zorder>CatLabel4</zorder>
@@ -1755,6 +1783,7 @@ color: rgb(255, 255, 255);
    <zorder>Cat4Button</zorder>
    <zorder>Cat5Button</zorder>
    <zorder>Cat6Button</zorder>
+   <zorder>AS_InstructionsLabel</zorder>
   </widget>
  </widget>
  <resources/>

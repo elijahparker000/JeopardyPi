@@ -94,6 +94,31 @@ def initCluesAndCats(round):
                                         unique = False
                 print("\n\n")
                 if(DDcount == gameRound and unique == True):
+                        #make smaller df's for each category
+                        df1 = df.iloc[cat1Index:cat1Index+5, :]
+                        df2 = df.iloc[cat2Index:cat2Index+5, :]
+                        df3 = df.iloc[cat3Index:cat3Index+5, :]
+                        df4 = df.iloc[cat4Index:cat4Index+5, :]
+                        df5 = df.iloc[cat5Index:cat5Index+5, :]
+                        df6 = df.iloc[cat6Index:cat6Index+5, :]
+                        
+                        #combine smaller dataframes into one. Now only keeping up with 30 clues worth
+                        df = pd.concat([df1, df2, df3, df4, df5, df6])
+                        print(df)
+                        #TODO: these variables can be gotten rid of since the df is just 30 questions now. This was just easier to do than cleaning up my code.
+                        cat1Index = 0
+                        cat2Index = 5
+                        cat3Index = 10
+                        cat4Index = 15
+                        cat5Index = 20
+                        cat6Index = 25
+                        #delete these, no point in memorizing them
+                        del df1
+                        del df2
+                        del df3
+                        del df4
+                        del df5
+                        del df6
                         break
 
 player1Score = 0
@@ -136,6 +161,13 @@ winnerPlayer = 0 #nobody has won initially
 alexBuzzCount = 0 #how many times alex has pressed the buzzer (i am so bad at this)
 indicatedTime = 0.0
 alexCanBuzz = True
+
+player1LED = 17
+player2LED = 27
+player3LED = 22
+player4LED = 10
+player5LED = 9
+alexLED = 11
 
 class Ui_MainWindow(object):
     def initPlayAgain(self):
@@ -539,6 +571,41 @@ class Ui_MainWindow(object):
                 exec(f'{ui}.PS_P5Money.setText("$" + str(player5Score))')
                 exec(f'{ui}.AS_P5Money.setText("$" + str(player5Score))')
     
+    def showIndicators(self):
+        #TODO: idk if this can be changed but it works for now
+        while not self.ClueWindowui.ReadyIndicatorL.isVisible():
+                self.ClueWindowui.ReadyIndicatorL.setVisible(True)
+        while not self.ClueWindowui.ReadyIndicatorR.isVisible():
+                self.ClueWindowui.ReadyIndicatorR.setVisible(True)
+        self.ClueWindowui.ReadyIndicatorL.update()
+        self.ClueWindowui.ReadyIndicatorR.update()
+        QApplication.processEvents()
+
+        GPIO.output(player1LED, GPIO.HIGH)
+        GPIO.output(player2LED, GPIO.HIGH)
+        GPIO.output(player3LED, GPIO.HIGH)
+        GPIO.output(player4LED, GPIO.HIGH)
+        GPIO.output(player5LED, GPIO.HIGH)
+        #GPIO.output(alexLED, GPIO.HIGH) not sure how Alex's buzzer should behave in all this
+
+
+    def hideIndicators(self, player=0):
+        #TODO: idk if this can be changed but it works for now
+        while self.ClueWindowui.ReadyIndicatorL.isVisible():
+                self.ClueWindowui.ReadyIndicatorL.setVisible(False)
+        while self.ClueWindowui.ReadyIndicatorR.isVisible():
+                self.ClueWindowui.ReadyIndicatorR.setVisible(False)
+        self.ClueWindowui.ReadyIndicatorL.update()
+        self.ClueWindowui.ReadyIndicatorR.update()
+        QApplication.processEvents()
+
+        #turn off all LEDs except the one of the input argument
+        for i in range(1, 6):
+               if player != i:
+                      exec{f'GPIO.output(player{i}LED, GPIO.LOW)'}
+                      
+
+
     #TODO: This is an immensely confusing function. Please do better
     def alexBuzzerPressedOrReleased(self, channel):
            global lastBuzzTime
@@ -563,14 +630,7 @@ class Ui_MainWindow(object):
                  if not alexBuzzerPressedFirst:
                      return #the button must be pressed before it can be released
                  
-                 #TODO: this is probably a stupid solution that won't work
-                 while not self.ClueWindowui.ReadyIndicatorL.isVisible():
-                        self.ClueWindowui.ReadyIndicatorL.setVisible(True)
-                 while not self.ClueWindowui.ReadyIndicatorR.isVisible():
-                        self.ClueWindowui.ReadyIndicatorR.setVisible(True)
-                 self.ClueWindowui.ReadyIndicatorL.update()
-                 self.ClueWindowui.ReadyIndicatorR.update()
-                 QApplication.processEvents()
+                 self.showIndicators()
                  
                  buzzable = True
                  #update the time in lastBuzzTime
@@ -632,6 +692,7 @@ class Ui_MainWindow(object):
                   player = 4
            if channel == 7:
                   player = 5
+
         
            if not buzzable: #if you buzzed too early or at a random time
                   lastBuzzTime[player-1] = time.time()
@@ -645,6 +706,7 @@ class Ui_MainWindow(object):
            alexCanBuzz = False #alex shouldnt be able to buzz until next question or miss
            mostRecentBuzz = player #so we know who to give the money to
            self.hideAllButBuzzed(player)
+           self.hideIndicators(player = player)
            #now show the buttons
            self.ClueWindowui.correctButton.setVisible(True)
            self.ClueWindowui.incorrectButton.setVisible(True)
@@ -989,6 +1051,7 @@ class Ui_MainWindow(object):
                  self.checkEndRound2()
                  return
           
+          self.showIndicators()
           
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score -= amount')
           self.setScores("self.ClueWindowui")
@@ -1018,6 +1081,7 @@ class Ui_MainWindow(object):
             self.CloseWindowui.cancelButton.clicked.connect(self.cancelClose)
 
     def closeScreens(self):
+            GPIO.cleanup()
             MainWindow.close()
             self.ClueWindow.close()
             self.DDWindow.close()
@@ -1873,6 +1937,14 @@ class Ui_MainWindow(object):
         GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP) #player5 buzzer
         GPIO.setup(12, GPIO.IN, pull_up_down=GPIO.PUD_UP) #alex buzzer
 
+        #PCB LEDs
+        GPIO.setup(17, GPIO.OUT)
+        GPIO.setup(27, GPIO.OUT)
+        GPIO.setup(22, GPIO.OUT)
+        GPIO.setup(10, GPIO.OUT)
+        GPIO.setup(9, GPIO.OUT)
+        GPIO.setup(11, GPIO.OUT)
+
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.PS_P1Name.setText(_translate("MainWindow", "Player1"))
@@ -1958,6 +2030,14 @@ if __name__ == "__main__":
     GPIO.add_event_detect(7, GPIO.FALLING, callback=ui.playerBuzzerPressed, bouncetime=1)
         #alex's button has bouncetime bc it's both rising and falling edge that matters
     GPIO.add_event_detect(12, GPIO.BOTH, callback=ui.alexBuzzerPressedOrReleased, bouncetime=50)
+    
+    #make sure LEDs are off at the start
+    GPIO.output(17, GPIO.LOW)
+    GPIO.output(27, GPIO.LOW)
+    GPIO.output(22, GPIO.LOW)
+    GPIO.output(10, GPIO.LOW)
+    GPIO.output(9, GPIO.LOW)
+    GPIO.output(11, GPIO.LOW)
 
     MainWindow.setWindowFlag(Qt.FramelessWindowHint)
     MainWindow.show()
