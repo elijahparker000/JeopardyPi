@@ -1004,6 +1004,7 @@ class Ui_MainWindow(object):
                  self.checkEndRound2()
                  return
           
+          self.hideIndicators()
           alexBuzzCount = 0
           exec(f'global player{mostRecentBuzz}Score; player{mostRecentBuzz}Score += amount')
           self.setScores("self")
