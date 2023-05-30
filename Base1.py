@@ -602,7 +602,7 @@ class Ui_MainWindow(object):
         #turn off all LEDs except the one of the input argument
         for i in range(1, 6):
                if player != i:
-                      exec{f'GPIO.output(player{i}LED, GPIO.LOW)'}
+                      exec(f'GPIO.output(player{i}LED, GPIO.LOW)')
                       
 
 
@@ -630,14 +630,13 @@ class Ui_MainWindow(object):
                  if not alexBuzzerPressedFirst:
                      return #the button must be pressed before it can be released
                  
-                 self.showIndicators()
-                 
                  buzzable = True
                  #update the time in lastBuzzTime
                  lastBuzzTime[5] = time.time()
                  alexBuzzerPressedFirst = False
                  #if this is the first time alex has pressed it 
                  if alexBuzzCount == 0:
+                         self.showIndicators()
                          indicatedTime = time.time()
                          alexBuzzCount = 1
                  #send us back to the base screen when released
@@ -662,6 +661,7 @@ class Ui_MainWindow(object):
                         #play the time's up sound and prevent buzzes when pressed
                         pygame.mixer.music.load("Sounds/times_up.mp3")
                         pygame.mixer.music.play()
+                        self.hideIndicators()
                         buzzable = False #nobody else should be able to buzz in until next question
                         alexBuzzCount = 2 #so that we'll close the ClueWindow when buzzer released
                         alexBuzzerPressedFirst = True
