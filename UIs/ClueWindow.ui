@@ -911,6 +911,38 @@ color: rgb(255, 255, 255);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="AlexReadyIndicatorL">
+    <property name="geometry">
+     <rect>
+      <x>1024</x>
+      <y>70</y>
+      <width>20</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="AlexReadyIndicatorR">
+    <property name="geometry">
+     <rect>
+      <x>1804</x>
+      <y>70</y>
+      <width>20</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
    <zorder>SettingsLabel</zorder>
    <zorder>PS_DecoLabel2</zorder>
    <zorder>AS_DecoLabel</zorder>
@@ -947,6 +979,8 @@ color: rgb(255, 255, 255);</string>
    <zorder>correctButton</zorder>
    <zorder>incorrectButton</zorder>
    <zorder>ReponseLabel</zorder>
+   <zorder>AlexReadyIndicatorL</zorder>
+   <zorder>AlexReadyIndicatorR</zorder>
   </widget>
  </widget>
  <resources/>
