@@ -780,6 +780,9 @@ color: rgb(255, 255, 255);</string>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="AS_Instructions2">
     <property name="geometry">

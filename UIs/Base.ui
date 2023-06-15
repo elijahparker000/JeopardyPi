@@ -1344,6 +1344,9 @@ color: rgb(255, 255, 255);
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="CatLabel2">
     <property name="geometry">
@@ -1370,6 +1373,9 @@ color: rgb(255, 255, 255);
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="CatLabel3">
@@ -1398,6 +1404,9 @@ color: rgb(255, 255, 255);
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="CatLabel4">
     <property name="geometry">
@@ -1424,6 +1433,9 @@ color: rgb(255, 255, 255);
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="CatLabel5">
@@ -1452,6 +1464,9 @@ color: rgb(255, 255, 255);
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="CatLabel6">
     <property name="geometry">
@@ -1478,6 +1493,9 @@ color: rgb(255, 255, 255);
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="Cat1Button">

@@ -451,7 +451,7 @@ class Ui_MainWindow(object):
          self.setScores("self.FinalJWindowui")
     
     def checkEndRound2(self):
-           if totalCluesFinished == 60:
+           if totalCluesFinished == 1:
                  print("END OF DOUBLE JEOPARDY ROUND")
                  self.initFinalJeopRound()
     
@@ -603,7 +603,7 @@ class Ui_MainWindow(object):
         #turn off all LEDs except the one of the input argument
         for i in range(1, 6):
                if player != i:
-                      exec{f'GPIO.output(player{i}LED, GPIO.LOW)'}
+                      exec(f'GPIO.output(player{i}LED, GPIO.LOW)')
                       
 
 
@@ -632,7 +632,13 @@ class Ui_MainWindow(object):
                      return #the button must be pressed before it can be released
                  
                  self.showIndicators()
-                 
+                 #timer for showing alex indicators when he can end clue
+                 #if not self.ClueWindowui.AlexReadyIndicatorL.isVisible():
+                        #print("starting Alex indicator timer")
+                        #self.Alextimer = QTimer()
+                        #self.Alextimer.setSingleShot(True)
+                        #self.Alextimer.timeout.connect(self.showAlexIndicators)
+                        #self.Alextimer.start(3000) # 3,000 milliseconds = 3 seconds
                  buzzable = True
                  #update the time in lastBuzzTime
                  lastBuzzTime[5] = time.time()
@@ -669,16 +675,15 @@ class Ui_MainWindow(object):
                  else:
                         alexBuzzerPressedFirst = True
                         self.ClueWindowui.PS_ClueLabel.setText(str(df.iloc[clueIndex+clueGlobal-1, 5])) #show clue
-                        #timer for showing alex indicators when he can end clue
-                        if not self.ClueWindowui.AlexReadyIndicatorL.isVisible():
-                                self.timer = QTimer()
-                                self.timer.setSingleShot(True)
-                                self.timer.timeout.connect(self.showAlexIndicators)
-                                self.timer.start(3000) # 3,000 milliseconds = 3 seconds
+                        
                                
     def showAlexIndicators(self):
-           self.ClueWindowui.AlexReadyIndicatorL.setVisible(True)
-           self.ClueWindowui.AlexReadyIndicatorR.setVisible(True)
+        print("about to show alexIndicators")
+        while not self.ClueWindowui.AlexReadyIndicatorL.isVisible():
+            self.ClueWindowui.AlexReadyIndicatorL.setVisible(True)
+        while not self.ClueWindowui.AlexReadyIndicatorR.isVisible():
+            self.ClueWindowui.AlexReadyIndicatorR.setVisible(True)
+        print("shown alexIndicators")
 
     
     def playerBuzzerPressed(self, channel):
@@ -2042,6 +2047,8 @@ class Ui_MainWindow(object):
 
 
 if __name__ == "__main__":
+    initCluesAndCats(gameRound)
+    
     import sys
     app = QtWidgets.QApplication(sys.argv)
     BaseWindow = QtWidgets.QMainWindow()

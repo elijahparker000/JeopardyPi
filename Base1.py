@@ -602,7 +602,7 @@ class Ui_MainWindow(object):
         #turn off all LEDs except the one of the input argument
         for i in range(1, 6):
                if player != i:
-                      exec{f'GPIO.output(player{i}LED, GPIO.LOW)'}
+                      exec(f'GPIO.output(player{i}LED, GPIO.LOW)')
                       
 
 

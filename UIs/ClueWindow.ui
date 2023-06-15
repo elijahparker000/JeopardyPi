@@ -755,6 +755,9 @@ color: rgb(255, 255, 255);
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="AmountLabel">
     <property name="geometry">
@@ -797,6 +800,8 @@ color: #d69f4c;</string>
      <font>
       <family>Roman</family>
       <pointsize>30</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
@@ -804,10 +809,13 @@ color: #d69f4c;</string>
 color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>Clue goes here</string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QLabel" name="AS_ClueLabel">
@@ -823,6 +831,8 @@ color: rgb(255, 255, 255);</string>
      <font>
       <family>Roman</family>
       <pointsize>30</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
@@ -834,6 +844,9 @@ color: rgb(255, 255, 255);</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="correctButton">
@@ -895,6 +908,8 @@ color: rgb(255, 255, 255);</string>
      <font>
       <family>Roman</family>
       <pointsize>20</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="styleSheet">
