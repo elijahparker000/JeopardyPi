@@ -1,1 +1,3 @@
 Jeopardy Blue = 6, 12, 233 or #060ce9
+
+The dollar figure images currently being used were found here: https://gameshows.fandom.com/wiki/Jeopardy!/Dollar_Figures#2009-present

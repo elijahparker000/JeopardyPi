@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>png/dollar_200.png</file>
+        <file>png/dollar_400.png</file>
+        <file>png/dollar_600.png</file>
+        <file>png/dollar_800.png</file>
+        <file>png/dollar_1000.png</file>
+        <file>png/dollar_1200.png</file>
+        <file>png/dollar_1600.png</file>
+        <file>png/dollar_2000.png</file>
+    </qresource>
+</RCC>
