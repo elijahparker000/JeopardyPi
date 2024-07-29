@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="ITC Korinna Bold.otf">fonts/ITC Korinna Bold.otf</file>
+        <file alias="Swiss 911 Compressed Regular.otf">fonts/Swiss 911 Compressed Regular.otf</file>
+        <file alias="Univers 75 Black Regular.otf">fonts/Univers 75 Black Regular.otf</file>
+        <file alias="Korinna Bold.ttf">fonts/Korinna Bold.ttf</file>
+        <file alias="Swiss 911 Compressed.ttf">fonts/Swiss 911 Compressed.ttf</file>
+        <file alias="univers-75-black.ttf">fonts/univers-75-black.ttf</file>
+    </qresource>
+</RCC>
