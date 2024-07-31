@@ -9,6 +9,7 @@ To test it, you can navigate to the flask_test directory and run app.py and the 
 
 ### Install Node.js
 Install Node.js from nodejs.org
+
 Next, navigate to the jeopardy-electron directory and run these three commands:
 ```
 npm init -y
