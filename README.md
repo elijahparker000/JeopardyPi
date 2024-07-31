@@ -8,7 +8,7 @@ pip install flask
 To test it, you can navigate to the flask_test directory and run app.py and the terminal should provide you with a link you can open in your browser to see the GUI. Next, we want to run that GUI in a window rather than a browser.
 
 ### Install Node.js
-Install Node.js from [nodejs.org](nodejs.org)
+Install [Node.js](https://nodejs.org)
 
 Next, navigate to the jeopardy-electron directory and run these three commands:
 ```
