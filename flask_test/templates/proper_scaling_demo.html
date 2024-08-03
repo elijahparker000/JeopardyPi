@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy Board</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        .board {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            transform-origin: top left;
+        }
+        .button {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #ef9026;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+        #button1 {
+            width: 200px;
+            height: 100px;
+            left: 50px;
+            top: 50px;
+        }
+        #button2 {
+            width: 200px;
+            height: 100px;
+            left: 300px;
+            top: 50px;
+        }
+        /* Add more buttons as needed with specific positions */
+    </style>
+</head>
+<body>
+    <div class="board" id="board">
+        <div class="button" id="button1" onclick="buttonClicked('Button 1')">Test 1</div>
+        <div class="button" id="button2" onclick="buttonClicked('Button 2')">Test 2</div>
+        <!-- Add more buttons here -->
+    </div>
+    <script>
+        function scaleBoard() {
+            const board = document.getElementById('board');
+            const scaleX = window.innerWidth / 1920; // Replace 1920 with your design width
+            const scaleY = window.innerHeight / 1080; // Replace 1080 with your design height
+            const scale = Math.min(scaleX, scaleY);
+            board.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', scaleBoard);
+        window.addEventListener('load', scaleBoard);
+
+        function buttonClicked(buttonName) {
+            fetch(`/button-clicked?name=${buttonName}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

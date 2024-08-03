@@ -6,3 +6,5 @@ Clue $ buttons should apparently be proportional to 860x480 based off of the ima
 
 Logos: https://logo-timeline.fandom.com/wiki/Jeopardy!/Colour_Variants
 
+Aspect Ratio: 16:9
+
