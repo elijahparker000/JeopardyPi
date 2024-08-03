@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Window</title>
+</head>
+<body>
+    <h1>Welcome to the Second Window</h1>
+    <div id="message"></div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        ipcRenderer.on('message', (event, arg) => {
+            document.getElementById('message').innerText = arg;
+        });
+    </script>
+</body>
+</html>
