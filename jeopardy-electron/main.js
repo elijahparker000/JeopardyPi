@@ -23,6 +23,7 @@ function createWindow() {
   mainWindow.loadURL('http://localhost:5000');
   mainWindow.setAspectRatio(aspectRatio);
   mainWindow.setMenuBarVisibility(false);
+  //mainWindow.maximize();
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
