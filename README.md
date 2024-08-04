@@ -1,4 +1,7 @@
 # JeopardyPi
+The current GUI:
+<img width="992" alt="BoardV1" src="https://github.com/user-attachments/assets/4f455949-1562-4076-bb68-181f826893e6">
+
 
 ## How to run flask GUI with electron
 ### Install flask
