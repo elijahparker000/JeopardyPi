@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeopardy Board</title>
     <style>
+        @font-face {
+            font-family: 'dollar_font';
+            src: url("{{ url_for('static', filename='fonts/Swiss 911 Compressed.ttf') }}") format('truetype');
+        }
+        @font-face {
+            font-family: 'cat_font';
+            src: url("{{ url_for('static', filename='fonts/univers-75-black.ttf') }}") format('truetype');
+        }
+
         body {
             background-color: black;
             font-family: Arial, sans-serif;
@@ -23,42 +32,306 @@
             position: absolute;
             background-color: #010877; /* Blue */
             border: none;
-            color: #ef9026;
+            color: #d69f4c;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
             text-decoration: none;
             box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 12em;
+            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
+            text-shadow: 15px 15px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
         }
         #button1 {
-            width: 200px;
-            height: 100px;
-            left: 50px;
-            top: 50px;
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 361px;
         }
         #button2 {
-            width: 200px;
-            height: 100px;
-            left: 300px;
-            top: 50px;
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 361px;
         }
-        /* Add more buttons as needed with specific positions */
+        #button3 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 361px;
+        }
+        #button4 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 361px;
+        }
+        #button5 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 361px;
+        }
+        #button6 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 361px;
+        }
+        #button7 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 672px;
+        }
+        #button8 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 672px;
+        }
+        #button9 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 672px;
+        }
+        #button10 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 672px;
+        }
+        #button11 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 672px;
+        }
+        #button12 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 672px;
+        }
+        #button13 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 983px;
+        }
+        #button14 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 983px;
+        }
+        #button15 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 983px;
+        }
+        #button16 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 983px;
+        }
+        #button17 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 983px;
+        }
+        #button18 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 983px;
+        }
+        #button19 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 1294px;
+        }
+        #button20 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 1294px;
+        }
+        #button21 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 1294px;
+        }
+        #button22 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 1294px;
+        }
+        #button23 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 1294px;
+        }
+        #button24 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 1294px;
+        }
+        #button25 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 1605px;
+        }
+        #button26 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 1605px;
+        }
+        #button27 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 1605px;
+        }
+        #button28 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 1605px;
+        }
+        #button29 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 1605px;
+        }
+        #button30 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 1605px;
+        }
+        .category {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 5em;
+            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
+            padding: 10px; /* Add padding if needed for better text placement */
+            word-wrap: break-word; /* Allow text to wrap */
+            max-width: 100%; /* Ensure text container takes full width of the element */
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
+        }
+
+        #category1 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 30px;
+        }
+        #category2 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 30px;
+        }
+        #category3 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 30px;
+        }
+        #category4 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 30px;
+        }
+        #category5 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 30px;
+        }
+        #category6 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 30px;
+        }
     </style>
 </head>
 <body>
     <div class="board" id="board">
-        <div class="button" id="button1" onclick="buttonClicked('Button 1')">Test 1</div>
-        <div class="button" id="button2" onclick="buttonClicked('Button 2')">Test 2</div>
+        <div class="category" id="category1">EDIBLE RHYME TIME</div>
+        <div class="category" id="category2">BOOKS IN GERMAN</div>
+        <div class="category" id="category3">3 "T"s</div>
+        <div class="category" id="category4">CHOP CHOP!</div>
+        <div class="category" id="category5">THEY SAID IT WOULDN'T LAST</div>
+        <div class="category" id="category6">THEY WERE RIGHT</div>
+        <div class="button" id="button1" onclick="buttonClicked('Button 1')"><strong>$200</strong></div>
+        <div class="button" id="button2" onclick="buttonClicked('Button 2')"><strong>$200</strong></div>
+        <div class="button" id="button3" onclick="buttonClicked('Button 3')"><strong>$200</strong></div>
+        <div class="button" id="button4" onclick="buttonClicked('Button 4')"><strong>$200</strong></div>
+        <div class="button" id="button5" onclick="buttonClicked('Button 5')"><strong>$200</strong></div>
+        <div class="button" id="button6" onclick="buttonClicked('Button 6')"><strong>$200</strong></div>
+        <div class="button" id="button7" onclick="buttonClicked('Button 7')"><strong>$400</strong></div>
+        <div class="button" id="button8" onclick="buttonClicked('Button 8')"><strong>$400</strong></div>
+        <div class="button" id="button9" onclick="buttonClicked('Button 9')"><strong>$400</strong></div>
+        <div class="button" id="button10" onclick="buttonClicked('Button 10')"><strong>$400</strong></div>
+        <div class="button" id="button11" onclick="buttonClicked('Button 11')"><strong>$400</strong></div>
+        <div class="button" id="button12" onclick="buttonClicked('Button 12')"><strong>$400</strong></div>
+        <div class="button" id="button13" onclick="buttonClicked('Button 13')"><strong>$600</strong></div>
+        <div class="button" id="button14" onclick="buttonClicked('Button 14')"><strong>$600</strong></div>
+        <div class="button" id="button15" onclick="buttonClicked('Button 15')"><strong>$600</strong></div>
+        <div class="button" id="button16" onclick="buttonClicked('Button 16')"><strong>$600</strong></div>
+        <div class="button" id="button17" onclick="buttonClicked('Button 17')"><strong>$600</strong></div>
+        <div class="button" id="button18" onclick="buttonClicked('Button 18')"><strong>$600</strong></div>
+        <div class="button" id="button19" onclick="buttonClicked('Button 19')"><strong>$800</strong></div>
+        <div class="button" id="button20" onclick="buttonClicked('Button 20')"><strong>$800</strong></div>
+        <div class="button" id="button21" onclick="buttonClicked('Button 21')"><strong>$800</strong></div>
+        <div class="button" id="button22" onclick="buttonClicked('Button 22')"><strong>$800</strong></div>
+        <div class="button" id="button23" onclick="buttonClicked('Button 23')"><strong>$800</strong></div>
+        <div class="button" id="button24" onclick="buttonClicked('Button 24')"><strong>$800</strong></div>
+        <div class="button" id="button25" onclick="buttonClicked('Button 25')"><strong>$1000</strong></div>
+        <div class="button" id="button26" onclick="buttonClicked('Button 26')"><strong>$1000</strong></div>
+        <div class="button" id="button27" onclick="buttonClicked('Button 27')"><strong>$1000</strong></div>
+        <div class="button" id="button28" onclick="buttonClicked('Button 28')"><strong>$1000</strong></div>
+        <div class="button" id="button29" onclick="buttonClicked('Button 29')"><strong>$1000</strong></div>
+        <div class="button" id="button30" onclick="buttonClicked('Button 30')"><strong>$1000</strong></div>
         <!-- Add more buttons here -->
     </div>
     <script>
         function scaleBoard() {
             const board = document.getElementById('board');
-            const scaleX = window.innerWidth / 1920; // Replace 1920 with your design width
-            const scaleY = window.innerHeight / 1080; // Replace 1080 with your design height
+            const scaleX = window.innerWidth / 3245; // Replace 1920 with your design width
+            const scaleY = window.innerHeight / 1917; // Replace 1080 with your design height
             const scale = Math.min(scaleX, scaleY);
             board.style.transform = `scale(${scale})`;
+
+            // Center the board horizontally
+            const boardWidth = 3245 * scale; // Replace 1920 with your design width
+            const offsetX = (window.innerWidth - boardWidth) / 2;
+            board.style.left = `${offsetX}px`;
         }
 
         window.addEventListener('resize', scaleBoard);
