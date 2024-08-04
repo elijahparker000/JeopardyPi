@@ -16,7 +16,7 @@ def button_clicked():
     button_name = request.args.get('name')
     print(f'{button_name} clicked!')
     app.logger.info(f'{button_name} clicked!')
-    return jsonify({'message': f'{button_name} clicked!', 'redirect': '/second'})
+    return jsonify({'message': f'{button_name} clicked!'})#, 'redirect': '/second'})
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
