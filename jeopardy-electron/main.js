@@ -19,8 +19,7 @@ function createWindow() {
       contextIsolation: false
     }
   });
-// MP comment
-//MP cpmment 2
+
   mainWindow.loadURL('http://localhost:5000');
   mainWindow.setAspectRatio(aspectRatio);
   mainWindow.setMenuBarVisibility(false);
