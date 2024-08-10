@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy Board</title>
+    <style>
+        @font-face {
+            font-family: 'dollar_font';
+            src: url("{{ url_for('static', filename='fonts/Swiss 911 Compressed.ttf') }}") format('truetype');
+        }
+        @font-face {
+            font-family: 'cat_font';
+            src: url("{{ url_for('static', filename='fonts/univers-75-black.ttf') }}") format('truetype');
+        }
+
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        .board {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            transform-origin: top left;
+        }
+        .button {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #d69f4c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 12em;
+            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
+            text-shadow: 15px 15px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
+        }
+        #button1 {
+            width: 3235px;
+            height: 1810px;
+            left: 30px;
+            top: 361px;
+            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button2 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 361px;
+            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button3 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 361px;
+            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button4 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 361px;
+            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button5 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 361px;
+            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button6 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 361px;
+            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button7 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 672px;
+            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button8 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 672px;
+            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button9 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 672px;
+            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button10 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 672px;
+            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button11 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 672px;
+            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button12 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 672px;
+            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button13 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 983px;
+            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button14 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 983px;
+            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button15 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 983px;
+            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button16 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 983px;
+            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button17 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 983px;
+            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button18 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 983px;
+            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button19 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 1294px;
+            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button20 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 1294px;
+            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button21 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 1294px;
+            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button22 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 1294px;
+            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button23 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 1294px;
+            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button24 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 1294px;
+            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button25 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 1605px;
+            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button26 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 1605px;
+            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button27 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 1605px;
+            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button28 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 1605px;
+            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button29 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 1605px;
+            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #button30 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 1605px;
+            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        .category {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 5em;
+            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
+            padding: 10px; /* Add padding if needed for better text placement */
+            word-wrap: break-word; /* Allow text to wrap */
+            max-width: 100%; /* Ensure text container takes full width of the element */
+            text-shadow: 3px 3px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
+        }
+
+        #category1 {
+            width: 505px;
+            height: 282px;
+            left: 30px;
+            top: 30px;
+        }
+        #category2 {
+            width: 505px;
+            height: 282px;
+            left: 566px;
+            top: 30px;
+        }
+        #category3 {
+            width: 505px;
+            height: 282px;
+            left: 1102px;
+            top: 30px;
+        }
+        #category4 {
+            width: 505px;
+            height: 282px;
+            left: 1638px;
+            top: 30px;
+        }
+        #category5 {
+            width: 505px;
+            height: 282px;
+            left: 2174px;
+            top: 30px;
+        }
+        #category6 {
+            width: 505px;
+            height: 282px;
+            left: 2710px;
+            top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="board">
+        <div class="button" id="button1" onclick="buttonClicked(this, 'Button 1')"></div>
+        <!-- Add more buttons here -->
+    </div>
+    <script>
+        function scaleBoard() {
+            const board = document.getElementById('board');
+            const scaleX = window.innerWidth / 20788; // Replace 1920 with your design width
+            const scaleY = window.innerHeight / 12304; // Replace 1080 with your design height
+            const scale = Math.min(scaleX, scaleY);
+            board.style.transform = `scale(${scale})`;
+
+            // Center the board horizontally
+            const boardWidth = 3245 * scale; // Replace 1920 with your design width
+            const offsetX = (window.innerWidth - boardWidth) / 2;
+            board.style.left = `${offsetX}px`;
+        }
+
+        window.addEventListener('resize', scaleBoard);
+        window.addEventListener('load', scaleBoard);
+
+        function buttonClicked(buttonElement, buttonName) {
+            fetch(`/button-clicked?name=${buttonName}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    } else {
+                        buttonElement.innerText = ''; // Set button text to blank
+                        buttonElement.style.backgroundImage = 'none'; // Remove background image
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

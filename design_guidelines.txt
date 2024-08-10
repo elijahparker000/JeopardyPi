@@ -1,5 +1,5 @@
 Jeopardy Blue = rgb(6, 12, 233) or #060ce9 actually I think it's rgb(1, 8, 119) or #010877 based off of pictures
-Clue dollar values color = rgb(239, 144, 38) or #ef9026
+Clue dollar values color = rgb(214, 159, 76) or #d69f4c
 
 The dollar figure images currently being used were found here: https://gameshows.fandom.com/wiki/Jeopardy!/Dollar_Figures#2009-present
 Clue $ buttons should apparently be proportional to 860x480 based off of the images I downloaded from online
