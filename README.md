@@ -2,6 +2,33 @@
 The current GUI:
 <img width="992" alt="BoardV1" src="https://github.com/user-attachments/assets/4f455949-1562-4076-bb68-181f826893e6">
 
+## Create .env file
+Create a new file in the main JeopardyPi directory named .env and add the following line to it
+```
+PROJ_PATH = "<path to the JeopardyPi directory on your machine>"
+```
+Also, install this library:
+```
+pip install python-dotenv
+```
+
+Now whenever you need a path, just do it like this:
+```
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from the .env file
+load_dotenv()
+
+# Access the PROJ_PATH environment variable
+proj_path = os.getenv('PROJ_PATH')
+
+
+# Specify the path to your file
+file_path = os.path.join(proj_path, "clues/jeopardy.csv")
+```
+
+Note: The .env file is listed in .gitignore, so it won't be tracked by git and thus won't mess up everyone else's .env files.
 
 ## How to run flask GUI with electron
 ### Install flask
