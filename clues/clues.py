@@ -5,9 +5,18 @@ Created on Wed Aug 14 12:47:49 2024
 @author: me
 """
 import pandas as pd
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from the .env file
+load_dotenv()
+
+# Access the PROJ_PATH environment variable
+proj_path = os.getenv('PROJ_PATH')
+
 
 # Specify the path to your file
-file_path = r"C:\Elijah\JeopardyPi\questions\jeopardy.csv"
+file_path = os.path.join(proj_path, "clues/jeopardy.csv")
 
 # Read the CSV file into a DataFrame
 df = pd.read_csv(file_path)
