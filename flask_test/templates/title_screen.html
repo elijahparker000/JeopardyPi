@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy Board</title>
+    <style>
+        @font-face {
+            font-family: 'dollar_font';
+            src: url("{{ url_for('static', filename='fonts/Swiss 911 Compressed.ttf') }}") format('truetype');
+        }
+        @font-face {
+            font-family: 'cat_font';
+            src: url("{{ url_for('static', filename='fonts/univers-75-black.ttf') }}") format('truetype');
+        }
+
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        .board {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            transform-origin: top left;
+        }
+        .button {
+            background-color: transparent; /* Transparent background */
+            color: #fff; /* White text color */
+            /*padding: 20px 60px; /* Padding for a sleek look */
+            font-size: 2em;
+            font-family: 'Arial', sans-serif; /* Font family */
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+            display: inline-block;
+            position: absolute;
+            top: 518px; /* Adjusted vertical position */
+            left: 564px; /* Adjusted horizontal position */
+            width: 100px;
+            height: 40px;
+            text-align: center;
+        }
+
+        .button:hover {
+            color: #bdbdbd; /* Light gray text color on hover */
+            transform: scale(1.05); /* Slight scale-up effect on hover */
+        }
+
+
+        .picture {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #d69f4c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 12em;
+            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
+            text-shadow: 15px 15px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
+        }
+        #picture1 {
+            width: 1227px;
+            height: 690px;
+            left: 0px;
+            top: 0px;
+            background-image: url("{{ url_for('static', filename='images/title_screen.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="board">
+        <div class="picture" id="picture1"></div>
+        <div class="button" id="start_button">Start</div>
+    </div>
+    <script>
+        function scaleBoard() {
+            const board = document.getElementById('board');
+            const scaleX = window.innerWidth / 1227; // Replace 1920 with your design width
+            const scaleY = window.innerHeight / 690; // Replace 1080 with your design height
+            const scale = Math.min(scaleX, scaleY);
+            board.style.transform = `scale(${scale})`;
+
+            // Center the board horizontally
+            const boardWidth = 1227 * scale; // Replace 1920 with your design width
+            const offsetX = (window.innerWidth - boardWidth) / 2;
+            board.style.left = `${offsetX}px`;
+        }
+
+        window.addEventListener('resize', scaleBoard);
+        window.addEventListener('load', scaleBoard);
+    </script>
+</body>
+</html>
