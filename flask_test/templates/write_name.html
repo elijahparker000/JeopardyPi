@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write Your Name</title>
+    <style>
+        body {
+            background-color: #000; /* Jeopardy blue background */
+            color: #fff; /* White text */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            transform-origin: top left;
+        }
+        #canvas {
+            position: absolute;
+            border: 2px solid #fff; /* White border */
+            background-color: #010877; /* Black canvas background */
+            left: 300px;
+            top: 300px;
+            width: 3236px; /* Design width */
+            height: 1810px; /* Design height */
+        }
+        #save_button {
+            position: absolute;
+            background-color: #010877;
+            border: none;
+            color: #fff;
+            width: 200px; /* Design width */
+            height: 100px; /* Design height */
+            left: 100px; /* Adjust position */
+            top: 2210px; /* Adjust position */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 2em;
+            cursor: pointer;
+        }
+        h1 {
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            font-size: 3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <h1>Write Your Name</h1>
+        <canvas id="canvas"></canvas>
+        <div id="save_button">Save Name</div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let scaleX, scaleY, scale;
+
+        function scaleContainer() {
+            const scaleX = window.innerWidth / 3836; // Replace 1920 with your design width
+            const scaleY = window.innerHeight / 2410; // Replace 1080 with your design height
+            const scale = Math.min(scaleX, scaleY);
+            container.style.transform = `scale(${scale})`;
+
+            // Center the container horizontally
+            const containerWidth = 3836 * scale; // Replace with your design width
+            const offsetX = (window.innerWidth - containerWidth) / 2;
+            container.style.left = `${offsetX}px`;
+
+            // Log the relevant parameters
+            console.log('Window Width:', window.innerWidth);
+            console.log('Window Height:', window.innerHeight);
+            console.log('Container Width (scaled):', containerWidth);
+            console.log('Scale Factor:', scale);
+            console.log('Offset X:', offsetX);
+            console.log('Canvas Rect:', canvas.getBoundingClientRect()); // Log the canvas bounding rect
+        }
+
+        window.addEventListener('resize', scaleContainer);
+        window.addEventListener('load', scaleContainer);
+
+        function startDrawing(e) {
+            drawing = true;
+            draw(e);
+        }
+
+        function stopDrawing() {
+            drawing = false;
+            ctx.beginPath();
+        }
+
+        // TODO: Fix this function! It doesn't map the mouse to the canvas properly and I'm tired of dealing with it rn.
+        function draw(e) {
+            if (!drawing) return;
+
+            // Get the bounding rectangle of the canvas
+            const rect = canvas.getBoundingClientRect();
+
+            console.log('rect.width:', rect.width);
+            console.log('rect.height:', rect.height);
+            console.log('rect.left:', rect.left);
+            console.log('rect.top:', rect.left);
+
+            // Calculate the current scale factors
+            const scaleX = rect.width / 3236; // The width of the canvas in the design
+            const scaleY = rect.height / 1810; // The height of the canvas in the design
+
+            // Adjust mouse position according to the scale and the offset
+            const mouseX = (e.clientX - (rect.left / scaleX)) / scaleX;
+            const mouseY = (e.clientY - (rect.top / scaleY)) / scaleY;
+
+            ctx.lineWidth = 5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#fff'; // White line color
+
+            ctx.lineTo(mouseX, mouseY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(mouseX, mouseY);
+        }
+
+
+
+
+
+        document.getElementById('save_button').addEventListener('click', function() {
+            const dataURL = canvas.toDataURL('image/png');
+            fetch('/save-name', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ image: dataURL })
+            }).then(response => response.json())
+              .then(data => {
+                console.log(data.message);
+            });
+        });
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mousemove', draw);
+    </script>
+</body>
+</html>

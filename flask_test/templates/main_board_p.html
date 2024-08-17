@@ -400,6 +400,72 @@
             left: 17356px;
             top: 192px;
         }
+
+        .nameplate {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #d69f4c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 12em;
+            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
+            text-shadow: 15px 15px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
+        }
+        #nameplate1 {
+            width: 3236px;
+            height: 1810px;
+            left: 768px;
+            top: 12380px;
+            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #nameplate2 {
+            width: 3236px;
+            height: 1810px;
+            left: 4772px;
+            top: 12380px;
+            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #nameplate3 {
+            width: 3236px;
+            height: 1810px;
+            left: 8776px;
+            top: 12380px;
+            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #nameplate4 {
+            width: 3236px;
+            height: 1810px;
+            left: 12780px;
+            top: 12380px;
+            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
+        #nameplate5 {
+            width: 3236px;
+            height: 1810px;
+            left: 16784px;
+            top: 12380px;
+            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
+            background-size: cover; /* Ensure the image covers the entire button */
+            background-position: center; /* Center the image */
+            color: transparent; /* Hide text */
+        }
     </style>
 </head>
 <body>
@@ -440,13 +506,18 @@
         <div class="button" id="button28" onclick="buttonClicked(this, 'Button 28')"></div>
         <div class="button" id="button29" onclick="buttonClicked(this, 'Button 29')"></div>
         <div class="button" id="button30" onclick="buttonClicked(this, 'Button 30')"></div>
+        <div class="nameplate" id="nameplate1"></div>
+        <div class="nameplate" id="nameplate2"></div>
+        <div class="nameplate" id="nameplate3"></div>
+        <div class="nameplate" id="nameplate4"></div>
+        <div class="nameplate" id="nameplate5"></div>
         <!-- Add more buttons here -->
     </div>
     <script>
         function scaleBoard() {
             const board = document.getElementById('board');
             const scaleX = window.innerWidth / 20783; // Replace 1920 with your design width
-            const scaleY = window.innerHeight / 12268; // Replace 1080 with your design height
+            const scaleY = window.innerHeight / 14382; // Replace 1080 with your design height
             const scale = Math.min(scaleX, scaleY);
             board.style.transform = `scale(${scale})`;
 
