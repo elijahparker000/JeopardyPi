@@ -1,3 +1,4 @@
 .env
-jeopardy-electron/node_modules
+jeopardy-electron/node_modules/
 venv/
+flask_test/static/images/names/
