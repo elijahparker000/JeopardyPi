@@ -18,7 +18,18 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    return render_template('title_screen.html')
+
+@app.route('/write_name')
+def next_page():
+    return render_template('write_name.html')
+
+@app.route('/main_board_p')
+def main_board():
     return render_template('main_board_p.html')
+
+
+
 
 @app.route('/button-clicked', methods=['GET'])
 def button_clicked():

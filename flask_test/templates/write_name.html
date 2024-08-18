@@ -142,10 +142,13 @@
                 },
                 body: JSON.stringify({ image: dataURL })
             }).then(response => response.json())
-              .then(data => {
+            .then(data => {
                 console.log(data.message);
+                // After the image is saved, redirect to the new page
+                window.location.href = '/main_board_p'; // Assuming '/main_board_p' is the Flask route that serves main_board_p.html
             });
         });
+
 
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
