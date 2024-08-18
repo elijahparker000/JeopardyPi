@@ -19,6 +19,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return render_template('title_screen.html')
+    #return render_template('clue_p.html')
 
 @app.route('/write_name')
 def next_page():
@@ -27,6 +28,10 @@ def next_page():
 @app.route('/main_board_p')
 def main_board():
     return render_template('main_board_p.html')
+
+@app.route('/clue_p')
+def clue_p():
+    return render_template('clue_p.html')
 
 
 

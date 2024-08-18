@@ -36,12 +36,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            text-decoration: none;
             box-sizing: border-box; /* Include padding and border in element's total width and height */
-            font-size: 12em;
-            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
-            text-shadow: 15px 15px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
         }
         #button1 {
             width: 3236px;
@@ -412,15 +407,12 @@
             text-align: center;
             text-decoration: none;
             box-sizing: border-box; /* Include padding and border in element's total width and height */
-            font-size: 12em;
-            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
-            text-shadow: 15px 15px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
         }
         #nameplate1 {
             width: 3236px;
             height: 1810px;
             left: 768px;
-            top: 12380px;
+            top: 13360px;
             background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
             background-size: cover; /* Ensure the image covers the entire button */
             background-position: center; /* Center the image */
@@ -430,7 +422,7 @@
             width: 3236px;
             height: 1810px;
             left: 4772px;
-            top: 12380px;
+            top: 13360px;
             background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
             background-size: cover; /* Ensure the image covers the entire button */
             background-position: center; /* Center the image */
@@ -440,7 +432,7 @@
             width: 3236px;
             height: 1810px;
             left: 8776px;
-            top: 12380px;
+            top: 13360px;
             background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
             background-size: cover; /* Ensure the image covers the entire button */
             background-position: center; /* Center the image */
@@ -450,7 +442,7 @@
             width: 3236px;
             height: 1810px;
             left: 12780px;
-            top: 12380px;
+            top: 13360px;
             background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
             background-size: cover; /* Ensure the image covers the entire button */
             background-position: center; /* Center the image */
@@ -460,11 +452,62 @@
             width: 3236px;
             height: 1810px;
             left: 16784px;
-            top: 12380px;
+            top: 13360px;
             background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
             background-size: cover; /* Ensure the image covers the entire button */
             background-position: center; /* Center the image */
             color: transparent; /* Hide text */
+        }
+
+        .score {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 35em;
+            font-family: 'cat_font', Arial, sans-serif; /* Use custom font */
+            padding: 10px; /* Add padding if needed for better text placement */
+            width: 100%; /* Ensure the text container takes full width of the element */
+            height: 100%; /* Ensure the text container takes full height of the element */
+            text-shadow: 19px 21px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
+            padding-top: 8%; /* Adjust this value until the text is centered */
+        }
+        #score1 {
+            width: 3236px;
+            height: 800px;
+            left: 768px;
+            top: 12380px;
+        }
+        #score2 {
+            width: 3236px;
+            height: 800px;
+            left: 4772px;
+            top: 12380px;
+        }
+        #score3 {
+            width: 3236px;
+            height: 800px;
+            left: 8776px;
+            top: 12380px;
+        }
+        #score4 {
+            width: 3236px;
+            height: 800px;
+            left: 12780px;
+            top: 12380px;
+        }
+        #score5 {
+            width: 3236px;
+            height: 800px;
+            left: 16784px;
+            top: 12380px;
+            color: #d41010;
         }
     </style>
 </head>
@@ -511,13 +554,17 @@
         <div class="nameplate" id="nameplate3"></div>
         <div class="nameplate" id="nameplate4"></div>
         <div class="nameplate" id="nameplate5"></div>
-        <!-- Add more buttons here -->
+        <div class="score" id="score1">$345,678</div>
+        <div class="score" id="score2">$0</div>
+        <div class="score" id="score3">$12</div>
+        <div class="score" id="score4">$843</div>
+        <div class="score" id="score5">-$1000</div>
     </div>
     <script>
         function scaleBoard() {
             const board = document.getElementById('board');
             const scaleX = window.innerWidth / 20783; // Replace 1920 with your design width
-            const scaleY = window.innerHeight / 14382; // Replace 1080 with your design height
+            const scaleY = window.innerHeight / 15362; // Replace 1080 with your design height
             const scale = Math.min(scaleX, scaleY);
             board.style.transform = `scale(${scale})`;
 
@@ -543,6 +590,7 @@
                     }
                 })
                 .catch(error => console.error('Error:', error));
+                window.location.href = '/clue_p';
         }
     </script>
 </body>

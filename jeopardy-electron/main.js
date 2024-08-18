@@ -20,6 +20,7 @@ function createWindow() {
       contextIsolation: false
     }
   });
+  //mainWindow.maximize();
 
   // Try to load the Flask server
   const retryInterval = 500; // Retry every 500ms

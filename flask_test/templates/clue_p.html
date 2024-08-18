@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeopardy Board</title>
+    <style>
+        @font-face {
+            font-family: 'clue_font';
+            src: url("{{ url_for('static', filename='fonts/Korinna Bold.ttf') }}") format('truetype');
+        }
+
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling */
+        }
+        .board {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            transform-origin: top left;
+        }
+        .clue {
+            position: absolute;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            font-size: 10em;
+            font-family: 'clue_font', Arial, sans-serif; /* Use custom font */
+            padding: 10px; /* Add padding if needed for better text placement */
+            width: 100%; /* Ensure the text container takes full width of the element */
+            height: 100%; /* Ensure the text container takes full height of the element */
+            text-shadow: 19px 14px 0px rgba(0, 0, 0, 1); /* Add shadow effect TODO: this is totally a guess*/ 
+            padding-top: 5%; /* Adjust this value until the text is centered */
+            padding-left: 20%; /* Adjust this value until the text is centered TODO: the left and right padding is to make the text stack into more lines*/
+            padding-right: 20%; /* Adjust this value until the text is centered */
+            width: 3236px;
+            height: 1810px;
+            left: 0px;
+            top: 0px;
+        }
+        .button {
+            background-color: transparent; /* Transparent background */
+            color: #fff; /* White text color */
+            /*padding: 20px 60px; /* Padding for a sleek look */
+            font-size: 2em;
+            font-family: 'Arial', sans-serif; /* Font family */
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+            display: inline-block;
+            position: absolute;
+            top: 100px; /* Adjusted vertical position */
+            left: 100px; /* Adjusted horizontal position */
+            width: 100px;
+            height: 40px;
+            text-align: center;
+        }
+
+        .button:hover {
+            color: #bdbdbd; /* Light gray text color on hover */
+            transform: scale(1.05); /* Slight scale-up effect on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="board">
+        <div class="clue">FOR THE LAST 8 YEARS OF HIS LIFE, GALILEO WAS UNDER HOUSE ARREST FOR ESPOUSING THIS MAN'S THEORY</div>
+        <div class="button" onclick="window.location.href = '/main_board_p' ; ">Close</div>
+    </div>
+    <script>
+        function scaleBoard() {
+            const board = document.getElementById('board');
+            const scaleX = window.innerWidth / 3236; // Replace 1920 with your design width
+            const scaleY = window.innerHeight / 1810; // Replace 1080 with your design height
+            const scale = Math.min(scaleX, scaleY);
+            board.style.transform = `scale(${scale})`;
+
+            // Center the board horizontally
+            const boardWidth = 3236 * scale; // Replace 1920 with your design width
+            const offsetX = (window.innerWidth - boardWidth) / 2;
+            board.style.left = `${offsetX}px`;
+        }
+
+        window.addEventListener('resize', scaleBoard);
+        window.addEventListener('load', scaleBoard);
+    </script>
+</body>
+</html>
