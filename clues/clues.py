@@ -25,10 +25,12 @@ df_show_list = show_round_category.drop_duplicates()
 df_jeopardy = df_show_list[df_show_list['Round'] == 'Jeopardy!']
 
 # Randomly sample six unique combinations
-df_jeopardy_sampled = df_jeopardy.sample(n=6, random_state=42)  # random_state is for reproducibility
-
+#df_jeopardy_sampled = df_jeopardy.sample(n=6, random_state=42)  # random_state is for reproducibility
+df_jeopardy_sampled = df_jeopardy.sample(n=6)  # random_state is for reproducibility
 
 # Merge the original DataFrame with the sampled_df to get all matching rows
 df_jeopardy_active_questions = pd.merge(df, df_jeopardy_sampled, on=['Show Number', 'Round', 'Category'], how='inner')
 print(df_jeopardy_active_questions)
+print(df_jeopardy_sampled)
+
 

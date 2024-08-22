@@ -23,7 +23,8 @@ def get_jeopardy_questions():
     show_round_category = df[['Show Number', 'Round', 'Category']]
     df_show_list = show_round_category.drop_duplicates()
     df_jeopardy = df_show_list[df_show_list['Round'] == 'Jeopardy!']
-    df_jeopardy_sampled = df_jeopardy.sample(n=6, random_state=42)
+    #df_jeopardy_sampled = df_jeopardy.sample(n=6, random_state=42) # pulls the same every time for testing
+    df_jeopardy_sampled = df_jeopardy.sample(n=6)
     df_jeopardy_active_questions = pd.merge(df, df_jeopardy_sampled, on=['Show Number', 'Round', 'Category'], how='inner')
     categories = df_jeopardy_sampled['Category'].tolist()  # Get the categories
     return df_jeopardy_active_questions, categories
