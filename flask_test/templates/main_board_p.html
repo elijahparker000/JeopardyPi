@@ -514,12 +514,12 @@
 <body>
     <!-- TODO: Add indicator bars that change color to alert players when they can press buzzers -->
     <div class="board" id="board">
-        <div class="category" id="category1">EDIBLE RHYME TIME</div>
-        <div class="category" id="category2">BOOKS IN GERMAN</div>
-        <div class="category" id="category3">3 "T"s</div>
-        <div class="category" id="category4">CHOP CHOP!</div>
-        <div class="category" id="category5">THEY SAID IT WOULDN'T LAST</div>
-        <div class="category" id="category6">THEY WERE RIGHT</div>
+        <div class="category" id="category1">{{ categories[0] }}</div>
+        <div class="category" id="category2">{{ categories[1] }}</div>
+        <div class="category" id="category3">{{ categories[2] }}</div>
+        <div class="category" id="category4">{{ categories[3] }}</div>
+        <div class="category" id="category5">{{ categories[4] }}</div>
+        <div class="category" id="category6">{{ categories[5] }}</div>
         <div class="button" id="button1" onclick="buttonClicked(this, 'Button 1')"></div>
         <div class="button" id="button2" onclick="buttonClicked(this, 'Button 2')"></div>
         <div class="button" id="button3" onclick="buttonClicked(this, 'Button 3')"></div>

@@ -5,21 +5,11 @@ Created on Wed Aug 14 12:47:49 2024
 @author: me
 """
 import pandas as pd
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
 
-# Load environment variables from the .env file
-load_dotenv()
-
-# Access the PROJ_PATH environment variable
-proj_path = os.getenv('PROJ_PATH')
-
-
-# Specify the path to your file
-file_path = os.path.join(proj_path, "clues/jeopardy.csv")
-
 # Read the CSV file into a DataFrame
-df = pd.read_csv(file_path)
+df = pd.read_csv('C:\Elijah\JeopardyPi\clues\jeopardy.csv')
 
 # If column names have leading/trailing spaces, strip them
 df.columns = df.columns.str.strip()
@@ -41,4 +31,4 @@ df_jeopardy_sampled = df_jeopardy.sample(n=6, random_state=42)  # random_state i
 # Merge the original DataFrame with the sampled_df to get all matching rows
 df_jeopardy_active_questions = pd.merge(df, df_jeopardy_sampled, on=['Show Number', 'Round', 'Category'], how='inner')
 print(df_jeopardy_active_questions)
-print('done')
+
