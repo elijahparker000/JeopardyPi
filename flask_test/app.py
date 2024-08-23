@@ -15,8 +15,8 @@ proj_path = os.getenv('PROJ_PATH')
 
 app = Flask(__name__)
 
-# Define the function to get Jeopardy questions
-def get_jeopardy_questions():
+# Define the function to get Jeopardy clues
+def get_jeopardy_clues():
     file_path = os.path.join(proj_path, "clues/jeopardy.csv")
     df = pd.read_csv(file_path)
     df.columns = df.columns.str.strip()
@@ -25,9 +25,9 @@ def get_jeopardy_questions():
     df_jeopardy = df_show_list[df_show_list['Round'] == 'Jeopardy!']
     #df_jeopardy_sampled = df_jeopardy.sample(n=6, random_state=42) # pulls the same every time for testing
     df_jeopardy_sampled = df_jeopardy.sample(n=6)
-    df_jeopardy_active_questions = pd.merge(df, df_jeopardy_sampled, on=['Show Number', 'Round', 'Category'], how='inner')
+    df_jeopardy_active_clues = pd.merge(df, df_jeopardy_sampled, on=['Show Number', 'Round', 'Category'], how='inner')
     categories = df_jeopardy_sampled['Category'].tolist()  # Get the categories
-    return df_jeopardy_active_questions, categories
+    return df_jeopardy_active_clues, categories
 
 @app.route('/')
 def index():
@@ -39,18 +39,18 @@ def next_page():
 
 @app.route('/main_board_p')
 def main_board():
-    _, categories = get_jeopardy_questions()
+    _, categories = get_jeopardy_clues()
     return render_template('main_board_p.html', categories=categories)
 
 @app.route('/clue_p')
 def clue_p():
     return render_template('clue_p.html')
 
-@app.route('/get-questions', methods=['GET'])
-def get_questions():
-    df_jeopardy_active_questions, _ = get_jeopardy_questions()
-    questions = df_jeopardy_active_questions.to_dict(orient='records')
-    return jsonify(questions)
+@app.route('/get-clues', methods=['GET'])
+def get_clues():
+    df_jeopardy_active_clues, _ = get_jeopardy_clues()
+    clues = df_jeopardy_active_clues.to_dict(orient='records')
+    return jsonify(clues)
 
 @app.route('/button-clicked', methods=['GET'])
 def button_clicked():
