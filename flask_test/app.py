@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from PIL import Image
 from io import BytesIO
 import base64
@@ -14,6 +14,7 @@ load_dotenv()
 proj_path = os.getenv('PROJ_PATH')
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'  # Replace with a strong secret key TODO: Figure out what this means
 
 # Define the function to get Jeopardy clues
 def get_jeopardy_clues():
@@ -39,8 +40,10 @@ def next_page():
 
 @app.route('/main_board_p')
 def main_board():
-    _, categories = get_jeopardy_clues()
-    return render_template('main_board_p.html', categories=categories)
+    if 'categories' not in session:
+        _, categories = get_jeopardy_clues()
+        session['categories'] = categories
+    return render_template('main_board_p.html', categories=session['categories'])
 
 @app.route('/clue_p')
 def clue_p():
