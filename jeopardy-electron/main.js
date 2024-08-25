@@ -23,6 +23,7 @@ function createWindows() {
     height: controlDisplay.size.height,
     x: controlDisplay.bounds.x,
     y: controlDisplay.bounds.y,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -84,6 +85,11 @@ function createWindows() {
 
 
 app.on('ready', () => {
+  const displays = screen.getAllDisplays();
+  displays.forEach((display, index) => {
+    console.log(`Display ${index}:`, display);
+  });
+
   const flaskAppPath = path.join(__dirname, '../flask_test/app.py');
   flaskProcess = exec(`python ${flaskAppPath}`, (err, stdout, stderr) => {
     if (err) {
