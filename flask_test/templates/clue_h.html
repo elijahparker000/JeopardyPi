@@ -49,11 +49,35 @@
             left: 0px;
             top: 0px;
         }
+        .button {
+            background-color: transparent; /* Transparent background */
+            color: #fff; /* White text color */
+            /*padding: 20px 60px; /* Padding for a sleek look */
+            font-size: 2em;
+            font-family: 'Arial', sans-serif; /* Font family */
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+            display: inline-block;
+            position: absolute;
+            top: 100px; /* Adjusted vertical position */
+            left: 100px; /* Adjusted horizontal position */
+            width: 100px;
+            height: 40px;
+            text-align: center;
+        }
+
+        .button:hover {
+            color: #bdbdbd; /* Light gray text color on hover */
+            transform: scale(1.05); /* Slight scale-up effect on hover */
+        }
     </style>
 </head>
 <body>
     <div class="board" id="board">
         <div class="clue">FOR THE LAST 8 YEARS OF HIS LIFE, GALILEO WAS UNDER HOUSE ARREST FOR ESPOUSING THIS MAN'S THEORY</div>
+        <div class="button" onclick="closeScreen()">Close</div>
     </div>
     <script>
         function scaleBoard() {
@@ -71,6 +95,13 @@
 
         window.addEventListener('resize', scaleBoard);
         window.addEventListener('load', scaleBoard);
+
+        function closeScreen() {
+                window.location.href = '/main_board_h';
+                // Send a request to the main process to change the player window's URL
+                const { ipcRenderer } = require('electron');
+                ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
+        }
     </script>
 </body>
 </html>

@@ -69,9 +69,19 @@ def main_board_p():
         categories = shared_dict['categories']
     return render_template('main_board_p.html', categories=categories)
 
+@app.route('/main_board_h')
+def main_board_h():
+    with shared_lock:
+        categories = shared_dict['categories']
+    return render_template('main_board_h.html', categories=categories)
+
 @app.route('/clue_p')
 def clue_p():
     return render_template('clue_p.html')
+
+@app.route('/clue_h')
+def clue_h():
+    return render_template('clue_h.html')
 
 @app.route('/title_video_p')
 def title_video_p():
