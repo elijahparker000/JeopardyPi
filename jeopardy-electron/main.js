@@ -3,28 +3,49 @@ const path = require('path');
 const { exec } = require('child_process');
 const http = require('http');
 
-let mainWindow;
+app.disableHardwareAcceleration();
+
+let controlWindow; // Window for "Alex Trebek" (game control)
+let playerWindow; // Window for players (game view)
 let flaskProcess;
 
-function createWindow() {
-  const aspectRatio = 16 / 9;
-  let windowWidth = 1280; // Specific width in pixels
-  let windowHeight = windowWidth / aspectRatio;
+function createWindows() {
+  const displays = screen.getAllDisplays();
+  
+  const controlDisplay = displays[0];
+  const playerDisplay = displays[1] || displays[0];
 
-  mainWindow = new BrowserWindow({
-    width: windowWidth,
-    height: windowHeight,
+  console.log('Control Display:', controlDisplay);
+  console.log('Player Display:', playerDisplay);
+
+  controlWindow = new BrowserWindow({
+    width: controlDisplay.size.width,
+    height: controlDisplay.size.height,
+    x: controlDisplay.bounds.x,
+    y: controlDisplay.bounds.y,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+
+  playerWindow = new BrowserWindow({
+    width: playerDisplay.size.width,
+    height: playerDisplay.size.height,
+    x: playerDisplay.bounds.x,
+    y: playerDisplay.bounds.y,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     }
   });
-  //mainWindow.maximize();
 
-  // Try to load the Flask server
-  const retryInterval = 500; // Retry every 500ms
-  const maxRetries = 20; // Try 20 times before giving up
+  playerWindow.setPosition(playerDisplay.bounds.x, playerDisplay.bounds.y); // Force position update
+  playerWindow.show(); // Ensure the window is displayed
+
+  const retryInterval = 500;
+  const maxRetries = 20;
   let retries = 0;
 
   const tryLoading = () => {
@@ -35,12 +56,19 @@ function createWindow() {
 
     http.get('http://localhost:5000', (res) => {
       if (res.statusCode === 200) {
-        mainWindow.loadURL('http://localhost:5000');
-        mainWindow.setAspectRatio(aspectRatio);
-        mainWindow.setMenuBarVisibility(false);
-        mainWindow.on('closed', function () {
-          mainWindow = null;
+        controlWindow.loadURL('http://localhost:5000/main_board_p');
+        playerWindow.loadURL('http://localhost:5000');
+
+        controlWindow.setMenuBarVisibility(false);
+        controlWindow.on('closed', function () {
+          controlWindow = null;
         });
+
+        playerWindow.setMenuBarVisibility(false);
+        playerWindow.on('closed', function () {
+          playerWindow = null;
+        });
+
       } else {
         retries++;
         setTimeout(tryLoading, retryInterval);
@@ -53,6 +81,7 @@ function createWindow() {
 
   tryLoading();
 }
+
 
 app.on('ready', () => {
   const flaskAppPath = path.join(__dirname, '../flask_test/app.py');
@@ -75,7 +104,7 @@ app.on('ready', () => {
     console.log(`Flask process exited with code ${code}`);
   });
 
-  createWindow();
+  createWindows();
 });
 
 app.on('window-all-closed', function () {
@@ -88,13 +117,13 @@ app.on('window-all-closed', function () {
 });
 
 app.on('activate', function () {
-  if (mainWindow === null) {
-    createWindow();
+  if (controlWindow === null || playerWindow === null) {
+    createWindows();
   }
 });
 
 ipcMain.on('message', (event, arg) => {
-  if (secondWindow) {
-    secondWindow.webContents.send('message', arg);
+  if (playerWindow) {
+    playerWindow.webContents.send('message', arg);
   }
 });
