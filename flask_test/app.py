@@ -31,15 +31,15 @@ def get_jeopardy_clues():
     return df_jeopardy_active_clues, categories
 
 @app.route('/')
-def index():
-    return render_template('title_screen.html')
+def title_screen_h():
+    return render_template('title_screen_h.html')
 
-@app.route('/write_name')
-def next_page():
-    return render_template('write_name.html')
+@app.route('/write_name_h')
+def write_name_h():
+    return render_template('write_name_h.html')
 
 @app.route('/main_board_p')
-def main_board():
+def main_board_p():
     if 'categories' not in session:
         _, categories = get_jeopardy_clues()
         session['categories'] = categories
