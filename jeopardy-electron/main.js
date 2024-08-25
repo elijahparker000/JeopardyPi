@@ -12,8 +12,8 @@ let flaskProcess;
 function createWindows() {
   const displays = screen.getAllDisplays();
   
-  const controlDisplay = displays[0];
-  const playerDisplay = displays[1] || displays[0];
+  const playerDisplay = displays[0];
+  const controlDisplay = displays[1] || displays[0];
 
   console.log('Control Display:', controlDisplay);
   console.log('Player Display:', playerDisplay);
