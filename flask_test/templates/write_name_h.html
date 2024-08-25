@@ -114,7 +114,13 @@
             }).then(response => response.json())
             .then(data => {
                 console.log(data.message);
+
+                // Navigate the host screen
                 window.location.href = '/main_board_p';
+
+                // Send a request to the main process to change the player window's URL
+                const { ipcRenderer } = require('electron');
+                ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
             });
         });
 

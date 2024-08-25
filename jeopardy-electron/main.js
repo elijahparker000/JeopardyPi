@@ -3,10 +3,8 @@ const path = require('path');
 const { exec } = require('child_process');
 const http = require('http');
 
-app.disableHardwareAcceleration();
-
-let controlWindow; // Window for "Alex Trebek" (game control)
-let playerWindow; // Window for players (game view)
+let controlWindow;
+let playerWindow;
 let flaskProcess;
 
 function createWindows() {
@@ -14,9 +12,6 @@ function createWindows() {
   
   const playerDisplay = displays[0];
   const controlDisplay = displays[1] || displays[0];
-
-  console.log('Control Display:', controlDisplay);
-  console.log('Player Display:', playerDisplay);
 
   controlWindow = new BrowserWindow({
     width: controlDisplay.size.width,
@@ -41,9 +36,6 @@ function createWindows() {
       contextIsolation: false
     }
   });
-
-  playerWindow.setPosition(playerDisplay.bounds.x, playerDisplay.bounds.y); // Force position update
-  playerWindow.show(); // Ensure the window is displayed
 
   const retryInterval = 500;
   const maxRetries = 20;
@@ -83,13 +75,7 @@ function createWindows() {
   tryLoading();
 }
 
-
 app.on('ready', () => {
-  const displays = screen.getAllDisplays();
-  displays.forEach((display, index) => {
-    console.log(`Display ${index}:`, display);
-  });
-
   const flaskAppPath = path.join(__dirname, '../flask_test/app.py');
   flaskProcess = exec(`python ${flaskAppPath}`, (err, stdout, stderr) => {
     if (err) {
@@ -128,8 +114,9 @@ app.on('activate', function () {
   }
 });
 
-ipcMain.on('message', (event, arg) => {
+// Handle the navigation request from the control window
+ipcMain.on('navigate-player', (event, url) => {
   if (playerWindow) {
-    playerWindow.webContents.send('message', arg);
+    playerWindow.loadURL(url);
   }
 });
