@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video and Audio</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #video-container, #image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        video, img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the screen while maintaining aspect ratio */
+        }
+        #image-container {
+            display: none; /* Start with the image container hidden */
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="intro-video" autoplay>
+            <source src="{{ url_for('static', filename='videos/intro_video.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div id="image-container">
+        <img id="end-image" src="{{ url_for('static', filename='images/title_screen.png') }}" alt="End Image">
+    </div>
+
+    <audio id="background-audio" autoplay>
+        <source src="{{ url_for('static', filename='audio/this_is_jeopardy.mp3') }}" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const video = document.getElementById('intro-video');
+        const image = document.getElementById('end-image');
+        const videoContainer = document.getElementById('video-container');
+        const imageContainer = document.getElementById('image-container');
+        const audio = document.getElementById('background-audio');
+
+        video.addEventListener('ended', function() {
+            videoContainer.style.display = 'none';
+            imageContainer.style.display = 'flex';
+            audio.play();
+        });
+    </script>
+</body>
+</html>

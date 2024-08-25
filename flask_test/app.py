@@ -49,6 +49,12 @@ def main_board():
 def clue_p():
     return render_template('clue_p.html')
 
+@app.route('/title_video_p')
+def title_video_p():
+    return render_template('title_video_p.html')
+
+
+
 @app.route('/get-clues', methods=['GET'])
 def get_clues():
     df_jeopardy_active_clues, _ = get_jeopardy_clues()

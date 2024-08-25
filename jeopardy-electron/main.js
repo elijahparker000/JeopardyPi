@@ -58,7 +58,7 @@ function createWindows() {
     http.get('http://localhost:5000', (res) => {
       if (res.statusCode === 200) {
         controlWindow.loadURL('http://localhost:5000/main_board_p');
-        playerWindow.loadURL('http://localhost:5000');
+        playerWindow.loadURL('http://localhost:5000/title_video_p');
 
         controlWindow.setMenuBarVisibility(false);
         controlWindow.on('closed', function () {
