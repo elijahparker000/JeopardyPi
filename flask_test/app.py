@@ -8,6 +8,7 @@ import pandas as pd
 from multiprocessing import Lock
 from multiprocessing.managers import AcquirerProxy, BaseManager, DictProxy
 import math
+from jeopardy_data import get_jeopardy_clues, return_clue_and_response
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -17,49 +18,6 @@ proj_path = os.getenv('PROJ_PATH')
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong secret key
-
-# Define the function to get Jeopardy clues
-# Define the function to get Jeopardy clues along with values, questions, and answers
-def get_jeopardy_clues():
-    file_path = os.path.join(proj_path, "clues/jeopardy.csv")
-    df = pd.read_csv(file_path)
-    df.columns = df.columns.str.strip()
-
-    # Filter the DataFrame for the 'Jeopardy!' round and remove duplicates of categories
-    show_round_category = df[['Show Number', 'Round', 'Category']]
-    df_show_list = show_round_category.drop_duplicates()
-    df_jeopardy = df_show_list[df_show_list['Round'] == 'Jeopardy!']
-
-    # Randomly sample 6 categories
-    df_jeopardy_sampled = df_jeopardy.sample(n=6)
-
-    # Merge the sampled categories with the original dataframe to get the clues and answers
-    df_jeopardy_active_clues = pd.merge(
-        df, 
-        df_jeopardy_sampled, 
-        on=['Show Number', 'Round', 'Category'], 
-        how='inner'
-    )
-
-    # Extract the categories, questions, answers, and values for the selected categories
-    categories = df_jeopardy_sampled['Category'].tolist()  # List of selected categories
-
-    # For each category, get the corresponding clues and answers
-    clues = {}
-    for category in categories:
-        # Filter the DataFrame for the current category
-        clues_for_category = df_jeopardy_active_clues[df_jeopardy_active_clues['Category'] == category]
-        
-        # Collect the clue value, question, and answer in a list of dictionaries
-        clues[category] = [
-            {
-                'clue': clue['Question'],
-                'response': clue['Answer']
-            }
-            for _, clue in clues_for_category.iterrows()
-        ]
-
-    return categories, clues
 
 
 # Set up shared state management
@@ -84,9 +42,13 @@ shared_dict, shared_lock = get_shared_state(HOST, PORT, KEY)
 # Clear shared state on startup to ensure random categories each time
 with shared_lock:
     shared_dict.clear()  # Ensure we don't have the same values each time we run the app
-    categories, clues = get_jeopardy_clues()
+    categories, clues = get_jeopardy_clues(proj_path)
     shared_dict['categories'] = categories
     shared_dict['clues'] = clues  # Store clues in shared_dict
+
+
+
+
 
 
 @app.route('/')
@@ -115,90 +77,28 @@ def main_board_h():
 @app.route('/clue_p')
 def clue_p():
     button_name = request.args.get('name')
-    print(button_name, flush=True)
-
-    # Parse the button name to extract the category and clue numbers
+    with shared_lock:
+        categories = shared_dict['categories']
+        clues = shared_dict['clues']
     try:
-        parts = button_name.split()
-        category_number = int(parts[1]) - 1  # Category number, adjust for 0-based indexing
-        clue_number = int(parts[3]) - 1      # Clue number, adjust for 0-based indexing
-    except (IndexError, ValueError):
-        return "Invalid clue identifier", 400
-
-    with shared_lock:
-        categories = shared_dict['categories']  # List of categories
-        clues = shared_dict['clues']  # Dictionary of clues by category
-
-    # Retrieve the category name
-    category_name = categories[category_number]
-
-    # Retrieve the clues for the specified category
-    category_clues = clues.get(category_name)
-
-    # Retrieve the specific clue
-    if clue_number >= len(category_clues):
-        return "Invalid clue number", 400
-
-    selected_clue = category_clues[clue_number]
-    clue_text = selected_clue['clue']
-    response_text = selected_clue['response']
-
-    print(f"Selected clue: {clue_text}, Response: {response_text}", flush=True)
-
-    # Store the selected clue in shared_dict for the player screen
-    with shared_lock:
-        shared_dict['current_clue'] = {
-            'clue': clue_text,
-            'response': response_text
-        }
-
-    # Pass the clue and response to the template
-    return render_template('clue_p.html', clue=clue_text, response=response_text)
+        clue, response = return_clue_and_response(categories, clues, button_name)
+    except ValueError as e:
+        return str(e), 400
+    return render_template('clue_p.html', clue=clue, response=response)
 
 
 
 @app.route('/clue_h')
 def clue_h():
     button_name = request.args.get('name')
-    print(button_name, flush=True)
-
-    # Parse the button name to extract the category and clue numbers
+    with shared_lock:
+        categories = shared_dict['categories']
+        clues = shared_dict['clues']
     try:
-        parts = button_name.split()
-        category_number = int(parts[1]) - 1  # Category number, adjust for 0-based indexing
-        clue_number = int(parts[3]) - 1      # Clue number, adjust for 0-based indexing
-    except (IndexError, ValueError):
-        return "Invalid clue identifier", 400
-
-    with shared_lock:
-        categories = shared_dict['categories']  # List of categories
-        clues = shared_dict['clues']  # Dictionary of clues by category
-
-    # Retrieve the category name
-    category_name = categories[category_number]
-
-    # Retrieve the clues for the specified category
-    category_clues = clues.get(category_name)
-
-    # Retrieve the specific clue
-    if clue_number >= len(category_clues):
-        return "Invalid clue number", 400
-
-    selected_clue = category_clues[clue_number]
-    clue_text = selected_clue['clue']
-    response_text = selected_clue['response']
-
-    print(f"Selected clue: {clue_text}, Response: {response_text}", flush=True)
-
-    # Store the selected clue in shared_dict for the player screen
-    with shared_lock:
-        shared_dict['current_clue'] = {
-            'clue': clue_text,
-            'response': response_text
-        }
-
-    # Pass the clue and response to the template
-    return render_template('clue_h.html', clue=clue_text, response=response_text)
+        clue, response = return_clue_and_response(categories, clues, button_name)
+    except ValueError as e:
+        return str(e), 400
+    return render_template('clue_h.html', clue=clue, response=response)
 
 
 
