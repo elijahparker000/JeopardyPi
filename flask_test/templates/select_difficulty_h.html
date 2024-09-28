@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Difficulty</title>
+    <style>
+        @font-face {
+            font-family: 'dollar_font';
+            src: url("{{ url_for('static', filename='fonts/Swiss 911 Compressed.ttf') }}") format('truetype');
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .board {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            transform-origin: top left;
+        }
+        .button {
+            position: absolute;
+            width: 3236px;
+            height: 600px;
+            left: 0px;
+            right: 0px;
+            margin: 0 auto;
+            background-color: #010877; /* Jeopardy blue */
+            border: 10px solid #d69f4c; /* Gold border */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 200px;
+            font-family: 'dollar_font', Arial, sans-serif;
+            cursor: pointer;
+            text-shadow: 10px 10px 0px rgba(0, 0, 0, 1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button:hover {
+            background-color: #0a19a0;
+            transform: scale(1.05);
+        }
+        #button1 {
+            top: 400px;
+        }
+        #button2 {
+            top: 1100px;
+        }
+        #button3 {
+            top: 1800px;
+        }
+        #button4 {
+            top: 2500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="board" id="board">
+        <div class="button" id="button1" onclick="selectDifficulty('Easy')">Easy</div>
+        <div class="button" id="button2" onclick="selectDifficulty('Medium')">Medium</div>
+        <div class="button" id="button3" onclick="selectDifficulty('Hard')">Hard</div>
+        <div class="button" id="button4" onclick="selectDifficulty('Expert')">Expert</div>
+    </div>
+    <script>
+        function scaleBoard() {
+            const board = document.getElementById('board');
+            const designWidth = 3236; // Your design width
+            const designHeight = 3100; // Total design height to accommodate all buttons
+            const scaleX = window.innerWidth / designWidth;
+            const scaleY = window.innerHeight / designHeight;
+            const scale = Math.min(scaleX, scaleY);
+            board.style.transform = `scale(${scale})`;
+
+            // Center the board
+            const boardWidth = designWidth * scale;
+            const boardHeight = designHeight * scale;
+            const offsetX = (window.innerWidth - boardWidth) / 2;
+            const offsetY = (window.innerHeight - boardHeight) / 2;
+            board.style.left = `${offsetX}px`;
+            board.style.top = `${offsetY}px`;
+        }
+
+        window.addEventListener('resize', scaleBoard);
+        window.addEventListener('load', scaleBoard);
+
+        function selectDifficulty(difficulty) {
+            fetch(`/select-difficulty?level=${difficulty}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                    window.location.href = `/main_board_h?difficulty=${difficulty}`;
+                    // Send a request to the main process to change the player window's URL
+                    const { ipcRenderer } = require('electron');
+                    ipcRenderer.send('navigate-player', `http://localhost:5000/main_board_p?difficulty=${difficulty}`);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

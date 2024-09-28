@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, session
 from PIL import Image
 from io import BytesIO
 import base64
@@ -58,6 +58,19 @@ def title_screen_h():
 @app.route('/write_name_h')
 def write_name_h():
     return render_template('write_name_h.html')
+
+@app.route('/select_difficulty_h')
+def select_difficulty_h():
+    return render_template('select_difficulty_h.html')
+
+#TODO: if using this assistant method approach, either use shared_lock or get both windows to share the same flask session
+@app.route('/select-difficulty')
+def select_difficulty():
+    difficulty = request.args.get('level', 'Easy')
+    # Store the difficulty in the session or process as needed
+    session['difficulty'] = difficulty
+    print(f"Difficulty selected: {difficulty}")  # For debugging
+    return jsonify({'message': f'Difficulty set to {difficulty}'})
 
 @app.route('/main_board_p')
 def main_board_p():
