@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Write Your Name</title>
     <style>
         @font-face {
@@ -108,11 +107,13 @@
         canvas.height = 1810;
 
         function startDrawing(e) {
+            e.preventDefault(); // Prevent default touch actions
             drawing = true;
             draw(e);
         }
 
-        function stopDrawing() {
+        function stopDrawing(e) {
+            e.preventDefault();
             drawing = false;
             ctx.beginPath();
         }
@@ -122,13 +123,27 @@
             const scaleX = canvas.width / rect.width;   // Relationship between actual and scaled width
             const scaleY = canvas.height / rect.height; // Relationship between actual and scaled height
 
-            const x = (e.clientX - rect.left) * scaleX;
-            const y = (e.clientY - rect.top) * scaleY;
+            let clientX, clientY;
+
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else if (e.changedTouches && e.changedTouches.length > 0) {
+                clientX = e.changedTouches[0].clientX;
+                clientY = e.changedTouches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const x = (clientX - rect.left) * scaleX;
+            const y = (clientY - rect.top) * scaleY;
             return { x, y };
         }
 
         function draw(e) {
             if (!drawing) return;
+            e.preventDefault();
 
             const { x, y } = getMousePos(e);
 
@@ -163,10 +178,17 @@
             });
         });
 
+        // Mouse events
         canvas.addEventListener('mousedown', startDrawing);
         canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing); // Stop drawing when mouse leaves canvas
+        canvas.addEventListener('mouseout', stopDrawing);
         canvas.addEventListener('mousemove', draw);
+
+        // Touch events
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchcancel', stopDrawing);
+        canvas.addEventListener('touchmove', draw);
     </script>
 </body>
 </html>
