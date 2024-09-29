@@ -19,19 +19,8 @@ proj_path = os.getenv('PROJ_PATH')
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong secret key
 
-# Set up shared state management
-# def get_shared_state(host, port, key):
-#     shared_dict = manager.dict()
-#     shared_lock = manager.Lock()
-#     manager = BaseManager((host, port), key)
-#     manager.register("get_dict", lambda: shared_dict, DictProxy)
-#     manager.register("get_lock", lambda: shared_lock, AcquirerProxy)
-#     try:
-#         manager.get_server()
-#         manager.start()
-#     except OSError:  # Address already in use
-#         manager.connect()
-#     return manager.get_dict(), manager.get_lock()
+# Set the maximum age (in seconds) for caching static files
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400  # Cache static files for 1 day (86400 seconds)
 
 HOST = "127.0.0.1"
 PORT = 35791
@@ -57,7 +46,15 @@ with shared_lock:
 
 
 
-
+@app.after_request
+def add_header(response):
+    if request.path.startswith('/static/'):
+        # For static files, cache for 1 day
+        response.headers['Cache-Control'] = 'public, max-age=86400'
+    else:
+        # For dynamic content, you may choose to disable caching
+        response.headers['Cache-Control'] = 'no-store'
+    return response
 
 @app.route('/')
 def title_screen_h():

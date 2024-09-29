@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Preload background images -->
+    <link rel="preload" href="{{ url_for('static', filename='images/dollar_200.png') }}" as="image">
+    <link rel="preload" href="{{ url_for('static', filename='images/dollar_400.png') }}" as="image">
+    <link rel="preload" href="{{ url_for('static', filename='images/dollar_600.png') }}" as="image">
+    <link rel="preload" href="{{ url_for('static', filename='images/dollar_800.png') }}" as="image">
+    <link rel="preload" href="{{ url_for('static', filename='images/dollar_1000.png') }}" as="image">
+
     <meta charset="UTF-8">
     <title>Jeopardy Board</title>
     <style>
@@ -26,6 +33,7 @@
             width: 100vw;
             height: 100vh;
             transform-origin: top left;
+            visibility: hidden;    /* Hide until scaling is adjusted */
         }
         .game-button {
             position: absolute;
@@ -140,9 +148,6 @@
 <body>
     <!-- TODO: Add indicator bars that change color to alert players when they can press buzzers -->
     <div class="board" id="board">
-        <!-- Debugging output -->
-        <pre>{{ enabled_buttons }}</pre>
-
         <!-- Categories -->
         {% for col in range(6) %}
         <div class="category" id="category{{ col+1 }}">{{ categories[col] }}</div>
@@ -184,6 +189,9 @@
             const boardWidth = 20783 * scale; // Replace 20783 with your design width
             const offsetX = (window.innerWidth - boardWidth) / 2;
             board.style.left = `${offsetX}px`;
+
+            // Make the board visible after scaling
+            board.style.visibility = 'visible';
         }
 
         window.addEventListener('resize', scaleBoard);
