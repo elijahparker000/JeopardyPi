@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jeopardy Board</title>
     <style>
         @font-face {
@@ -28,439 +27,70 @@
             height: 100vh;
             transform-origin: top left;
         }
-        .button {
+        .game-button {
             position: absolute;
-            background-color: #010877; /* Blue */
+            width: 3236px;
+            height: 1810px;
+            background-size: cover;
+            background-position: center;
             border: none;
-            color: #d69f4c;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            cursor: pointer;
         }
-        #button1 {
-            width: 3236px;
-            height: 1810px;
-            left: 191px;
-            top: 2306px;
+        div.game-button.used {
+            background-image: none;
+            background-color: #010877;
+        }
+        
+        /* Dollar value background images */
+        .game-button.value200 {
             background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
         }
-        #button2 {
-            width: 3236px;
-            height: 1810px;
-            left: 3624px;
-            top: 2306px;
-            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button3 {
-            width: 3236px;
-            height: 1810px;
-            left: 7057px;
-            top: 2306px;
-            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button4 {
-            width: 3236px;
-            height: 1810px;
-            left: 10490px;
-            top: 2306px;
-            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button5 {
-            width: 3236px;
-            height: 1810px;
-            left: 13923px;
-            top: 2306px;
-            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button6 {
-            width: 3236px;
-            height: 1810px;
-            left: 17356px;
-            top: 2306px;
-            background-image: url("{{ url_for('static', filename='images/dollar_200.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button7 {
-            width: 3236px;
-            height: 1810px;
-            left: 191px;
-            top: 4296px;
+        .game-button.value400 {
             background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
         }
-        #button8 {
-            width: 3236px;
-            height: 1810px;
-            left: 3624px;
-            top: 4296px;
-            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button9 {
-            width: 3236px;
-            height: 1810px;
-            left: 7057px;
-            top: 4296px;
-            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button10 {
-            width: 3236px;
-            height: 1810px;
-            left: 10490px;
-            top: 4296px;
-            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button11 {
-            width: 3236px;
-            height: 1810px;
-            left: 13923px;
-            top: 4296px;
-            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button12 {
-            width: 3236px;
-            height: 1810px;
-            left: 17356px;
-            top: 4296px;
-            background-image: url("{{ url_for('static', filename='images/dollar_400.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button13 {
-            width: 3236px;
-            height: 1810px;
-            left: 191px;
-            top: 6286px;
+        .game-button.value600 {
             background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
         }
-        #button14 {
-            width: 3236px;
-            height: 1810px;
-            left: 3624px;
-            top: 6286px;
-            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button15 {
-            width: 3236px;
-            height: 1810px;
-            left: 7057px;
-            top: 6286px;
-            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button16 {
-            width: 3236px;
-            height: 1810px;
-            left: 10490px;
-            top: 6286px;
-            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button17 {
-            width: 3236px;
-            height: 1810px;
-            left: 13923px;
-            top: 6286px;
-            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button18 {
-            width: 3236px;
-            height: 1810px;
-            left: 17356px;
-            top: 6286px;
-            background-image: url("{{ url_for('static', filename='images/dollar_600.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button19 {
-            width: 3236px;
-            height: 1810px;
-            left: 191px;
-            top: 8276px;
+        .game-button.value800 {
             background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
         }
-        #button20 {
-            width: 3236px;
-            height: 1810px;
-            left: 3624px;
-            top: 8276px;
-            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button21 {
-            width: 3236px;
-            height: 1810px;
-            left: 7057px;
-            top: 8276px;
-            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button22 {
-            width: 3236px;
-            height: 1810px;
-            left: 10490px;
-            top: 8276px;
-            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button23 {
-            width: 3236px;
-            height: 1810px;
-            left: 13923px;
-            top: 8276px;
-            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button24 {
-            width: 3236px;
-            height: 1810px;
-            left: 17356px;
-            top: 8276px;
-            background-image: url("{{ url_for('static', filename='images/dollar_800.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button25 {
-            width: 3236px;
-            height: 1810px;
-            left: 191px;
-            top: 10266px;
+        .game-button.value1000 {
             background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
         }
-        #button26 {
-            width: 3236px;
-            height: 1810px;
-            left: 3624px;
-            top: 10266px;
-            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button27 {
-            width: 3236px;
-            height: 1810px;
-            left: 7057px;
-            top: 10266px;
-            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button28 {
-            width: 3236px;
-            height: 1810px;
-            left: 10490px;
-            top: 10266px;
-            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button29 {
-            width: 3236px;
-            height: 1810px;
-            left: 13923px;
-            top: 10266px;
-            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #button30 {
-            width: 3236px;
-            height: 1810px;
-            left: 17356px;
-            top: 10266px;
-            background-image: url("{{ url_for('static', filename='images/dollar_1000.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
+
         .category {
             position: absolute;
+            width: 3236px;
+            height: 1810px;
             background-color: #010877; /* Blue */
-            border: none;
             color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
-            text-decoration: none;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
             font-size: 25em;
-            font-family: 'dollar_font', Arial, sans-serif; /* Use custom font */
-            padding: 10px; /* Add padding if needed for better text placement */
-            word-wrap: break-word; /* Allow text to wrap */
-            width: 100%; /* Ensure the text container takes full width of the element */
-            height: 100%; /* Ensure the text container takes full height of the element */
-            text-shadow: 19px 21px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
-        }
-
-
-        #category1 {
-            width: 3236px;
-            height: 1810px;
-            left: 191px;
-            top: 192px;
-        }
-        #category2 {
-            width: 3236px;
-            height: 1810px;
-            left: 3624px;
-            top: 192px;
-        }
-        #category3 {
-            width: 3236px;
-            height: 1810px;
-            left: 7057px;
-            top: 192px;
-        }
-        #category4 {
-            width: 3236px;
-            height: 1810px;
-            left: 10490px;
-            top: 192px;
-        }
-        #category5 {
-            width: 3236px;
-            height: 1810px;
-            left: 13923px;
-            top: 192px;
-        }
-        #category6 {
-            width: 3236px;
-            height: 1810px;
-            left: 17356px;
-            top: 192px;
+            font-family: 'dollar_font', Arial, sans-serif;
+            text-shadow: 19px 21px 0px rgba(0, 0, 0, 1);
+            word-wrap: break-word;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         .nameplate {
             position: absolute;
+            width: 3236px;
+            height: 1810px;
+            background-size: cover;
+            background-position: center;
             background-color: #010877; /* Blue */
             border: none;
-            color: #d69f4c;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            text-decoration: none;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
-        }
-        #nameplate1 {
-            width: 3236px;
-            height: 1810px;
-            left: 768px;
-            top: 13360px;
-            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #nameplate2 {
-            width: 3236px;
-            height: 1810px;
-            left: 4772px;
-            top: 13360px;
-            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #nameplate3 {
-            width: 3236px;
-            height: 1810px;
-            left: 8776px;
-            top: 13360px;
-            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #nameplate4 {
-            width: 3236px;
-            height: 1810px;
-            left: 12780px;
-            top: 13360px;
-            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
-        }
-        #nameplate5 {
-            width: 3236px;
-            height: 1810px;
-            left: 16784px;
-            top: 13360px;
-            background-image: url("{{ url_for('static', filename='images/names/player_name.png') }}");
-            background-size: cover; /* Ensure the image covers the entire button */
-            background-position: center; /* Center the image */
-            color: transparent; /* Hide text */
+            color: transparent;
         }
 
         .score {
             position: absolute;
+            width: 3236px;
+            height: 800px;
             background-color: #010877; /* Blue */
             border: none;
             color: #ffffff;
@@ -468,109 +98,90 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            text-decoration: none;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
             font-size: 35em;
-            font-family: 'cat_font', Arial, sans-serif; /* Use custom font */
-            padding: 10px; /* Add padding if needed for better text placement */
-            width: 100%; /* Ensure the text container takes full width of the element */
-            height: 100%; /* Ensure the text container takes full height of the element */
-            text-shadow: 19px 21px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
-            padding-top: 8%; /* Adjust this value until the text is centered */
+            font-family: 'cat_font', Arial, sans-serif;
+            text-shadow: 19px 21px 0px rgba(0, 0, 0, 1);
+            box-sizing: border-box;
+            padding-top: 8%;
         }
-        #score1 {
-            width: 3236px;
-            height: 800px;
-            left: 768px;
+
+        /* Generate positions for categories */
+        {% for col in range(6) %}
+        #category{{ col+1 }} {
+            left: {{ 191 + (col * 3433) }}px;
+            top: 192px;
+        }
+        {% endfor %}
+
+        /* Generate positions for buttons */
+        {% for row in range(5) %}
+            {% for col in range(6) %}
+            #button{{ row * 6 + col + 1 }} {
+                left: {{ 191 + (col * 3433) }}px;
+                top: {{ 2306 + (row * 1990) }}px;
+            }
+            {% endfor %}
+        {% endfor %}
+
+        /* Generate positions for nameplates */
+        {% set nameplate_positions = [768, 4772, 8776, 12780, 16784] %}
+        {% for idx in range(5) %}
+        #nameplate{{ idx+1 }} {
+            left: {{ nameplate_positions[idx] }}px;
+            top: 13360px;
+        }
+        #score{{ idx+1 }} {
+            left: {{ nameplate_positions[idx] }}px;
             top: 12380px;
         }
-        #score2 {
-            width: 3236px;
-            height: 800px;
-            left: 4772px;
-            top: 12380px;
-        }
-        #score3 {
-            width: 3236px;
-            height: 800px;
-            left: 8776px;
-            top: 12380px;
-        }
-        #score4 {
-            width: 3236px;
-            height: 800px;
-            left: 12780px;
-            top: 12380px;
-        }
-        #score5 {
-            width: 3236px;
-            height: 800px;
-            left: 16784px;
-            top: 12380px;
-            color: #d41010;
-        }
+        {% endfor %}
     </style>
 </head>
 <body>
     <!-- TODO: Add indicator bars that change color to alert players when they can press buzzers -->
     <div class="board" id="board">
-        <div class="category" id="category1">{{ categories[0] }}</div>
-        <div class="category" id="category2">{{ categories[1] }}</div>
-        <div class="category" id="category3">{{ categories[2] }}</div>
-        <div class="category" id="category4">{{ categories[3] }}</div>
-        <div class="category" id="category5">{{ categories[4] }}</div>
-        <div class="category" id="category6">{{ categories[5] }}</div>
-        <div class="button" id="button1" onclick="buttonClicked(this, 'cat 1 clue 1')"></div>
-        <div class="button" id="button2" onclick="buttonClicked(this, 'cat 2 clue 1')"></div>
-        <div class="button" id="button3" onclick="buttonClicked(this, 'cat 3 clue 1')"></div>
-        <div class="button" id="button4" onclick="buttonClicked(this, 'cat 4 clue 1')"></div>
-        <div class="button" id="button5" onclick="buttonClicked(this, 'cat 5 clue 1')"></div>
-        <div class="button" id="button6" onclick="buttonClicked(this, 'cat 6 clue 1')"></div>
-        <div class="button" id="button7" onclick="buttonClicked(this, 'cat 1 clue 2')"></div>
-        <div class="button" id="button8" onclick="buttonClicked(this, 'cat 2 clue 2')"></div>
-        <div class="button" id="button9" onclick="buttonClicked(this, 'cat 3 clue 2')"></div>
-        <div class="button" id="button10" onclick="buttonClicked(this, 'cat 4 clue 2')"></div>
-        <div class="button" id="button11" onclick="buttonClicked(this, 'cat 5 clue 2')"></div>
-        <div class="button" id="button12" onclick="buttonClicked(this, 'cat 6 clue 2')"></div>
-        <div class="button" id="button13" onclick="buttonClicked(this, 'cat 1 clue 3')"></div>
-        <div class="button" id="button14" onclick="buttonClicked(this, 'cat 2 clue 3')"></div>
-        <div class="button" id="button15" onclick="buttonClicked(this, 'cat 3 clue 3')"></div>
-        <div class="button" id="button16" onclick="buttonClicked(this, 'cat 4 clue 3')"></div>
-        <div class="button" id="button17" onclick="buttonClicked(this, 'cat 5 clue 3')"></div>
-        <div class="button" id="button18" onclick="buttonClicked(this, 'cat 6 clue 3')"></div>
-        <div class="button" id="button19" onclick="buttonClicked(this, 'cat 1 clue 4')"></div>
-        <div class="button" id="button20" onclick="buttonClicked(this, 'cat 2 clue 4')"></div>
-        <div class="button" id="button21" onclick="buttonClicked(this, 'cat 3 clue 4')"></div>
-        <div class="button" id="button22" onclick="buttonClicked(this, 'cat 4 clue 4')"></div>
-        <div class="button" id="button23" onclick="buttonClicked(this, 'cat 5 clue 4')"></div>
-        <div class="button" id="button24" onclick="buttonClicked(this, 'cat 6 clue 4')"></div>
-        <div class="button" id="button25" onclick="buttonClicked(this, 'cat 1 clue 5')"></div>
-        <div class="button" id="button26" onclick="buttonClicked(this, 'cat 2 clue 5')"></div>
-        <div class="button" id="button27" onclick="buttonClicked(this, 'cat 3 clue 5')"></div>
-        <div class="button" id="button28" onclick="buttonClicked(this, 'cat 4 clue 5')"></div>
-        <div class="button" id="button29" onclick="buttonClicked(this, 'cat 5 clue 5')"></div>
-        <div class="button" id="button30" onclick="buttonClicked(this, 'cat 6 clue 5')"></div>
-        <div class="nameplate" id="nameplate1"></div>
-        <div class="nameplate" id="nameplate2"></div>
-        <div class="nameplate" id="nameplate3"></div>
-        <div class="nameplate" id="nameplate4"></div>
-        <div class="nameplate" id="nameplate5"></div>
+        <!-- Debugging output -->
+        <pre>{{ enabled_buttons }}</pre>
+
+        <!-- Categories -->
+        {% for col in range(6) %}
+        <div class="category" id="category{{ col+1 }}">{{ categories[col] }}</div>
+        {% endfor %}
+
+        <!-- Buttons -->
+        {% for row in range(5) %}
+            {% for col in range(6) %}
+            <div class="game-button value{{ (row + 1) * 200 }} {% if enabled_buttons[row][col] == 0 %}used{% endif %}"
+                id="button{{ row * 6 + col + 1 }}"
+                {% if enabled_buttons[row][col] == 1 %}onclick="buttonClicked(this, {{ row }}, {{ col }})"{% endif %}>
+            </div>
+            {% endfor %}
+        {% endfor %}
+
+        <!-- Nameplates -->
+        <div class="nameplate" id="nameplate1" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate2" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate3" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate4" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate5" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+
+        <!-- Scores -->
         <div class="score" id="score1">$345,678</div>
         <div class="score" id="score2">$0</div>
         <div class="score" id="score3">$12</div>
         <div class="score" id="score4">$843</div>
-        <div class="score" id="score5">-$1000</div>
+        <div class="score" id="score5" style="color: #d41010;">-$1000</div>
     </div>
     <script>
         function scaleBoard() {
             const board = document.getElementById('board');
-            const scaleX = window.innerWidth / 20783; // Replace 1920 with your design width
-            const scaleY = window.innerHeight / 15362; // Replace 1080 with your design height
+            const scaleX = window.innerWidth / 20783; // Replace 20783 with your design width
+            const scaleY = window.innerHeight / 15362; // Replace 15362 with your design height
             const scale = Math.min(scaleX, scaleY);
             board.style.transform = `scale(${scale})`;
 
             // Center the board horizontally
-            const boardWidth = 20783 * scale; // Replace 1920 with your design width
+            const boardWidth = 20783 * scale; // Replace 20783 with your design width
             const offsetX = (window.innerWidth - boardWidth) / 2;
             board.style.left = `${offsetX}px`;
         }
@@ -578,23 +189,24 @@
         window.addEventListener('resize', scaleBoard);
         window.addEventListener('load', scaleBoard);
 
-        function buttonClicked(buttonElement, buttonName) {
-            fetch(`/button-clicked?name=${buttonName}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data.message);
-                    if (data.redirect) {
-                        window.location.href = data.redirect;
-                    } else {
-                        buttonElement.innerText = ''; // Set button text to blank
-                        buttonElement.style.backgroundImage = 'none'; // Remove background image
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-                window.location.href = `/clue_h?name=${buttonName}`;
+        function buttonClicked(buttonElement, row, col) {
+            fetch('/button-clicked', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ row: row, col: col })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                // Update the button's appearance
+                buttonElement.classList.add('used');
+                // Navigate to the clue page
+                window.location.href = `/clue_h?row=${row}&col=${col}`;
                 // Send a request to the main process to change the player window's URL
                 const { ipcRenderer } = require('electron');
-                ipcRenderer.send('navigate-player', `http://localhost:5000/clue_p?name=${buttonName}`);
+                ipcRenderer.send('navigate-player', `http://localhost:5000/clue_p?row=${row}&col=${col}`);
+            })
+            .catch(error => console.error('Error:', error));
         }
     </script>
 </body>

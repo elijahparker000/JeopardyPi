@@ -40,11 +40,10 @@ def get_jeopardy_clues(proj_path):
 
 
 
-def return_clue_and_response(categories, clues, button_name):
+def return_clue_and_response(categories, clues, row, col):
     try:
-        parts = button_name.split()
-        category_number = int(parts[1]) - 1
-        clue_number = int(parts[3]) - 1
+        category_number = int(col)
+        clue_number = int(row)
     except (IndexError, ValueError):
         raise ValueError("Invalid button name format")
 

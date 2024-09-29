@@ -5,7 +5,7 @@ import base64
 import os
 from dotenv import load_dotenv
 import pandas as pd
-from multiprocessing import Lock
+from multiprocessing import Lock, Manager
 from multiprocessing.managers import AcquirerProxy, BaseManager, DictProxy
 import math
 from jeopardy_data import get_jeopardy_clues, return_clue_and_response
@@ -19,32 +19,40 @@ proj_path = os.getenv('PROJ_PATH')
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong secret key
 
-
 # Set up shared state management
-def get_shared_state(host, port, key):
-    shared_dict = {}
-    shared_lock = Lock()
-    manager = BaseManager((host, port), key)
-    manager.register("get_dict", lambda: shared_dict, DictProxy)
-    manager.register("get_lock", lambda: shared_lock, AcquirerProxy)
-    try:
-        manager.get_server()
-        manager.start()
-    except OSError:  # Address already in use
-        manager.connect()
-    return manager.get_dict(), manager.get_lock()
+# def get_shared_state(host, port, key):
+#     shared_dict = manager.dict()
+#     shared_lock = manager.Lock()
+#     manager = BaseManager((host, port), key)
+#     manager.register("get_dict", lambda: shared_dict, DictProxy)
+#     manager.register("get_lock", lambda: shared_lock, AcquirerProxy)
+#     try:
+#         manager.get_server()
+#         manager.start()
+#     except OSError:  # Address already in use
+#         manager.connect()
+#     return manager.get_dict(), manager.get_lock()
 
 HOST = "127.0.0.1"
 PORT = 35791
 KEY = b"secret"
-shared_dict, shared_lock = get_shared_state(HOST, PORT, KEY)
+# shared_dict, shared_lock = get_shared_state(HOST, PORT, KEY)
 
-# Clear shared state on startup to ensure random categories each time
+# Set up shared state management
+manager = Manager()
+shared_dict = manager.dict()
+shared_lock = manager.Lock()
+
+# Initialize shared state
 with shared_lock:
     shared_dict.clear()  # Ensure we don't have the same values each time we run the app
     categories, clues = get_jeopardy_clues(proj_path)
     shared_dict['categories'] = categories
     shared_dict['clues'] = clues  # Store clues in shared_dict
+    # Initialize enabled_buttons as a managed list of managed lists
+    shared_dict['enabled_buttons'] = manager.list(
+        [manager.list([1] * 6) for _ in range(5)]
+    )
 
 
 
@@ -69,32 +77,44 @@ def select_difficulty():
     difficulty = request.args.get('level', 'Easy')
     # Store the difficulty in the session or process as needed
     session['difficulty'] = difficulty
-    print(f"Difficulty selected: {difficulty}")  # For debugging
+    print(f"Difficulty selected: {difficulty}", flush=True)  # For debugging
     return jsonify({'message': f'Difficulty set to {difficulty}'})
 
 @app.route('/main_board_p')
 def main_board_p():
     with shared_lock:
         categories = shared_dict['categories']
-    return render_template('main_board_p.html', categories=categories)
+        enabled_buttons = shared_dict['enabled_buttons']
+    # Convert to regular list for logging
+    enabled_buttons_list = [list(row) for row in enabled_buttons]
+    app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
+    return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list)
+
 
 @app.route('/main_board_h')
 def main_board_h():
     with shared_lock:
         categories = shared_dict['categories']
-    return render_template('main_board_h.html', categories=categories)
+        enabled_buttons = shared_dict['enabled_buttons']
+    # Convert to regular list for logging
+    enabled_buttons_list = [list(row) for row in enabled_buttons]
+    app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
+    return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list)
+
 
 #TODO: Fix this hackiness. No need to have both the clue_p route and clue_h route go through the logic
 # of getting the clue and response on their own. Can probably just have clue_h do it and share it with
 # clue_p as long as it's quick enough or whatever.
 @app.route('/clue_p')
 def clue_p():
-    button_name = request.args.get('name')
+    row = request.args.get('row')
+    col = request.args.get('col')
+
     with shared_lock:
         categories = shared_dict['categories']
         clues = shared_dict['clues']
     try:
-        clue, response = return_clue_and_response(categories, clues, button_name)
+        clue, response = return_clue_and_response(categories, clues, row, col)
     except ValueError as e:
         return str(e), 400
     return render_template('clue_p.html', clue=clue, response=response)
@@ -103,12 +123,14 @@ def clue_p():
 
 @app.route('/clue_h')
 def clue_h():
-    button_name = request.args.get('name')
+    row = request.args.get('row')
+    col = request.args.get('col')
+
     with shared_lock:
         categories = shared_dict['categories']
         clues = shared_dict['clues']
     try:
-        clue, response = return_clue_and_response(categories, clues, button_name)
+        clue, response = return_clue_and_response(categories, clues, row, col)
     except ValueError as e:
         return str(e), 400
     return render_template('clue_h.html', clue=clue, response=response)
@@ -126,12 +148,16 @@ def get_clues():
     clues = df_jeopardy_active_clues.to_dict(orient='records')
     return jsonify(clues)
 
-@app.route('/button-clicked', methods=['GET'])
+@app.route('/button-clicked', methods=['POST'])
 def button_clicked():
-    button_name = request.args.get('name')
-    print(f'{button_name} clicked!')
-    app.logger.info(f'{button_name} clicked!')
-    return jsonify({'message': f'{button_name} clicked!'})
+    data = request.json
+    row = int(data.get('row'))
+    col = int(data.get('col'))
+    with shared_lock:
+        shared_dict['enabled_buttons'][row][col] = 0  # Disable the button
+    app.logger.debug(f"Button at ({row}, {col}) set to 0")
+    return jsonify({'message': f'Button at ({row}, {col}) clicked!'})
+
 
 @app.route('/save-name', methods=['POST'])
 def save_name():
