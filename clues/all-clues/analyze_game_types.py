@@ -23,17 +23,25 @@ game_types = []
 
 # Define patterns to look for common game types
 game_type_patterns = [
-    r'\bTeen Tournament\b',
-    r'\bCollege Championship\b',
-    r'\bTournament of Champions\b',
-    r'\bTeachers Tournament\b',
-    r'\bKids Week\b',
-    r'\bCelebrity Jeopardy\b',
-    r'\bSeniors Tournament\b',
-    r'\bBattle of the Decades\b',
-    r'\bAll-Star Games\b',
-    r'\bPower Players Week\b',
-    # Add more patterns as needed
+    r'\bTeen\b', # Easy
+    r'\bCollege Championship\b', # Medium
+    r'\bTournament of Champions\b', # Expert
+    r'\bTeachers Tournament\b', # Medium
+    r'\bKids Week\b', # Easy
+    r'\bCelebrity\b', # Easy
+    r'\bSeniors?\b', # Medium
+    r'\bBattle of the Decades\b', # TOC Level (Expert)
+    r'\bAll-Star Games\b', # TOC Level (Expert)
+    r'\bPower Players Week\b', # Equivalent to Celebrity Jeopardy (Easy)
+    r'\bArmed Forces\b', # Medium
+    r'\bBoston\b', # exclude 
+    r'\bInternational\b', # exclude
+    r'\bBack to School\b', # Easy
+    r'\b10th Anniversary\b', # TOC Level (Expert)
+    r'\bOlympic\b', # exclude
+    r'\bMillion Dollar Masters\b', # TOC Level (Expert)
+    r'\bIBM\b', # TOC Level (Expert)
+    r'^-$' #normal games (Hard)
 ]
 
 # Compile regex patterns
@@ -64,3 +72,8 @@ if unknown_notes:
     print("\nNotes without recognized game types:")
     for note in set(unknown_notes):
         print(note)
+
+total=0
+for game_type, count in game_type_counts.items():
+    total=total+count
+print(f"{total} Total Clues")
