@@ -33,12 +33,12 @@ game_type_patterns = [
     r'\bBattle of the Decades\b', # TOC Level (Expert)
     r'\bAll-Star Games\b', # TOC Level (Expert)
     r'\bPower Players Week\b', # Equivalent to Celebrity Jeopardy (Easy)
-    r'\bArmed Forces\b', # Medium
-    r'\bBoston\b', # exclude 
-    r'\bInternational\b', # exclude
+    r'\bArmed Forces\b', # Exclude
+    r'\bBoston\b', # Exclude 
+    r'\bInternational\b', # Exclude
     r'\bBack to School\b', # Easy
     r'\b10th Anniversary\b', # TOC Level (Expert)
-    r'\bOlympic\b', # exclude
+    r'\bOlympic\b', # Exclude
     r'\bMillion Dollar Masters\b', # TOC Level (Expert)
     r'\bIBM\b', # TOC Level (Expert)
     r'^-$' #normal games (Hard)
