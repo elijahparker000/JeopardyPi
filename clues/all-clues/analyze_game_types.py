@@ -4,19 +4,18 @@ from collections import Counter
 from dotenv import load_dotenv
 import os
 
-
 # Load environment variables from the .env file
 load_dotenv()
 
 # Access the PROJ_PATH environment variable
 proj_path = os.getenv('PROJ_PATH')
 
-# Load the CSV file
-csv_file = os.path.join(proj_path, "clues/all-clues/AllClues-350000.csv")  # Replace with your actual file path
-df = pd.read_csv(csv_file)
+# Load the TSV file
+csv_file = os.path.join(proj_path, "clues/all-clues/combined_season1-39.tsv")  # Replace with your actual file path
+df = pd.read_csv(csv_file, sep='\t')
 
-# Extract the 'notes' column and drop NaN values
-notes_series = df['notes'].dropna()
+# Extract the 'notes' column without dropping NaN values
+notes_series = df['notes']
 
 # Initialize a list to hold all game type mentions
 game_types = []
@@ -41,7 +40,11 @@ game_type_patterns = [
     r'\bOlympic\b', # Exclude
     r'\bMillion Dollar Masters\b', # TOC Level (Expert)
     r'\bIBM\b', # TOC Level (Expert)
-    r'^-$' #normal games (Hard)
+    #r'^-$', # normal games (Hard)
+    r'\bHigh School\b', # Medium
+    r'\bProfessors\b', # TOC Level
+    r'\bSecond Chance\b', # Exclude
+    r'\bAlex Trebek\'s Final Game\b', # Exclude
 ]
 
 # Compile regex patterns
@@ -49,10 +52,20 @@ compiled_patterns = [re.compile(pattern, re.IGNORECASE) for pattern in game_type
 
 # Process each note
 for note in notes_series:
-    for pattern in compiled_patterns:
-        match = pattern.search(note)
-        if match:
-            game_types.append(match.group())
+    if pd.isnull(note) or note.strip() == '':
+        # Note is empty or NaN; count as 'Regular Game'
+        game_types.append('Regular Game')
+    else:
+        matched = False
+        for pattern in compiled_patterns:
+            match = pattern.search(note)
+            if match:
+                game_types.append(match.group())
+                matched = True
+                break
+        if not matched:
+            # Note didn't match any known game type
+            game_types.append('Unknown')
 
 # Count the occurrences of each game type
 game_type_counts = Counter(game_types)
@@ -64,7 +77,9 @@ for game_type, count in game_type_counts.items():
 
 # Optionally, display notes that didn't match any known game type
 unknown_notes = []
-for note in notes_series:
+for idx, note in notes_series.items():
+    if pd.isnull(note) or note.strip() == '':
+        continue  # Skip regular games
     if not any(pattern.search(note) for pattern in compiled_patterns):
         unknown_notes.append(note)
 
@@ -73,7 +88,10 @@ if unknown_notes:
     for note in set(unknown_notes):
         print(note)
 
-total=0
-for game_type, count in game_type_counts.items():
-    total=total+count
-print(f"{total} Total Clues")
+# Calculate the total number of clues
+total_clues = sum(game_type_counts.values())
+print(f"\n{total_clues} Total Clues")
+
+# Optionally, print the total number of Regular Game clues
+regular_game_count = game_type_counts.get('Regular Game', 0)
+print(f"\nTotal Regular Game Clues: {regular_game_count}")
