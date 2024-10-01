@@ -63,9 +63,9 @@ output_dir = os.path.join(proj_path, "clues/split_clues")
 os.makedirs(output_dir, exist_ok=True)
 
 # Save each DataFrame to a separate CSV file
-df_easy.to_csv(os.path.join(output_dir, 'Easy.csv'), index=False)
-df_medium.to_csv(os.path.join(output_dir, 'Medium.csv'), index=False)
-df_hard.to_csv(os.path.join(output_dir, 'Hard.csv'), index=False)
-df_expert.to_csv(os.path.join(output_dir, 'Expert.csv'), index=False)
+df_easy.to_csv(os.path.join(output_dir, 'easy.csv'), index=False)
+df_medium.to_csv(os.path.join(output_dir, 'medium.csv'), index=False)
+df_hard.to_csv(os.path.join(output_dir, 'hard.csv'), index=False)
+df_expert.to_csv(os.path.join(output_dir, 'expert.csv'), index=False)
 
 print("Clues have been split into difficulty levels and saved to CSV files.")
