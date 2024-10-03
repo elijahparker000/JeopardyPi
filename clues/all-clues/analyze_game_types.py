@@ -11,7 +11,7 @@ load_dotenv()
 proj_path = os.getenv('PROJ_PATH')
 
 # Load the TSV file
-csv_file = os.path.join(proj_path, "clues/all-clues/combined_season1-39.tsv")  # Replace with your actual file path
+csv_file = os.path.join(proj_path, "clues/all-clues/all_data.tsv")  # Replace with your actual file path
 df = pd.read_csv(csv_file, sep='\t')
 
 # Extract the 'notes' column without dropping NaN values
