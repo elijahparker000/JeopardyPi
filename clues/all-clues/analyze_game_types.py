@@ -11,7 +11,7 @@ load_dotenv()
 proj_path = os.getenv('PROJ_PATH')
 
 # Load the TSV file
-csv_file = os.path.join(proj_path, "clues/all-clues/all_data.tsv")  # Replace with your actual file path
+csv_file = os.path.join(proj_path, "clues/all-clues/all_data_cleaned.tsv")  # Replace with your actual file path
 df = pd.read_csv(csv_file, sep='\t')
 
 # Extract the 'notes' column without dropping NaN values
@@ -40,11 +40,14 @@ game_type_patterns = [
     r'\bOlympic\b', # Exclude
     r'\bMillion Dollar Masters\b', # TOC Level (Expert)
     r'\bIBM\b', # TOC Level (Expert)
-    #r'^-$', # normal games (Hard)
     r'\bHigh School\b', # Medium
     r'\bProfessors\b', # TOC Level
     r'\bSecond Chance\b', # Exclude
     r'\bAlex Trebek\'s Final Game\b', # Exclude
+    r'\bSuper Jeopardy\b', # TOC Level (Expert)
+    r'\bMasters\b', # TOC Level (Expert)
+    r'\bGreatest of All Time\b', # TOC Level (Expert)
+    r'\bPilot\b', # Exclude
 ]
 
 # Compile regex patterns
