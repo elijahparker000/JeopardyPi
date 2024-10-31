@@ -108,17 +108,33 @@
             // ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
         }
 
-        // Socket.IO client code
+        // Socket.IO client code using the '/game' namespace
         var socket = io('/game');
 
         socket.on('connect', function() {
             console.log('Connected to server');
         });
 
+        socket.on('disconnect', function(reason) {
+            console.log('Disconnected from server:', reason);
+        });
+
+        socket.on('reconnect_attempt', () => {
+            console.log('Attempting to reconnect...');
+        });
+
+        socket.on('reconnect', (attemptNumber) => {
+            console.log('Reconnected to server after', attemptNumber, 'attempt(s)');
+        });
+
+        socket.on('connect_error', (error) => {
+            console.error('Connection error:', error);
+        });
+
         socket.on('button_press', function(data) {
             var player = data.player;
             var message = 'Player ' + player + ' pressed the button!';
-            console.log(message);
+            console.log('Received button_press event:', message);
             // Update the clue screen accordingly
             displayPlayerPress(message);
         });

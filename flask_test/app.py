@@ -70,9 +70,11 @@ def serial_listener():
                     print(f"Player {line} pressed", flush=True)
                     # Emit the event to all connected clients
                     socketio.emit('button_press', {'player': line}, namespace='/game')
+                    print("Emitted 'button_press' event to namespace '/game'", flush=True)
         else:
             # No data, yield control
             eventlet.sleep(0.01)  # Sleep for 10 ms
+
 
 @app.after_request
 def add_header(response):
