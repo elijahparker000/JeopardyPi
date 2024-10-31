@@ -1,3 +1,6 @@
+import eventlet
+eventlet.monkey_patch()
+
 from flask import Flask, request, jsonify, render_template, session
 from PIL import Image
 from io import BytesIO
@@ -5,10 +8,10 @@ import base64
 import os
 from dotenv import load_dotenv
 import pandas as pd
-from multiprocessing import Lock, Manager
-from multiprocessing.managers import AcquirerProxy, BaseManager, DictProxy
 import math
 from jeopardy_data import get_jeopardy_clues, return_clue_and_response
+from flask_socketio import SocketIO, emit, Namespace
+import serial
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -19,18 +22,15 @@ proj_path = os.getenv('PROJ_PATH')
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong secret key
 
+# Initialize SocketIO with eventlet
+socketio = SocketIO(app, async_mode='eventlet')
+
 # Set the maximum age (in seconds) for caching static files
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400  # Cache static files for 1 day (86400 seconds)
 
-HOST = "127.0.0.1"
-PORT = 35791
-KEY = b"secret"
-# shared_dict, shared_lock = get_shared_state(HOST, PORT, KEY)
-
 # Set up shared state management
-manager = Manager()
-shared_dict = manager.dict()
-shared_lock = manager.Lock()
+shared_lock = eventlet.semaphore.Semaphore()
+shared_dict = {}
 
 # Initialize shared state
 with shared_lock:
@@ -38,13 +38,41 @@ with shared_lock:
     categories, clues = get_jeopardy_clues(proj_path)
     shared_dict['categories'] = categories
     shared_dict['clues'] = clues  # Store clues in shared_dict
-    # Initialize enabled_buttons as a managed list of managed lists
-    shared_dict['enabled_buttons'] = manager.list(
-        [manager.list([1] * 6) for _ in range(5)]
-    )
+    # Initialize enabled_buttons as a list of lists
+    shared_dict['enabled_buttons'] = [[1] * 6 for _ in range(5)]
 
+# Define the '/game' namespace
+class GameNamespace(Namespace):
+    def on_connect(self):
+        print('Client connected to /game', flush=True)
 
+    def on_disconnect(self):
+        print('Client disconnected from /game', flush=True)
 
+# Register the namespace
+socketio.on_namespace(GameNamespace('/game'))
+
+def serial_listener():
+    print(f"Inside serial_listener", flush=True)
+    # Adjust the serial port and baud rate as needed
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0)  # Non-blocking mode
+    ser.reset_input_buffer()
+    buffer = ''
+    while True:
+        # Read non-blocking
+        data = ser.read(1024)  # Read up to 1024 bytes
+        if data:
+            buffer += data.decode('utf-8')
+            while '\n' in buffer:
+                line, buffer = buffer.split('\n', 1)
+                line = line.strip()
+                if line in {'1', '2', '3', '4', '5'}:
+                    print(f"Player {line} pressed", flush=True)
+                    # Emit the event to all connected clients
+                    socketio.emit('button_press', {'player': line}, namespace='/game')
+        else:
+            # No data, yield control
+            eventlet.sleep(0.01)  # Sleep for 10 ms
 
 @app.after_request
 def add_header(response):
@@ -68,7 +96,6 @@ def write_name_h():
 def select_difficulty_h():
     return render_template('select_difficulty_h.html')
 
-#TODO: if using this assistant method approach, either use shared_lock or get both windows to share the same flask session
 @app.route('/select-difficulty')
 def select_difficulty():
     difficulty = request.args.get('level', 'Easy')
@@ -87,7 +114,6 @@ def main_board_p():
     app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
     return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list)
 
-
 @app.route('/main_board_h')
 def main_board_h():
     with shared_lock:
@@ -98,10 +124,6 @@ def main_board_h():
     app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
     return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list)
 
-
-#TODO: Fix this hackiness. No need to have both the clue_p route and clue_h route go through the logic
-# of getting the clue and response on their own. Can probably just have clue_h do it and share it with
-# clue_p as long as it's quick enough or whatever.
 @app.route('/clue_p')
 def clue_p():
     row = request.args.get('row')
@@ -115,8 +137,6 @@ def clue_p():
     except ValueError as e:
         return str(e), 400
     return render_template('clue_p.html', clue=clue, response=response)
-
-
 
 @app.route('/clue_h')
 def clue_h():
@@ -132,16 +152,13 @@ def clue_h():
         return str(e), 400
     return render_template('clue_h.html', clue=clue, response=response)
 
-
-
-
 @app.route('/title_video_p')
 def title_video_p():
     return render_template('title_video_p.html')
 
 @app.route('/get-clues', methods=['GET'])
 def get_clues():
-    df_jeopardy_active_clues, _ = get_jeopardy_clues()
+    df_jeopardy_active_clues, _ = get_jeopardy_clues(proj_path)
     clues = df_jeopardy_active_clues.to_dict(orient='records')
     return jsonify(clues)
 
@@ -154,7 +171,6 @@ def button_clicked():
         shared_dict['enabled_buttons'][row][col] = 0  # Disable the button
     app.logger.debug(f"Button at ({row}, {col}) set to 0")
     return jsonify({'message': f'Button at ({row}, {col}) clicked!'})
-
 
 @app.route('/save-name', methods=['POST'])
 def save_name():
@@ -171,4 +187,7 @@ def save_name():
     return jsonify({'message': 'Name saved successfully!'})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Start the serial listener using eventlet
+    eventlet.spawn(serial_listener)
+
+    socketio.run(app, debug=True, port=5000)

@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeopardy Board</title>
+    <title>Jeopardy Clue</title>
     <style>
+        /* Existing styles */
+
         @font-face {
             font-family: 'clue_font';
             src: url("{{ url_for('static', filename='fonts/Korinna Bold.ttf') }}") format('truetype');
@@ -40,9 +42,9 @@
             padding: 10px; /* Add padding if needed for better text placement */
             width: 100%; /* Ensure the text container takes full width of the element */
             height: 100%; /* Ensure the text container takes full height of the element */
-            text-shadow: 19px 14px 0px rgba(0, 0, 0, 1); /* Add shadow effect TODO: this is totally a guess*/ 
+            text-shadow: 19px 14px 0px rgba(0, 0, 0, 1); /* Add shadow effect */
             padding-top: 5%; /* Adjust this value until the text is centered */
-            padding-left: 20%; /* Adjust this value until the text is centered TODO: the left and right padding is to make the text stack into more lines*/
+            padding-left: 20%; /* Adjust this value until the text is centered */
             padding-right: 20%; /* Adjust this value until the text is centered */
             width: 3236px;
             height: 1810px;
@@ -52,7 +54,6 @@
         .button {
             background-color: transparent; /* Transparent background */
             color: #fff; /* White text color */
-            /*padding: 20px 60px; /* Padding for a sleek look */
             font-size: 2em;
             font-family: 'Arial', sans-serif; /* Font family */
             text-align: center;
@@ -73,6 +74,10 @@
             transform: scale(1.05); /* Slight scale-up effect on hover */
         }
     </style>
+    <!-- Include Socket.IO client library -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"
+        integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI"
+        crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="board" id="board">
@@ -82,13 +87,13 @@
     <script>
         function scaleBoard() {
             const board = document.getElementById('board');
-            const scaleX = window.innerWidth / 3236; // Replace 1920 with your design width
-            const scaleY = window.innerHeight / 1810; // Replace 1080 with your design height
+            const scaleX = window.innerWidth / 3236; // Replace 3236 with your design width
+            const scaleY = window.innerHeight / 1810; // Replace 1810 with your design height
             const scale = Math.min(scaleX, scaleY);
             board.style.transform = `scale(${scale})`;
 
             // Center the board horizontally
-            const boardWidth = 3236 * scale; // Replace 1920 with your design width
+            const boardWidth = 3236 * scale; // Replace 3236 with your design width
             const offsetX = (window.innerWidth - boardWidth) / 2;
             board.style.left = `${offsetX}px`;
         }
@@ -97,10 +102,52 @@
         window.addEventListener('load', scaleBoard);
 
         function closeScreen() {
-                window.location.href = '/main_board_h';
-                // Send a request to the main process to change the player window's URL
-                const { ipcRenderer } = require('electron');
-                ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
+            window.location.href = '/main_board_h';
+            // If using Electron or another method to communicate with the main process, include that here
+            // const { ipcRenderer } = require('electron');
+            // ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
+        }
+
+        // Socket.IO client code
+        var socket = io('/game');
+
+        socket.on('connect', function() {
+            console.log('Connected to server');
+        });
+
+        socket.on('button_press', function(data) {
+            var player = data.player;
+            var message = 'Player ' + player + ' pressed the button!';
+            console.log(message);
+            // Update the clue screen accordingly
+            displayPlayerPress(message);
+        });
+
+        function displayPlayerPress(message) {
+            // Create an overlay or update the DOM to show the message
+            var overlay = document.createElement('div');
+            overlay.id = 'player-press-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.color = '#fff';
+            overlay.style.fontSize = '5em';
+            overlay.style.zIndex = '1000'; // Ensure it overlays other content
+            overlay.innerText = message;
+
+            // Append the overlay to the body
+            document.body.appendChild(overlay);
+
+            // Optionally, remove the overlay after a certain time
+            setTimeout(function() {
+                overlay.remove();
+            }, 3000); // Remove after 3 seconds
         }
     </script>
 </body>
