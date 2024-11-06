@@ -1,7 +1,6 @@
-import eventlet
-eventlet.monkey_patch()
-
+import threading
 from flask import Flask, request, jsonify, render_template, session
+from flask_sse import sse
 from PIL import Image
 from io import BytesIO
 import base64
@@ -10,8 +9,9 @@ from dotenv import load_dotenv
 import pandas as pd
 import math
 from jeopardy_data import get_jeopardy_clues, return_clue_and_response
-from flask_socketio import SocketIO, emit, Namespace
 import serial
+import json
+import time
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -22,14 +22,15 @@ proj_path = os.getenv('PROJ_PATH')
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong secret key
 
-# Initialize SocketIO with eventlet
-socketio = SocketIO(app, async_mode='eventlet')
+# Configure Flask-SSE
+app.config["REDIS_URL"] = "redis://localhost:6379"
+app.register_blueprint(sse, url_prefix='/stream')
 
 # Set the maximum age (in seconds) for caching static files
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400  # Cache static files for 1 day (86400 seconds)
 
 # Set up shared state management
-shared_lock = eventlet.semaphore.Semaphore()
+shared_lock = threading.Lock()
 shared_dict = {}
 
 # Initialize shared state
@@ -41,40 +42,25 @@ with shared_lock:
     # Initialize enabled_buttons as a list of lists
     shared_dict['enabled_buttons'] = [[1] * 6 for _ in range(5)]
 
-# Define the '/game' namespace
-class GameNamespace(Namespace):
-    def on_connect(self):
-        print('Client connected to /game', flush=True)
-
-    def on_disconnect(self):
-        print('Client disconnected from /game', flush=True)
-
-# Register the namespace
-socketio.on_namespace(GameNamespace('/game'))
-
 def serial_listener():
     print(f"Inside serial_listener", flush=True)
-    # Adjust the serial port and baud rate as needed
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0)  # Non-blocking mode
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0)
     ser.reset_input_buffer()
     buffer = ''
-    while True:
-        # Read non-blocking
-        data = ser.read(1024)  # Read up to 1024 bytes
-        if data:
-            buffer += data.decode('utf-8')
-            while '\n' in buffer:
-                line, buffer = buffer.split('\n', 1)
-                line = line.strip()
-                if line in {'1', '2', '3', '4', '5'}:
-                    print(f"Player {line} pressed", flush=True)
-                    # Emit the event to all connected clients
-                    socketio.emit('button_press', {'player': line}, namespace='/game')
-                    print("Emitted 'button_press' event to namespace '/game'", flush=True)
-        else:
-            # No data, yield control
-            eventlet.sleep(0.01)  # Sleep for 10 ms
-
+    with app.app_context():
+        while True:
+            data = ser.read(1024)
+            if data:
+                buffer += data.decode('utf-8')
+                while '\n' in buffer:
+                    line, buffer = buffer.split('\n', 1)
+                    line = line.strip()
+                    if line in {'1', '2', '3', '4', '5'}:
+                        print(f"Player {line} pressed", flush=True)
+                        # Publish the event using Flask-SSE
+                        sse.publish({"player": line}, type='button_press')
+            else:
+                time.sleep(0.01)
 
 @app.after_request
 def add_header(response):
@@ -189,7 +175,9 @@ def save_name():
     return jsonify({'message': 'Name saved successfully!'})
 
 if __name__ == '__main__':
-    # Start the serial listener using eventlet
-    eventlet.spawn(serial_listener)
+    # Start the serial listener thread
+    serial_thread = threading.Thread(target=serial_listener)
+    serial_thread.daemon = True  # Ensures thread exits when main program exits
+    serial_thread.start()
 
-    socketio.run(app, debug=True, port=5000)
+    app.run(debug=True, port=5000)
