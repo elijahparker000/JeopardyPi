@@ -102,6 +102,79 @@
                 const { ipcRenderer } = require('electron');
                 ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
         }
+
+        function startSSE() {
+            console.log('Attempting to start SSE connection');
+            const eventSource = new EventSource('/stream');
+
+            eventSource.onopen = function(e) {
+                console.log('SSE connection opened');
+            };
+
+            // Listen for events of type 'button_press'
+            eventSource.addEventListener('button_press', function(e) {
+                console.log('Received button_press event:', e.data);
+                if (e.data) {
+                    const event = JSON.parse(e.data);
+                    if (event.player) {
+                        const message = 'Player ' + event.player + ' pressed the button!';
+                        console.log('Received event:', message);
+                        displayPlayerPress(message);
+                    }
+                }
+            });
+
+            eventSource.onerror = function(e) {
+                console.error('SSE error:', e);
+                // Optionally handle reconnection logic here
+                if (eventSource.readyState === EventSource.CLOSED) {
+                    console.log('SSE connection closed. Reconnecting...');
+                    setTimeout(startSSE, 1000);  // Retry after 1 second
+                }
+            };
+        }
+
+        // Ensure that startSSE is called when the page loads
+        window.addEventListener('load', function() {
+            console.log('Page loaded');
+            startSSE();
+        });
+
+        // Function to display the overlay when a player presses the button
+        function displayPlayerPress(message) {
+            console.log('Displaying overlay with message:', message);
+            // Remove any existing overlay
+            var existingOverlay = document.getElementById('player-press-overlay');
+            if (existingOverlay) {
+                existingOverlay.remove();
+            }
+
+            // Create the overlay
+            var overlay = document.createElement('div');
+            overlay.id = 'player-press-overlay';
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100vw';
+            overlay.style.height = '100vh';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.color = '#fff';
+            overlay.style.fontSize = '5em';
+            overlay.style.zIndex = '1000'; // Ensure it overlays other content
+            overlay.innerText = message;
+
+            // Append the overlay to the body
+            document.body.appendChild(overlay);
+
+            // Remove the overlay after a certain time
+            setTimeout(function() {
+                console.log('Removing overlay');
+                overlay.remove();
+            }, 1000); // Remove after 5 seconds
+        }
     </script>
 </body>
 </html>

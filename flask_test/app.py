@@ -5,10 +5,15 @@ import base64
 import os
 from dotenv import load_dotenv
 import pandas as pd
-from multiprocessing import Lock, Manager
-from multiprocessing.managers import AcquirerProxy, BaseManager, DictProxy
+#from multiprocessing import Lock, Manager
+#from multiprocessing.managers import AcquirerProxy, BaseManager, DictProxy
 import math
 from jeopardy_data import get_jeopardy_clues, return_clue_and_response
+from flask_sse import sse
+import threading
+import serial
+import json
+import time
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -19,18 +24,16 @@ proj_path = os.getenv('PROJ_PATH')
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Replace with a strong secret key
 
+# Configure Flask-SSE
+app.config["REDIS_URL"] = "redis://localhost:6379"
+app.register_blueprint(sse, url_prefix='/stream')
+
 # Set the maximum age (in seconds) for caching static files
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400  # Cache static files for 1 day (86400 seconds)
 
-HOST = "127.0.0.1"
-PORT = 35791
-KEY = b"secret"
-# shared_dict, shared_lock = get_shared_state(HOST, PORT, KEY)
-
 # Set up shared state management
-manager = Manager()
-shared_dict = manager.dict()
-shared_lock = manager.Lock()
+shared_lock = threading.Lock()
+shared_dict = {}
 
 # Initialize shared state
 with shared_lock:
@@ -38,12 +41,29 @@ with shared_lock:
     categories, clues = get_jeopardy_clues(proj_path)
     shared_dict['categories'] = categories
     shared_dict['clues'] = clues  # Store clues in shared_dict
-    # Initialize enabled_buttons as a managed list of managed lists
-    shared_dict['enabled_buttons'] = manager.list(
-        [manager.list([1] * 6) for _ in range(5)]
-    )
+    # Initialize enabled_buttons as a list of lists
+    shared_dict['enabled_buttons'] = [[1] * 6 for _ in range(5)]
 
 
+def serial_listener():
+    print(f"Inside serial_listener", flush=True)
+    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0)
+    ser.reset_input_buffer()
+    buffer = ''
+    with app.app_context():
+        while True:
+            data = ser.read(1024)
+            if data:
+                buffer += data.decode('utf-8')
+                while '\n' in buffer:
+                    line, buffer = buffer.split('\n', 1)
+                    line = line.strip()
+                    if line in {'1', '2', '3', '4', '5'}:
+                        print(f"Player {line} pressed", flush=True)
+                        # Publish the event using Flask-SSE
+                        sse.publish({"player": line}, type='button_press')
+            else:
+                time.sleep(0.01)
 
 
 @app.after_request
@@ -141,7 +161,7 @@ def title_video_p():
 
 @app.route('/get-clues', methods=['GET'])
 def get_clues():
-    df_jeopardy_active_clues, _ = get_jeopardy_clues()
+    df_jeopardy_active_clues, _ = get_jeopardy_clues(proj_path)
     clues = df_jeopardy_active_clues.to_dict(orient='records')
     return jsonify(clues)
 
@@ -170,5 +190,11 @@ def save_name():
     image.save(os.path.join(save_path, 'player_name.png'))
     return jsonify({'message': 'Name saved successfully!'})
 
+
 if __name__ == '__main__':
+    # Start the serial listener thread
+    serial_thread = threading.Thread(target=serial_listener)
+    serial_thread.daemon = True  # Ensures thread exits when main program exits
+    serial_thread.start()
+
     app.run(debug=True, port=5000)
