@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Preload fonts and images if necessary -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeopardy Board</title>
+    <title>Jeopardy Clue</title>
     <style>
         @font-face {
             font-family: 'clue_font';
             src: url("{{ url_for('static', filename='fonts/Korinna Bold.ttf') }}") format('truetype');
+        }
+        @font-face {
+            font-family: 'cat_font';
+            src: url("{{ url_for('static', filename='fonts/univers-75-black.ttf') }}") format('truetype');
         }
 
         body {
@@ -24,8 +28,71 @@
             height: 100vh;
             transform-origin: top left;
         }
-        .clue {
+        .clue, .response, .decision-buttons, .nameplate, .score, .button {
             position: absolute;
+        }
+        .clue {
+            background-color: #010877; /* Blue */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+            font-size: 10em;
+            font-family: 'clue_font', Arial, sans-serif;
+            padding: 10px;
+            text-shadow: 19px 14px 0px rgba(0, 0, 0, 1);
+            padding-left: 20%;
+            padding-right: 20%;
+        }
+        .response {
+            background-color: #010877; /* Blue */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+            font-size: 5em; /* Smaller than the clue */
+            font-family: 'clue_font', Arial, sans-serif;
+            padding: 10px;
+            text-shadow: 10px 7px 0px rgba(0, 0, 0, 1);
+            padding-left: 20%;
+            padding-right: 20%;
+        }
+        .decision-buttons {
+            display: none; /* Initially hidden */
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 100%;
+            text-align: center;
+        }
+        .decision-button {
+            background-color: #007bff;
+            color: #fff;
+            font-size: 5em;
+            font-family: 'Arial', sans-serif;
+            padding: 0; /* Remove padding to prevent it from affecting size */
+            margin: 0;  /* We'll set margins in JavaScript */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-sizing: border-box; /* Include border and padding in width and height */
+        }        
+        .decision-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .nameplate {
+            background-size: cover;
+            background-position: center;
+            background-color: #010877; /* Blue */
+            border: none;
+            color: transparent;
+        }
+        .score {
             background-color: #010877; /* Blue */
             border: none;
             color: #ffffff;
@@ -33,41 +100,22 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            text-decoration: none;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
-            font-size: 10em;
-            font-family: 'clue_font', Arial, sans-serif; /* Use custom font */
-            padding: 10px; /* Add padding if needed for better text placement */
-            width: 100%; /* Ensure the text container takes full width of the element */
-            height: 100%; /* Ensure the text container takes full height of the element */
-            text-shadow: 19px 14px 0px rgba(0, 0, 0, 1); /* Add shadow effect TODO: this is totally a guess*/ 
-            padding-top: 5%; /* Adjust this value until the text is centered */
-            padding-left: 20%; /* Adjust this value until the text is centered TODO: the left and right padding is to make the text stack into more lines*/
-            padding-right: 20%; /* Adjust this value until the text is centered */
-            width: 3236px;
-            height: 1810px;
-            left: 0px;
-            top: 0px;
+            font-size: 35em;
+            font-family: 'cat_font', Arial, sans-serif;
+            text-shadow: 19px 21px 0px rgba(0, 0, 0, 1);
+            box-sizing: border-box;
+            padding-top: 8%;
         }
         .button {
             background-color: transparent; /* Transparent background */
             color: #fff; /* White text color */
-            /*padding: 20px 60px; /* Padding for a sleek look */
             font-size: 2em;
             font-family: 'Arial', sans-serif; /* Font family */
             text-align: center;
             text-decoration: none;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Smooth transition for hover effects */
-            display: inline-block;
-            position: absolute;
-            top: 100px; /* Adjusted vertical position */
-            left: 100px; /* Adjusted horizontal position */
-            width: 100px;
-            height: 40px;
-            text-align: center;
+            transition: color 0.3s, transform 0.3s;
         }
-
         .button:hover {
             color: #bdbdbd; /* Light gray text color on hover */
             transform: scale(1.05); /* Slight scale-up effect on hover */
@@ -76,31 +124,131 @@
 </head>
 <body>
     <div class="board" id="board">
-        <div class="clue">{{ clue }}</div>
-        <div class="button" onclick="closeScreen()">Close</div>
+        <!-- Clue -->
+        <div class="clue" id="clue">{{ clue }}</div>
+
+        <!-- response box for the host -->
+        <div class="response" id="response">{{ response }}</div>
+
+        <!-- Correct and Incorrect buttons -->
+        <div class="decision-buttons" id="decision-buttons">
+            <button class="decision-button" onclick="submitDecision(true)">Correct</button>
+            <button class="decision-button" onclick="submitDecision(false)">Incorrect</button>
+        </div>
+
+        <!-- Close button -->
+        <div class="button" id="close-button" onclick="closeScreen()">Close</div>
+
+        <!-- Nameplates -->
+        <div class="nameplate" id="nameplate1" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate2" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate3" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate4" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate5" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+
+        <!-- Scores -->
+        <div class="score" id="score1">${{ scores['1'] }}</div>
+        <div class="score" id="score2">${{ scores['2'] }}</div>
+        <div class="score" id="score3">${{ scores['3'] }}</div>
+        <div class="score" id="score4">${{ scores['4'] }}</div>
+        <div class="score" id="score5">${{ scores['5'] }}</div>
+
     </div>
     <script>
+        // Design dimensions
+        const designWidth = 20783;
+        const designHeight = 15362;
+
+        // Positions for nameplates and scores
+        const nameplatePositions = [768, 4772, 8776, 12780, 16784];
+        const nameplateTop = 13360;
+        const scoreTop = 12380;
+
         function scaleBoard() {
             const board = document.getElementById('board');
-            const scaleX = window.innerWidth / 3236; // Replace 1920 with your design width
-            const scaleY = window.innerHeight / 1810; // Replace 1080 with your design height
+            const scaleX = window.innerWidth / designWidth;
+            const scaleY = window.innerHeight / designHeight;
             const scale = Math.min(scaleX, scaleY);
             board.style.transform = `scale(${scale})`;
 
             // Center the board horizontally
-            const boardWidth = 3236 * scale; // Replace 1920 with your design width
+            const boardWidth = designWidth * scale;
             const offsetX = (window.innerWidth - boardWidth) / 2;
             board.style.left = `${offsetX}px`;
+
+            // Position elements
+            positionElements();
+        }
+
+        function positionElements() {
+            // Clue
+            const clue = document.getElementById('clue');
+            clue.style.left = '191px';
+            clue.style.top = '192px';
+            clue.style.width = '20401px';
+            clue.style.height = '5806px';
+
+            // response
+            const response = document.getElementById('response');
+            response.style.left = '191px';
+            response.style.top = '6190px'; // Positioned below the clue
+            response.style.width = '20401px';
+            response.style.height = '2903px';
+
+            // Decision Buttons Container
+            const decisionButtons = document.getElementById('decision-buttons');
+            decisionButtons.style.left = '191px';
+            decisionButtons.style.top = '9285px'; // Positioned below the response box
+            decisionButtons.style.width = '20401px';
+            decisionButtons.style.height = '2903px'; // Adjust as needed
+
+            // Adjust individual button sizes
+            const decisionButtonElements = document.getElementsByClassName('decision-button');
+            const buttonWidth = '9000px';  // Adjust to fit within the container
+            const buttonHeight = '3148px'; // Match the container height
+            const buttonMargin = '0 500px'; // Adjust spacing between buttons
+
+            for (let i = 0; i < decisionButtonElements.length; i++) {
+                const button = decisionButtonElements[i];
+                button.style.width = buttonWidth;
+                button.style.height = buttonHeight;
+                button.style.margin = buttonMargin;
+            }
+
+            // Close Button
+            const closeButton = document.getElementById('close-button');
+            closeButton.style.top = '200px';
+            closeButton.style.left = '200px';
+            closeButton.style.width = '400px';
+            closeButton.style.height = '160px';
+
+            // Nameplates and Scores
+            for (let idx = 0; idx < 5; idx++) {
+                const nameplate = document.getElementById('nameplate' + (idx + 1));
+                nameplate.style.left = nameplatePositions[idx] + 'px';
+                nameplate.style.top = nameplateTop + 'px';
+                nameplate.style.width = '3236px';
+                nameplate.style.height = '1810px';
+
+                const score = document.getElementById('score' + (idx + 1));
+                score.style.left = nameplatePositions[idx] + 'px';
+                score.style.top = scoreTop + 'px';
+                score.style.width = '3236px';
+                score.style.height = '800px';
+            }
         }
 
         window.addEventListener('resize', scaleBoard);
-        window.addEventListener('load', scaleBoard);
+        window.addEventListener('load', function() {
+            scaleBoard();
+            startSSE();
+        });
 
         function closeScreen() {
-                window.location.href = '/main_board_h';
-                // Send a request to the main process to change the player window's URL
-                const { ipcRenderer } = require('electron');
-                ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
+            window.location.href = '/main_board_h';
+            // Send a request to the main process to change the player window's URL
+            const { ipcRenderer } = require('electron');
+            ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
         }
 
         function startSSE() {
@@ -119,7 +267,7 @@
                     if (event.player) {
                         const message = 'Player ' + event.player + ' pressed the button!';
                         console.log('Received event:', message);
-                        displayPlayerPress(message);
+                        displayPlayerPress(event.player);
                     }
                 }
             });
@@ -132,49 +280,95 @@
                     setTimeout(startSSE, 1000);  // Retry after 1 second
                 }
             };
+
+            // Inside startSSE() function
+            eventSource.addEventListener('score_update', function(e) {
+                console.log('Received score_update event:', e.data);
+                if (e.data) {
+                    const event = JSON.parse(e.data);
+                    updateScores(event.scores);
+                }
+            });
+
         }
 
-        // Ensure that startSSE is called when the page loads
-        window.addEventListener('load', function() {
-            console.log('Page loaded');
-            startSSE();
-        });
+        var buzzedPlayerId = null;
 
         // Function to display the overlay when a player presses the button
-        function displayPlayerPress(message) {
-            console.log('Displaying overlay with message:', message);
-            // Remove any existing overlay
-            var existingOverlay = document.getElementById('player-press-overlay');
-            if (existingOverlay) {
-                existingOverlay.remove();
+        function displayPlayerPress(playerId) {
+            console.log('Displaying overlay for player:', playerId);
+            buzzedPlayerId = playerId;
+
+            // Highlight the buzzed player's nameplate or score
+            var nameplate = document.getElementById('nameplate' + playerId);
+            if (nameplate) {
+                nameplate.style.border = '10px solid yellow'; // Highlight with a border
             }
 
-            // Create the overlay
-            var overlay = document.createElement('div');
-            overlay.id = 'player-press-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100vw';
-            overlay.style.height = '100vh';
-            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-            overlay.style.display = 'flex';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
-            overlay.style.color = '#fff';
-            overlay.style.fontSize = '5em';
-            overlay.style.zIndex = '1000'; // Ensure it overlays other content
-            overlay.innerText = message;
-
-            // Append the overlay to the body
-            document.body.appendChild(overlay);
-
-            // Remove the overlay after a certain time
-            setTimeout(function() {
-                console.log('Removing overlay');
-                overlay.remove();
-            }, 1000); // Remove after 5 seconds
+            // Show the decision buttons
+            var decisionButtons = document.getElementById('decision-buttons');
+            if (decisionButtons) {
+                decisionButtons.style.display = 'block';
+            }
         }
+
+        // Function to send the host's decision
+        function submitDecision(isCorrect) {
+            console.log('Host decision for player', buzzedPlayerId, ':', isCorrect ? 'Correct' : 'Incorrect');
+        
+            clue_value = 200
+        
+            // Send the decision to the server
+            fetch('/host_decision', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    player_id: buzzedPlayerId,
+                    is_correct: isCorrect,
+                    value: clue_value
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                // Reset the UI
+                resetBuzzIn();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+
+        // Function to reset the UI after the host makes a decision
+        function resetBuzzIn() {
+            // Remove highlight from the player's nameplate
+            var nameplate = document.getElementById('nameplate' + buzzedPlayerId);
+            if (nameplate) {
+                nameplate.style.border = 'none';
+            }
+            buzzedPlayerId = null;
+
+            // Hide the decision buttons
+            var decisionButtons = document.getElementById('decision-buttons');
+            if (decisionButtons) {
+                decisionButtons.style.display = 'none';
+            }
+        }
+
+        function updateScores(scores) {
+            for (const playerId in scores) {
+                const scoreElement = document.getElementById('score' + playerId);
+                if (scoreElement) {
+                    scoreElement.textContent = '$' + scores[playerId];
+                    // Optionally change text color for negative scores
+                    if (scores[playerId] < 0) {
+                        scoreElement.style.color = '#d41010'; // Red color for negative scores
+                    } else {
+                        scoreElement.style.color = '#ffffff'; // Default color
+                    }
+                }
+            }
+        }
+        
     </script>
 </body>
 </html>

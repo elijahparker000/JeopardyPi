@@ -43,6 +43,8 @@ with shared_lock:
     shared_dict['clues'] = clues  # Store clues in shared_dict
     # Initialize enabled_buttons as a list of lists
     shared_dict['enabled_buttons'] = [[1] * 6 for _ in range(5)]
+    # Initialize player scores
+    shared_dict['scores'] = {str(i): 0 for i in range(1, 6)}  # Player IDs '1' to '5'
 
 
 def serial_listener():
@@ -66,15 +68,42 @@ def serial_listener():
                 time.sleep(0.01)
 
 
-@app.after_request
-def add_header(response):
-    if request.path.startswith('/static/'):
-        # For static files, cache for 1 day
-        response.headers['Cache-Control'] = 'public, max-age=86400'
-    else:
-        # For dynamic content, you may choose to disable caching
-        response.headers['Cache-Control'] = 'no-store'
-    return response
+# @app.after_request
+# def add_header(response):
+#     if request.path.startswith('/static/'):
+#         # For static files, cache for 1 day
+#         response.headers['Cache-Control'] = 'public, max-age=86400'
+#     else:
+#         # For dynamic content, you may choose to disable caching
+#         response.headers['Cache-Control'] = 'no-store'
+#     return response
+
+@app.route('/host_decision', methods=['POST'])
+def host_decision():
+    data = request.get_json()
+    player_id = data['player_id']
+    is_correct = data['is_correct']
+    clue_value = data['value']
+    with shared_lock:
+        # Update the player's score
+        if is_correct:
+            score_delta = clue_value
+        else:
+            score_delta = -clue_value
+        shared_dict['scores'][player_id] += score_delta
+
+        # Prepare data for SSE
+        score_update_data = {
+            'player_id': player_id,
+            'new_score': shared_dict['scores'][player_id],
+            'scores': shared_dict['scores']  # Optionally send all scores
+        }
+
+    # Broadcast the score update to all clients
+    sse.publish(score_update_data, type='score_update')
+
+    return jsonify({'message': 'Score updated successfully'})
+
 
 @app.route('/')
 def title_screen_h():
@@ -102,10 +131,11 @@ def main_board_p():
     with shared_lock:
         categories = shared_dict['categories']
         enabled_buttons = shared_dict['enabled_buttons']
+        scores = shared_dict['scores']
     # Convert to regular list for logging
     enabled_buttons_list = [list(row) for row in enabled_buttons]
     app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
-    return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list)
+    return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores)
 
 
 @app.route('/main_board_h')
@@ -113,10 +143,11 @@ def main_board_h():
     with shared_lock:
         categories = shared_dict['categories']
         enabled_buttons = shared_dict['enabled_buttons']
+        scores = shared_dict['scores']
     # Convert to regular list for logging
     enabled_buttons_list = [list(row) for row in enabled_buttons]
     app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
-    return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list)
+    return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores)
 
 
 #TODO: Fix this hackiness. No need to have both the clue_p route and clue_h route go through the logic
@@ -146,11 +177,12 @@ def clue_h():
     with shared_lock:
         categories = shared_dict['categories']
         clues = shared_dict['clues']
+        scores = shared_dict['scores']
     try:
         clue, response = return_clue_and_response(categories, clues, row, col)
     except ValueError as e:
         return str(e), 400
-    return render_template('clue_h.html', clue=clue, response=response)
+    return render_template('clue_h.html', clue=clue, response=response, scores=scores)
 
 
 

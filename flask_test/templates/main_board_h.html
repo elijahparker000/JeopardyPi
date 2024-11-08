@@ -171,11 +171,11 @@
         <div class="nameplate" id="nameplate5" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
 
         <!-- Scores -->
-        <div class="score" id="score1">$345,678</div>
-        <div class="score" id="score2">$0</div>
-        <div class="score" id="score3">$12</div>
-        <div class="score" id="score4">$843</div>
-        <div class="score" id="score5" style="color: #d41010;">-$1000</div>
+        <div class="score" id="score1">${{ scores['1'] }}</div>
+        <div class="score" id="score2">${{ scores['2'] }}</div>
+        <div class="score" id="score3">${{ scores['3'] }}</div>
+        <div class="score" id="score4">${{ scores['4'] }}</div>
+        <div class="score" id="score5">${{ scores['5'] }}</div>
     </div>
     <script>
         function scaleBoard() {
