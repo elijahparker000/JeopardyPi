@@ -3,12 +3,12 @@
 // Buttons are connected between the digital pins and ground
 
 // Define the button pins (change these to the pins you want to use)
-const int buttonPins[5] = {9, 8, 7, 5, 3}; // Pins where buttons are connected
+const int buttonPins[6] = {9, 8, 7, 5, 3, 10}; // Pins where buttons are connected
 
 // Variables to keep track of button states
-bool buttonStates[5] = {HIGH, HIGH, HIGH, HIGH, HIGH};        // Current state of the buttons
-bool lastButtonStates[5] = {HIGH, HIGH, HIGH, HIGH, HIGH};    // Previous state of the buttons
-unsigned long lastDebounceTime[5] = {0, 0, 0, 0, 0};          // Timestamp of the last state change
+bool buttonStates[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};        // Current state of the buttons
+bool lastButtonStates[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};    // Previous state of the buttons
+unsigned long lastDebounceTime[6] = {0, 0, 0, 0, 0, 0};          // Timestamp of the last state change
 const unsigned long debounceDelay = 50;                       // Debounce delay in milliseconds
 
 void setup() {
@@ -16,14 +16,14 @@ void setup() {
   Serial.begin(9600);
 
   // Initialize the button pins as inputs with internal pull-up resistors
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 6; i++) {
     pinMode(buttonPins[i], INPUT_PULLUP);
   }
 }
 
 void loop() {
   // Iterate over each button
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 6; i++) {
     // Read the current state of the button
     int reading = digitalRead(buttonPins[i]);
 
