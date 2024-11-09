@@ -1,15 +1,11 @@
-// Arduino script to read 5 buttons and send numbers 1-5 to the serial port
-// Uses internal pull-up resistors
-// Buttons are connected between the digital pins and ground
-
 // Define the button pins (change these to the pins you want to use)
 const int buttonPins[6] = {9, 8, 7, 5, 3, 10}; // Pins where buttons are connected
 
 // Variables to keep track of button states
 bool buttonStates[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};        // Current state of the buttons
 bool lastButtonStates[6] = {HIGH, HIGH, HIGH, HIGH, HIGH, HIGH};    // Previous state of the buttons
-unsigned long lastDebounceTime[6] = {0, 0, 0, 0, 0, 0};          // Timestamp of the last state change
-const unsigned long debounceDelay = 50;                       // Debounce delay in milliseconds
+unsigned long lastDebounceTime[6] = {0, 0, 0, 0, 0, 0};             // Timestamp of the last state change
+const unsigned long debounceDelay = 50;                             // Debounce delay in milliseconds
 
 void setup() {
   // Initialize serial communication
@@ -39,10 +35,18 @@ void loop() {
       if (reading != buttonStates[i]) {
         buttonStates[i] = reading;
 
-        // If the button is pressed (since we're using INPUT_PULLUP, LOW means pressed)
-        if (buttonStates[i] == LOW) {
-          // Send the corresponding number to the serial port
-          Serial.println(i + 1); // i ranges from 0-4, so add 1 to get 1-5
+        if (i < 5) {
+          // For buttons 1-5
+          if (buttonStates[i] == LOW) {
+            Serial.println(i + 1); // Send 1-5 for buttons 1-5
+          }
+        } else if (i == 5) {
+          // For button 6 (special behavior)
+          if (buttonStates[i] == LOW) {
+            Serial.println("6_press"); // When button 6 is pressed
+          } else {
+            Serial.println("6_release"); // When button 6 is released
+          }
         }
       }
     }
