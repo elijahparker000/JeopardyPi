@@ -280,6 +280,9 @@
             ipcRenderer.send('navigate-player', 'http://localhost:5000/main_board_p');
         }
 
+        var isTimeoutSoundPlaying = false;
+        var clueClosedReceived = false;
+
         function startSSE() {
             console.log('Attempting to start SSE connection');
             const eventSource = new EventSource('/stream');
@@ -339,7 +342,13 @@
 
             eventSource.addEventListener('clue_closed', function(e) {
                 console.log('Received clue_closed event');
-                closeScreen();
+                clueClosedReceived = true;
+                if (isTimeoutSoundPlaying) {
+                    console.log('Waiting for timeout sound to finish before closing screen');
+                    // Do nothing here; the screen will close when the sound ends
+                } else {
+                    closeScreen();
+                }
             });
 
         }
@@ -447,7 +456,15 @@
         
         function playTimeoutSound() {
             const timeoutSound = document.getElementById('timeout-sound');
+            isTimeoutSoundPlaying = true;
             timeoutSound.play();
+            timeoutSound.onended = function() {
+                isTimeoutSoundPlaying = false;
+                // If the clue_closed event has already been received, close the screen
+                if (clueClosedReceived) {
+                    closeScreen();
+                }
+            };
         }
         
     </script>
