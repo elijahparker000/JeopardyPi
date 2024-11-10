@@ -24,8 +24,10 @@
         }
         .board {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+             /*width: 100vw;
+            height: 100vh; */
+            width: 20783px;
+            height: 15362px;
             transform-origin: top left;
         }
         .clue, .response, .decision-buttons, .nameplate, .score, .button {
@@ -120,6 +122,23 @@
             color: #bdbdbd; /* Light gray text color on hover */
             transform: scale(1.05); /* Slight scale-up effect on hover */
         }
+        .buzz-indicator {
+            position: absolute;
+            width: 100px; /* Adjust thickness */
+            height: 15362px;
+            background-color: white;
+            color: white;
+            display: none; /* Initially hidden */
+            z-index: 1000; /* Ensure it's on top */
+        }
+        
+        #left-indicator {
+            left: 0;
+        }
+        
+        #right-indicator {
+            right: 0
+        }
     </style>
 </head>
 <body>
@@ -153,6 +172,12 @@
         <div class="score" id="score4">${{ scores['4'] }}</div>
         <div class="score" id="score5">${{ scores['5'] }}</div>
 
+        <!-- Indicators -->
+        <div id="left-indicator" class="buzz-indicator"></div>
+        <div id="right-indicator" class="buzz-indicator"></div>
+
+        <!-- Timeout Audio -->
+        <audio id="timeout-sound" src="{{ url_for('static', filename='audio/out_of_time.mp3') }}"></audio>
     </div>
     <script>
         // Design dimensions
@@ -242,6 +267,10 @@
         window.addEventListener('load', function() {
             scaleBoard();
             startSSE();
+
+            // Initially hide the indicators
+            document.getElementById('left-indicator').style.display = 'none';
+            document.getElementById('right-indicator').style.display = 'none';
         });
 
         function closeScreen() {
@@ -288,6 +317,29 @@
                     const event = JSON.parse(e.data);
                     updateScores(event.scores);
                 }
+            });
+
+            eventSource.addEventListener('clue_control', function(e) {
+                console.log('Received clue_control event:', e.data);
+                const data = JSON.parse(e.data);
+                if (data.action === 'show_clue') {
+                    console.log('show_clue action received');
+                    // Display the clue
+                    // showClue('{{ clue }}');
+                } else if (data.action === 'enable_buzz') {
+                    console.log('enable_buzz action received');
+                    // Show buzz-in indicators
+                    showBuzzIndicators();
+                } else if (data.action === 'buzzing_ended') {
+                    console.log('buzzing_ended action received');
+                    removeBuzzIndicators();
+                    playTimeoutSound();
+                }
+            });
+
+            eventSource.addEventListener('clue_closed', function(e) {
+                console.log('Received clue_closed event');
+                closeScreen();
             });
 
         }
@@ -367,6 +419,35 @@
                     }
                 }
             }
+        }
+
+        //function showClue(clueText) {
+            //const clueElement = document.getElementById('clue');
+            //clueElement.textContent = clueText;
+            //clueElement.style.display = 'block';
+        //}
+    
+        function showBuzzIndicators() {
+            console.log('Executing showBuzzIndicators()');
+            // Add vertical white bars to indicate buzzing is enabled
+            const leftIndicator = document.getElementById('left-indicator');
+            const rightIndicator = document.getElementById('right-indicator');
+            console.log('Left Indicator:', leftIndicator);
+            console.log('Right Indicator:', rightIndicator);
+            leftIndicator.style.display = 'block';
+            rightIndicator.style.display = 'block';
+        }
+
+        function removeBuzzIndicators() {
+            const leftIndicator = document.getElementById('left-indicator');
+            const rightIndicator = document.getElementById('right-indicator');
+            leftIndicator.style.display = 'none';
+            rightIndicator.style.display = 'none';
+        }
+        
+        function playTimeoutSound() {
+            const timeoutSound = document.getElementById('timeout-sound');
+            timeoutSound.play();
         }
         
     </script>

@@ -15,6 +15,8 @@ import serial
 import json
 import time
 
+ser = serial.Serial('/dev/ttyACM0', 9600)  # Replace '/dev/ttyACM0' with your actual serial port
+
 # Load environment variables from the .env file
 load_dotenv()
 
@@ -45,27 +47,84 @@ with shared_lock:
     shared_dict['enabled_buttons'] = [[1] * 6 for _ in range(5)]
     # Initialize player scores
     shared_dict['scores'] = {str(i): 0 for i in range(1, 6)}  # Player IDs '1' to '5'
+    shared_dict['buzzed_in_player'] = None
+    shared_dict['buzzed_out_players'] = []
+    shared_dict['buzzing_enabled'] = False
+    shared_dict['host_button_pressed'] = False
+    shared_dict['lockout_times'] = {}
+    shared_dict['answering_window_ended'] = False
 
 
 def serial_listener():
-    print(f"Inside serial_listener", flush=True)
-    ser = serial.Serial('/dev/ttyACM0', 9600, timeout=0)
-    ser.reset_input_buffer()
-    buffer = ''
-    with app.app_context():
-        while True:
-            data = ser.read(1024)
-            if data:
-                buffer += data.decode('utf-8')
-                while '\n' in buffer:
-                    line, buffer = buffer.split('\n', 1)
-                    line = line.strip()
-                    if line in {'1', '2', '3', '4', '5'}:
-                        print(f"Player {line} pressed", flush=True)
-                        # Publish the event using Flask-SSE
-                        sse.publish({"player": line}, type='button_press')
+    while True:
+        line = ser.readline().decode('utf-8').strip()
+        if line == '6_press':
+            print("Host button pressed", flush=True)
+            with app.app_context():
+                with shared_lock:
+                    if shared_dict.get('buzzing_enabled', False):
+                        # Host pressed button during buzzing phase
+                        shared_dict['buzzing_enabled'] = False
+                        shared_dict['answering_window_ended'] = True
+                        # Remove indicators and play timeout sound
+                        sse.publish({'action': 'buzzing_ended'}, type='clue_control')
+                    else:
+                        # Host pressed button during reading phase
+                        shared_dict['host_button_pressed'] = True
+                        sse.publish({'action': 'show_clue'}, type='clue_control')
+        elif line == '6_release':
+            print("Host button released", flush=True)
+            with app.app_context():
+                with shared_lock:
+                    if shared_dict.get('answering_window_ended', False):
+                        shared_dict['answering_window_ended'] = False
+                        # Close the clue screen
+                        sse.publish({'action': 'close_clue'}, type='clue_closed')
+                    elif shared_dict.get('host_button_pressed', False):
+                        shared_dict['host_button_pressed'] = False
+                        shared_dict['buzzing_enabled'] = True
+                        sse.publish({'action': 'enable_buzz'}, type='clue_control')
+        elif line in {'1', '2', '3', '4', '5'}:
+            player_id = line
+            print(f"Player {player_id} buzzed in", flush=True)
+            with app.app_context():
+                handle_player_buzz(player_id)
+
+
+def handle_player_buzz(player_id):
+    current_time = time.time()
+    with shared_lock:
+        # Check if player has already buzzed in incorrectly
+        if player_id in shared_dict.get('buzzed_out_players', []):
+            print(f"Player {player_id} has already buzzed out on this clue", flush=True)
+            return  # Ignore the buzz
+        # Check if buzzing is enabled
+        print("Debug 1", flush=True)
+        if shared_dict.get('buzzing_enabled', False):
+            print("Debug 2", flush=True)
+            # Check if the player is already locked out
+            lockout_end = shared_dict.get('lockout_times', {}).get(player_id, 0)
+            if current_time >= lockout_end:
+                print("Debug 3", flush=True)
+                # First player to buzz in
+                if shared_dict.get('buzzed_in_player') is None:
+                    print("Debug 4", flush=True)
+                    shared_dict['buzzed_in_player'] = player_id
+                    shared_dict['buzzing_enabled'] = False  # Disable further buzzing
+                    print(f"Alerting client of player {player_id} buzz", flush=True)
+                    sse.publish({'player': player_id}, type='button_press')
             else:
-                time.sleep(0.01)
+                # Player is locked out
+                print(f"Player {player_id} locked out", flush=True)
+                pass  # Ignore the buzz
+        else:
+            # Buzzing is not enabled (reading phase or after first buzz)
+            # Apply early buzz-in penalty if host is still holding the button
+            ##if shared_dict.get('host_button_pressed', False):
+            # Lock out the player for 0.25 seconds from now
+            print(f"Locking out player {player_id} for 0.25 seconds", flush=True)
+            shared_dict.setdefault('lockout_times', {})[player_id] = current_time + 0.25 #TODO: Thorough testing
+            print(f"Player {player_id} locked out until {current_time + 0.25}")
 
 
 # @app.after_request
@@ -88,21 +147,47 @@ def host_decision():
         # Update the player's score
         if is_correct:
             score_delta = clue_value
+            shared_dict['scores'][player_id] += score_delta
+            # Reset game state
+            shared_dict['buzzed_in_player'] = None
+            shared_dict['buzzing_enabled'] = False
+            shared_dict['buzzed_out_players'] = []
+            # Prepare data for SSE
+            score_update_data = {
+                'player_id': player_id,
+                'new_score': shared_dict['scores'][player_id],
+                'scores': shared_dict['scores']
+            }
+            # Broadcast the score update
+            sse.publish(score_update_data, type='score_update')
+            # Close the clue screen
+            sse.publish({'action': 'close_clue'}, type='clue_closed')
+            return jsonify({'message': 'Score updated successfully and clue closed'})
         else:
             score_delta = -clue_value
-        shared_dict['scores'][player_id] += score_delta
+            shared_dict['scores'][player_id] += score_delta
+            # Add the player to buzzed out players
+            shared_dict['buzzed_out_players'].append(player_id)
+            # Reset buzzed_in_player
+            shared_dict['buzzed_in_player'] = None
+            # Check if any players are left who haven't buzzed in incorrectly
+            remaining_players = set(['1', '2', '3', '4', '5']) - set(shared_dict['buzzed_out_players'])
+            if remaining_players:
+                shared_dict['buzzing_enabled'] = True  # Allow other players to buzz in
+            else:
+                # No remaining players, close the clue
+                shared_dict['buzzing_enabled'] = False
+                sse.publish({'action': 'close_clue'}, type='clue_closed')
+            # Prepare data for SSE
+            score_update_data = {
+                'player_id': player_id,
+                'new_score': shared_dict['scores'][player_id],
+                'scores': shared_dict['scores']
+            }
+            # Broadcast the score update
+            sse.publish(score_update_data, type='score_update')
+            return jsonify({'message': 'Score updated, player incorrect'})
 
-        # Prepare data for SSE
-        score_update_data = {
-            'player_id': player_id,
-            'new_score': shared_dict['scores'][player_id],
-            'scores': shared_dict['scores']  # Optionally send all scores
-        }
-
-    # Broadcast the score update to all clients
-    sse.publish(score_update_data, type='score_update')
-
-    return jsonify({'message': 'Score updated successfully'})
 
 
 @app.route('/')
@@ -178,6 +263,12 @@ def clue_h():
         categories = shared_dict['categories']
         clues = shared_dict['clues']
         scores = shared_dict['scores']
+        # Reset game state
+        shared_dict['buzzed_in_player'] = None
+        shared_dict['buzzed_out_players'] = []
+        shared_dict['buzzing_enabled'] = False
+        shared_dict['host_button_pressed'] = False
+        shared_dict['lockout_times'] = {}
     try:
         clue, response = return_clue_and_response(categories, clues, row, col)
     except ValueError as e:
@@ -229,4 +320,8 @@ if __name__ == '__main__':
     serial_thread.daemon = True  # Ensures thread exits when main program exits
     serial_thread.start()
 
-    app.run(debug=True, port=5000)
+    # If you run this with debug it starts a parent process and a child process, both of which
+    # try to read the serial port which causes issues meaning the buttons won't work
+    # correctly 100% of the time.
+    #app.run(debug=True, port=5000)
+    app.run(port=5000)
