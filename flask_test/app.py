@@ -253,7 +253,7 @@ def clue_p():
     except ValueError as e:
         return str(e), 400
     cache_buster = int(time.time())
-    return render_template('clue_h.html', clue=clue, response=response, scores=scores, cache_buster=cache_buster)
+    return render_template('clue_p.html', clue=clue, response=response, scores=scores, cache_buster=cache_buster)
 
 
 
