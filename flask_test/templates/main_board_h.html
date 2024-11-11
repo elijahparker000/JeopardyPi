@@ -164,11 +164,12 @@
         {% endfor %}
 
         <!-- Nameplates -->
-        <div class="nameplate" id="nameplate1" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate2" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate3" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate4" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate5" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate1" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate2" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate3" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate4" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate5" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+
 
         <!-- Scores -->
         <div class="score" id="score1">${{ scores['1'] }}</div>

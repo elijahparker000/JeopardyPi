@@ -220,8 +220,8 @@ def main_board_p():
     # Convert to regular list for logging
     enabled_buttons_list = [list(row) for row in enabled_buttons]
     app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
-    return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores)
-
+    cache_buster = int(time.time())  # Use the current timestamp
+    return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores, cache_buster=cache_buster)
 
 @app.route('/main_board_h')
 def main_board_h():
@@ -232,7 +232,8 @@ def main_board_h():
     # Convert to regular list for logging
     enabled_buttons_list = [list(row) for row in enabled_buttons]
     app.logger.debug(f"Enabled buttons: {enabled_buttons_list}")
-    return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores)
+    cache_buster = int(time.time())  # Use the current timestamp
+    return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores, cache_buster=cache_buster)
 
 
 #TODO: Fix this hackiness. No need to have both the clue_p route and clue_h route go through the logic
@@ -246,11 +247,13 @@ def clue_p():
     with shared_lock:
         categories = shared_dict['categories']
         clues = shared_dict['clues']
+        scores = shared_dict['scores']
     try:
         clue, response = return_clue_and_response(categories, clues, row, col)
     except ValueError as e:
         return str(e), 400
-    return render_template('clue_p.html', clue=clue, response=response)
+    cache_buster = int(time.time())
+    return render_template('clue_h.html', clue=clue, response=response, scores=scores, cache_buster=cache_buster)
 
 
 
@@ -273,7 +276,8 @@ def clue_h():
         clue, response = return_clue_and_response(categories, clues, row, col)
     except ValueError as e:
         return str(e), 400
-    return render_template('clue_h.html', clue=clue, response=response, scores=scores)
+    cache_buster = int(time.time())
+    return render_template('clue_h.html', clue=clue, response=response, scores=scores, cache_buster=cache_buster)
 
 
 

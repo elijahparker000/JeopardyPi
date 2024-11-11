@@ -24,10 +24,10 @@
         }
         .board {
             position: relative;
-             /*width: 100vw;
-            height: 100vh; */
-            width: 20783px;
-            height: 15362px;
+            width: 100vw;
+            height: 100vh;
+            /*width: 20783px;
+            height: 15362px;*/
             transform-origin: top left;
         }
         .clue, .response, .decision-buttons, .nameplate, .score, .button {
@@ -87,7 +87,17 @@
             background-color: #0056b3;
             transform: scale(1.05);
         }
+        /*.nameplate {
+            background-size: cover;
+            background-position: center;
+            background-color: #010877; /* Blue */
+            /*border: none;
+            color: transparent;
+        }*/
         .nameplate {
+            position: absolute;
+            width: 3236px;
+            height: 1810px;
             background-size: cover;
             background-position: center;
             background-color: #010877; /* Blue */
@@ -95,6 +105,9 @@
             color: transparent;
         }
         .score {
+            position: absolute;
+            width: 3236px;
+            height: 800px;
             background-color: #010877; /* Blue */
             border: none;
             color: #ffffff;
@@ -108,6 +121,32 @@
             box-sizing: border-box;
             padding-top: 8%;
         }
+        /* Generate positions for nameplates */
+        {% set nameplate_positions = [768, 4772, 8776, 12780, 16784] %}
+        {% for idx in range(5) %}
+        #nameplate{{ idx+1 }} {
+            left: {{ nameplate_positions[idx] }}px;
+            top: 13360px;
+        }
+        #score{{ idx+1 }} {
+            left: {{ nameplate_positions[idx] }}px;
+            top: 12380px;
+        }
+        {% endfor %}
+        /*.score {
+            background-color: #010877; /* Blue */
+            /*border: none;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 35em;
+            font-family: 'cat_font', Arial, sans-serif;
+            text-shadow: 19px 21px 0px rgba(0, 0, 0, 1);
+            box-sizing: border-box;
+            padding-top: 8%;
+        }*/
         .button {
             background-color: transparent; /* Transparent background */
             color: #fff; /* White text color */
@@ -159,11 +198,11 @@
         <div class="button" id="close-button" onclick="closeScreen()">Close</div>
 
         <!-- Nameplates -->
-        <div class="nameplate" id="nameplate1" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate2" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate3" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate4" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
-        <div class="nameplate" id="nameplate5" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}');"></div>
+        <div class="nameplate" id="nameplate1" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate2" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate3" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate4" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
+        <div class="nameplate" id="nameplate5" style="background-image: url('{{ url_for('static', filename='images/names/player_name.png') }}?v={{ cache_buster }}');"></div>
 
         <!-- Scores -->
         <div class="score" id="score1">${{ scores['1'] }}</div>
@@ -185,9 +224,9 @@
         const designHeight = 15362;
 
         // Positions for nameplates and scores
-        const nameplatePositions = [768, 4772, 8776, 12780, 16784];
-        const nameplateTop = 13360;
-        const scoreTop = 12380;
+        //const nameplatePositions = [768, 4772, 8776, 12780, 16784];
+        //const nameplateTop = 13360;
+        //const scoreTop = 12380;
 
         function scaleBoard() {
             const board = document.getElementById('board');
@@ -248,19 +287,19 @@
             closeButton.style.height = '160px';
 
             // Nameplates and Scores
-            for (let idx = 0; idx < 5; idx++) {
-                const nameplate = document.getElementById('nameplate' + (idx + 1));
-                nameplate.style.left = nameplatePositions[idx] + 'px';
-                nameplate.style.top = nameplateTop + 'px';
-                nameplate.style.width = '3236px';
-                nameplate.style.height = '1810px';
+            //for (let idx = 0; idx < 5; idx++) {
+                //const nameplate = document.getElementById('nameplate' + (idx + 1));
+                //nameplate.style.left = nameplatePositions[idx] + 'px';
+                //nameplate.style.top = nameplateTop + 'px';
+                //nameplate.style.width = '3236px';
+                //nameplate.style.height = '1810px';
 
-                const score = document.getElementById('score' + (idx + 1));
-                score.style.left = nameplatePositions[idx] + 'px';
-                score.style.top = scoreTop + 'px';
-                score.style.width = '3236px';
-                score.style.height = '800px';
-            }
+                //const score = document.getElementById('score' + (idx + 1));
+                //score.style.left = nameplatePositions[idx] + 'px';
+                //score.style.top = scoreTop + 'px';
+                //score.style.width = '3236px';
+                //score.style.height = '800px';
+            //}
         }
 
         window.addEventListener('resize', scaleBoard);
@@ -419,11 +458,12 @@
             for (const playerId in scores) {
                 const scoreElement = document.getElementById('score' + playerId);
                 if (scoreElement) {
-                    scoreElement.textContent = '$' + scores[playerId];
-                    // Optionally change text color for negative scores
-                    if (scores[playerId] < 0) {
+                    let scoreValue = scores[playerId];
+                    if (scoreValue < 0) {
+                        scoreElement.textContent = '-$' + Math.abs(scoreValue);
                         scoreElement.style.color = '#d41010'; // Red color for negative scores
                     } else {
+                        scoreElement.textContent = '$' + scoreValue;
                         scoreElement.style.color = '#ffffff'; // Default color
                     }
                 }
