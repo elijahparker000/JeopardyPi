@@ -54,7 +54,8 @@ app.config["REDIS_URL"] = "redis://localhost:6379"
 app.register_blueprint(sse, url_prefix='/stream')
 
 # Set the maximum age (in seconds) for caching static files
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400  # Cache static files for 1 day
+#TODO: This could be useful for speeding up rendering in the final product? Not sure.
+#app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 86400  # Cache static files for 1 day
 
 # Set up shared state management
 shared_lock = threading.Lock()
@@ -264,8 +265,7 @@ def main_board_p():
     # Convert to regular list for logging
     enabled_buttons_list = [list(row) for row in enabled_buttons]
     logger.debug(f"Enabled buttons (player): {enabled_buttons_list}")
-    cache_buster = int(time.time())  # Use the current timestamp
-    return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores, cache_buster=cache_buster)
+    return render_template('main_board_p.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores)
 
 @app.route('/main_board_h')
 def main_board_h():
@@ -276,8 +276,7 @@ def main_board_h():
     # Convert to regular list for logging
     enabled_buttons_list = [list(row) for row in enabled_buttons]
     logger.debug(f"Enabled buttons (host): {enabled_buttons_list}")
-    cache_buster = int(time.time())  # Use the current timestamp
-    return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores, cache_buster=cache_buster)
+    return render_template('main_board_h.html', categories=categories, enabled_buttons=enabled_buttons_list, scores=scores)
 
 @app.route('/clue_p')
 def clue_p():
@@ -295,8 +294,7 @@ def clue_p():
     except ValueError as e:
         logger.error(f"Error retrieving clue: {e}")
         return str(e), 400
-    cache_buster = int(time.time())
-    return render_template('clue_p.html', clue=clue, response=response, scores=scores, cache_buster=cache_buster)
+    return render_template('clue_p.html', clue=clue, response=response, scores=scores)
 
 @app.route('/clue_h')
 def clue_h():
@@ -320,8 +318,7 @@ def clue_h():
     except ValueError as e:
         logger.error(f"Error retrieving clue: {e}")
         return str(e), 400
-    cache_buster = int(time.time())
-    return render_template('clue_h.html', clue=clue, response=response, scores=scores, cache_buster=cache_buster)
+    return render_template('clue_h.html', clue=clue, response=response, scores=scores)
 
 @app.route('/title_video_p')
 def title_video_p():
